@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الجدول اليومي مع تتبع الوقت</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tajawal', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0d0d0d 0%, #1a1a1a 100%);
+            color: #f0f0f0;
+            padding: 20px;
+            min-height: 100vh;
+            direction: rtl;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 20px 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ffcc00;
+            position: relative;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            color: #ffcc00;
+            text-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
+            margin-bottom: 10px;
+        }
+        
+        .date-info {
+            background: rgba(30, 30, 30, 0.9);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #444;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        
+        .date-info div {
+            margin: 5px 15px;
+        }
+        
+        .highlight {
+            color: #ffcc00;
+            font-weight: bold;
+        }
+        
+        .schedule-container {
+            position: relative;
+            background: rgba(25, 25, 25, 0.95);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+            margin-bottom: 30px;
+            border: 1px solid #333;
+        }
+        
+        .schedule-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .schedule-table th {
+            background: #222;
+            color: #ffcc00;
+            padding: 15px;
+            font-size: 1.2rem;
+            border-bottom: 2px solid #ffcc00;
+        }
+        
+        .schedule-table td {
+            padding: 15px;
+            border-bottom: 1px solid #333;
+            text-align: center;
+        }
+        
+        .schedule-table tr:nth-child(even) {
+            background: rgba(40, 40, 40, 0.6);
+        }
+        
+        .schedule-table tr:hover {
+            background: rgba(50, 50, 50, 0.8);
+        }
+        
+        .time {
+            color: #ffcc00;
+            font-weight: bold;
+            width: 25%;
+        }
+        
+        .activity {
+            text-align: right;
+            width: 75%;
+        }
+        
+        .lunch {
+            background: rgba(0, 80, 0, 0.3) !important;
+        }
+        
+        .break {
+            background: rgba(0, 60, 120, 0.3) !important;
+        }
+        
+        /* شريط التقدم الزمني */
+        .time-progress-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: rgba(50, 50, 50, 0.7);
+            z-index: 10;
+        }
+        
+        .time-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #ffcc00, #ff9900);
+            width: 0%;
+            transition: width 1s linear;
+            box-shadow: 0 0 10px rgba(255, 204, 0, 0.7);
+        }
+        
+        .current-marker {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            width: 3px;
+            background: #ff3333;
+            box-shadow: 0 0 5px #ff0000;
+            z-index: 20;
+            display: none;
+        }
+        
+        .tasks {
+            background: rgba(25, 25, 25, 0.95);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+            border: 1px solid #333;
+        }
+        
+        .tasks h2 {
+            color: #ffcc00;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.8rem;
+        }
+        
+        .task-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        .task-item {
+            background: rgba(40, 40, 40, 0.9);
+            padding: 15px;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 250px;
+            text-align: center;
+            border: 1px solid #444;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .task-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            border-color: #ffcc00;
+        }
+        
+        .task-item.completed {
+            background: rgba(0, 100, 0, 0.4);
+            border-color: #0f0;
+        }
+        
+        .task-title {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: #ffcc00;
+        }
+        
+        .completion-btn {
+            background: #333;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            width: 100%;
+            font-weight: bold;
+        }
+        
+        .completion-btn:hover {
+            background: #ffcc00;
+            color: #000;
+            transform: scale(1.05);
+        }
+        
+        .completion-btn.completed {
+            background: #0a0;
+        }
+        
+        .completion-btn.completed:hover {
+            background: #0f0;
+        }
+        
+        .progress-container {
+            background: rgba(25, 25, 25, 0.95);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+            margin-bottom: 30px;
+            border: 1px solid #333;
+        }
+        
+        .progress-bar {
+            height: 30px;
+            background: #333;
+            border-radius: 15px;
+            margin: 20px 0;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid #444;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ffcc00, #ff9900);
+            border-radius: 15px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .progress-text {
+            color: #ffcc00;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 30px;
+            border-top: 1px solid #444;
+            color: #aaa;
+        }
+        
+        /* تحسينات إضافية */
+        .highlight-box {
+            background: rgba(255, 204, 0, 0.1);
+            border: 1px solid #ffcc00;
+            border-radius: 5px;
+            padding: 3px 8px;
+            display: inline-block;
+        }
+        
+        @media (max-width: 768px) {
+            .schedule-table {
+                font-size: 0.85rem;
+            }
+            
+            .schedule-table th, .schedule-table td {
+                padding: 10px 5px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .date-info {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .task-item {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📅 الجدول اليومي الكامل</h1>
+            <div class="time-progress-container">
+                <div class="time-progress-bar" id="time-progress-bar"></div>
+                <div class="current-marker" id="current-marker"></div>
+            </div>
+        </header>
+        
+        <div class="date-info">
+            <div>اليوم: <span class="highlight" id="current-day">الاثنين</span></div>
+            <div>التاريخ: <span class="highlight" id="current-date">21 سبتمبر 2023</span></div>
+            <div>الوقت الحالي: <span class="highlight" id="current-time">06:00 صباحاً</span></div>
+            <div>النشاط الحالي: <span class="highlight highlight-box" id="current-activity">محاضرة 1</span></div>
+        </div>
+        
+        <div class="schedule-container">
+            <table class="schedule-table">
+                <thead>
+                    <tr>
+                        <th>الوقت</th>
+                        <th>النشاط</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr id="activity-1">
+                        <td class="time">6:00 – 7:00</td>
+                        <td class="activity">محاضرة 1</td>
+                    </tr>
+                    <tr id="activity-2">
+                        <td class="time">7:00 – 8:00</td>
+                        <td class="activity">محاضرة 2</td>
+                    </tr>
+                    <tr class="break" id="activity-3">
+                        <td class="time">8:00 – 9:00</td>
+                        <td class="activity">استراحة / رياضة / تسبح</td>
+                    </tr>
+                    <tr id="activity-4">
+                        <td class="time">9:00 – 10:00</td>
+                        <td class="activity">محاضرة 3</td>
+                    </tr>
+                    <tr id="activity-5">
+                        <td class="time">10:00 – 11:00</td>
+                        <td class="activity">محاضرة 4</td>
+                    </tr>
+                    <tr id="activity-6">
+                        <td class="time">11:00 – 12:00</td>
+                        <td class="activity">كتابة ملخص سريع للمحاضرات</td>
+                    </tr>
+                    <tr class="lunch" id="activity-7">
+                        <td class="time">12:00 – 2:00</td>
+                        <td class="activity">🌿 غداء + صلاة + راحة</td>
+                    </tr>
+                    <tr id="activity-8">
+                        <td class="time">2:00 – 3:00</td>
+                        <td class="activity">محاضرة 5</td>
+                    </tr>
+                    <tr id="activity-9">
+                        <td class="time">3:00 – 4:00</td>
+                        <td class="activity">محاضرة 6</td>
+                    </tr>
+                    <tr id="activity-10">
+                        <td class="time">4:00 – 5:00</td>
+                        <td class="activity">محاضرة 7 (إذا عندك طاقة)</td>
+                    </tr>
+                    <tr id="activity-11">
+                        <td class="time">5:00 – 6:00</td>
+                        <td class="activity">كتابة ملخص + مراجعة</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="tasks">
+            <h2>متابعة الإنجاز</h2>
+            <div class="task-list">
+                <div class="task-item" id="task-1">
+                    <div class="task-title">محاضرة 1</div>
+                    <button class="completion-btn" data-task="1">غير مكتمل</button>
+                </div>
+                <div class="task-item" id="task-2">
+                    <div class="task-title">محاضرة 2</div>
+                    <button class="completion-btn" data-task="2">غير مكتمل</button>
+                </div>
+                <div class="task-item" id="task-3">
+                    <div class="task-title">محاضرة 3</div>
+                    <button class="completion-btn" data-task="3">غير مكتمل</button>
+                </div>
+                <div class="task-item" id="task-4">
+                    <div class="task-title">محاضرة 4</div>
+                    <button class="completion-btn" data-task="4">غير مكتمل</button>
+                </div>
+                <div class="task-item" id="task-5">
+                    <div class="task-title">محاضرة 5</div>
+                    <button class="completion-btn" data-task="5">غير مكتمل</button>
+                </div>
+                <div class="task-item" id="task-6">
+                    <div class="task-title">محاضرة 6</div>
+                    <button class="completion-btn" data-task="6">غير مكتمل</button>
+                </div>
+                <div class="task-item" id="task-7">
+                    <div class="task-title">محاضرة 7</div>
+                    <button class="completion-btn" data-task="7">غير مكتمل</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="progress-container">
+            <h2>تقدم اليوم</h2>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <div class="progress-text" id="progress-text">0% مكتمل</div>
+        </div>
+        
+        <footer>
+            <p>© 2023 الجدول اليومي - جميع الحقوق محفوظة</p>
+        </footer>
+    </div>
+
+    <script>
+        // تحديث التاريخ والوقت
+        function updateDateTime() {
+            const now = new Date();
+            const days = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+            const months = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
+            
+            document.getElementById('current-day').textContent = days[now.getDay()];
+            document.getElementById('current-date').textContent = `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+            
+            let hours = now.getHours();
+            let minutes = now.getMinutes();
+            const ampm = hours >= 12 ? 'مساءً' : 'صباحاً';
+            hours = hours % 12;
+            hours = hours ? hours : 12;
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            document.getElementById('current-time').textContent = `${hours}:${minutes} ${ampm}`;
+            
+            // تحديث شريط التقدم الزمني
+            updateTimeProgress();
+        }
+        
+        // تحديث شريط التقدم الزمني
+        function updateTimeProgress() {
+            const now = new Date();
+            const startHour = 6; // بداية اليوم 6 صباحاً
+            const endHour = 18; // نهاية اليوم 6 مساءً
+            
+            // حساب الوقت الحالي كنسبة مئوية من اليوم
+            const totalMinutes = (endHour - startHour) * 60;
+            const currentMinutes = (now.getHours() - startHour) * 60 + now.getMinutes();
+            
+            // التأكد من أن النسبة بين 0 و 100
+            let progress = (currentMinutes / totalMinutes) * 100;
+            if (progress < 0) progress = 0;
+            if (progress > 100) progress = 100;
+            
+            document.getElementById('time-progress-bar').style.width = `${progress}%`;
+            
+            // تحديث النشاط الحالي
+            updateCurrentActivity(now);
+        }
+        
+        // تحديث النشاط الحالي
+        function updateCurrentActivity(now) {
+            const activities = [
+                { start: 6*60, end: 7*60, name: "محاضرة 1", id: "activity-1" },
+                { start: 7*60, end: 8*60, name: "محاضرة 2", id: "activity-2" },
+                { start: 8*60, end: 9*60, name: "استراحة / رياضة / تسبح", id: "activity-3" },
+                { start: 9*60, end: 10*60, name: "محاضرة 3", id: "activity-4" },
+                { start: 10*60, end: 11*60, name: "محاضرة 4", id: "activity-5" },
+                { start: 11*60, end: 12*60, name: "كتابة ملخص سريع", id: "activity-6" },
+                { start: 12*60, end: 14*60, name: "🌿 غداء + صلاة + راحة", id: "activity-7" },
+                { start: 14*60, end: 15*60, name: "محاضرة 5", id: "activity-8" },
+                { start: 15*60, end: 16*60, name: "محاضرة 6", id: "activity-9" },
+                { start: 16*60, end: 17*60, name: "محاضرة 7 (إذا عندك طاقة)", id: "activity-10" },
+                { start: 17*60, end: 18*60, name: "كتابة ملخص + مراجعة", id: "activity-11" }
+            ];
+            
+            const currentMinutes = now.getHours() * 60 + now.getMinutes();
+            
+            // إزالة التمييز من جميع الأنشطة
+            activities.forEach(activity => {
+                const element = document.getElementById(activity.id);
+                if (element) {
+                    element.style.backgroundColor = '';
+                    element.style.fontWeight = 'normal';
+                }
+            });
+            
+            // تحديد النشاط الحالي
+            let currentActivity = "لا يوجد نشاط";
+            for (const activity of activities) {
+                if (currentMinutes >= activity.start && currentMinutes < activity.end) {
+                    currentActivity = activity.name;
+                    const element = document.getElementById(activity.id);
+                    if (element) {
+                        element.style.backgroundColor = 'rgba(255, 204, 0, 0.2)';
+                        element.style.fontWeight = 'bold';
+                    }
+                    break;
+                }
+            }
+            
+            document.getElementById('current-activity').textContent = currentActivity;
+        }
+        
+        // تحديث حالة المهام
+        function updateTaskStatus(taskNumber, completed) {
+            const taskItem = document.getElementById(`task-${taskNumber}`);
+            const button = taskItem.querySelector('.completion-btn');
+            
+            if (completed) {
+                taskItem.classList.add('completed');
+                button.textContent = 'مكتمل ✓';
+                button.classList.add('completed');
+            } else {
+                taskItem.classList.remove('completed');
+                button.textContent = 'غير مكتمل';
+                button.classList.remove('completed');
+            }
+            
+            updateProgress();
+        }
+        
+        // حساب التقدم
+        function updateProgress() {
+            const buttons = document.querySelectorAll('.completion-btn');
+            let completedCount = 0;
+            
+            buttons.forEach(button => {
+                if (button.classList.contains('completed')) {
+                    completedCount++;
+                }
+            });
+            
+            const progress = Math.round((completedCount / buttons.length) * 100);
+            document.getElementById('progress-fill').style.width = `${progress}%`;
+            document.getElementById('progress-text').textContent = `${progress}% مكتمل`;
+        }
+        
+        // إضافة مستمعي الأحداث للأزرار
+        document.querySelectorAll('.completion-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const taskNumber = this.getAttribute('data-task');
+                const isCompleted = this.classList.contains('completed');
+                updateTaskStatus(taskNumber, !isCompleted);
+            });
+        });
+        
+        // تحديث الوقت كل دقيقة
+        setInterval(updateDateTime, 60000);
+        updateDateTime();
+        updateProgress();
+    </script>
+</body>
+</html>
