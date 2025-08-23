@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الموقع الاحترافي</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #000;
+            color: #ff0000;
+            overflow: hidden;
+            height: 100vh;
+            position: relative;
+        }
+        
+        /* خلفية سوداء ثابتة */
+        .black-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: -3;
+        }
+        
+        /* تأثيرات خلفية منقطة حمراء */
+        .dots-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle, rgba(255, 0, 0, 0.15) 1px, transparent 1px),
+                radial-gradient(circle, rgba(255, 0, 0, 0.1) 2px, transparent 2px),
+                radial-gradient(circle, rgba(255, 0, 0, 0.05) 3px, transparent 3px);
+            background-size: 40px 40px, 80px 80px, 120px 120px;
+            z-index: -2;
+        }
+        
+        /* شبكة خلفية */
+        .grid-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(255, 0, 0, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 0, 0, 0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
+            z-index: -1;
+            opacity: 0.7;
+        }
+        
+        /* العد التنازلي - بدون توهج */
+        .countdown-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 10;
+            width: 85%;
+            max-width: 800px;
+            padding: 50px;
+            background: rgba(10, 0, 0, 0.85);
+            border: 4px solid #ff0000;
+            border-radius: 25px;
+        }
+        
+        .countdown-title {
+            font-size: 3.2vw;
+            color: #ff0000;
+            margin-bottom: 30px;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+        
+        .countdown {
+            font-size: 22vw;
+            font-weight: 900;
+            color: #ff0000;
+            margin: 20px 0;
+        }
+        
+        /* تحذير قبل الاختيار */
+        .warning-box {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 85%;
+            max-width: 800px;
+            padding: 50px;
+            background: rgba(10, 0, 0, 0.85);
+            border: 4px solid #ff0000;
+            border-radius: 25px;
+            text-align: center;
+            z-index: 20;
+        }
+        
+        .warning-title {
+            font-size: 3.2vw;
+            color: #ff0000;
+            margin-bottom: 30px;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+        
+        .warning-message {
+            font-size: 2.1vw;
+            color: #ffffff;
+            line-height: 1.7;
+            margin: 25px 0;
+            font-weight: 500;
+        }
+        
+        .warning-icon {
+            font-size: 5.5vw;
+            margin: 25px 0;
+            color: #ff0000;
+        }
+        
+        .warning-button {
+            margin-top: 35px;
+            padding: 18px 50px;
+            font-size: 2vw;
+            background: rgba(255, 0, 0, 0.25);
+            color: #ff0000;
+            border: 3px solid #ff0000;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        
+        .warning-button:hover {
+            background: rgba(255, 0, 0, 0.5);
+            transform: scale(1.08);
+            letter-spacing: 2px;
+        }
+        
+        /* اختيار الأرقام */
+        .number-selection {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 85%;
+            max-width: 900px;
+            padding: 50px;
+            background: rgba(10, 0, 0, 0.85);
+            border: 4px solid #ff0000;
+            border-radius: 25px;
+            text-align: center;
+            z-index: 30;
+        }
+        
+        .selection-title {
+            font-size: 3.2vw;
+            color: #ff0000;
+            margin-bottom: 40px;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+        
+        .numbers-container {
+            display: flex;
+            justify-content: center;
+            gap: 35px;
+            flex-wrap: wrap;
+            max-width: 95%;
+            margin: 0 auto;
+        }
+        
+        .number-btn {
+            width: 130px;
+            height: 130px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 3px solid #ff0000;
+            color: #ff0000;
+            font-size: 3.2rem;
+            font-weight: 900;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            border-radius: 50%;
+        }
+        
+        .number-btn:hover {
+            transform: scale(1.15);
+            background: rgba(50, 0, 0, 0.4);
+        }
+        
+        .number-btn:active {
+            transform: scale(0.95);
+        }
+        
+        /* رسالة الاختيار */
+        .choice-message {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 85%;
+            max-width: 800px;
+            padding: 50px;
+            background: rgba(10, 0, 0, 0.85);
+            border: 4px solid #ff0000;
+            border-radius: 25px;
+            text-align: center;
+            z-index: 40;
+        }
+        
+        .choice-text {
+            font-size: 2.3vw;
+            color: #ffffff;
+            margin-bottom: 25px;
+            font-weight: 500;
+            line-height: 1.6;
+        }
+        
+        .selected-number {
+            font-size: 6.5vw;
+            color: #ff0000;
+            margin: 30px 0;
+        }
+        
+        /* خلفية الدخان النهائية */
+        .smoke-bg {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 0, 0, 0.97);
+            z-index: 50;
+        }
+        
+        .smoke-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(ellipse at center, rgba(60,0,0,0.4) 0%, transparent 70%),
+                radial-gradient(circle, rgba(120,0,0,0.3) 0%, transparent 60%);
+            background-size: 700px 700px, 1200px 1200px;
+        }
+        
+        .smoke-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle, rgba(100,0,0,0.3) 15px, transparent 15px),
+                radial-gradient(circle, rgba(150,0,0,0.2) 20px, transparent 20px),
+                radial-gradient(circle, rgba(80,0,0,0.4) 10px, transparent 10px);
+            background-size: 250px 250px, 350px 350px, 180px 180px;
+        }
+        
+        /* صندوق النجاح */
+        .success-box {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 85%;
+            max-width: 800px;
+            padding: 50px;
+            background: rgba(10, 0, 0, 0.85);
+            border: 4px solid #ff0000;
+            border-radius: 25px;
+            text-align: center;
+            z-index: 60;
+        }
+        
+        .success-title {
+            font-size: 3.2vw;
+            color: #ff0000;
+            margin-bottom: 30px;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+        
+        .success-message {
+            font-size: 2.1vw;
+            color: #ffffff;
+            line-height: 1.7;
+            margin: 25px 0;
+            font-weight: 500;
+        }
+        
+        .success-icon {
+            font-size: 5.5vw;
+            margin: 25px 0;
+            color: #ff0000;
+        }
+        
+        /* مؤشر التحميل */
+        .loader {
+            display: none;
+            width: 120px;
+            height: 120px;
+            border: 10px solid rgba(255, 0, 0, 0.3);
+            border-top: 10px solid #ff0000;
+            border-radius: 50%;
+            animation: spin 1.2s linear infinite;
+            margin: 35px auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* رسالة القفل */
+        .locked-message {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 85%;
+            max-width: 800px;
+            padding: 50px;
+            background: rgba(10, 0, 0, 0.85);
+            border: 4px solid #ff0000;
+            border-radius: 25px;
+            text-align: center;
+            z-index: 70;
+        }
+        
+        .locked-title {
+            font-size: 3.2vw;
+            color: #ff0000;
+            margin-bottom: 30px;
+            font-weight: bold;
+        }
+        
+        .locked-text {
+            font-size: 2.3vw;
+            color: #ffffff;
+            line-height: 1.7;
+            margin: 25px 0;
+        }
+        
+        .locked-icon {
+            font-size: 5.5vw;
+            margin: 25px 0;
+            color: #ff0000;
+        }
+    </style>
+</head>
+<body>
+    <!-- خلفية سوداء ثابتة -->
+    <div class="black-bg"></div>
+    <div class="dots-bg"></div>
+    <div class="grid-bg"></div>
+    
+    <!-- العد التنازلي - بدون توهج -->
+    <div class="countdown-container">
+        <div class="countdown-title">العد التنازلي</div>
+        <div class="countdown" id="countdown">9</div>
+    </div>
+    
+    <!-- تحذير قبل الاختيار -->
+    <div class="warning-box" id="warningBox">
+        <div class="warning-icon">⚠️</div>
+        <div class="warning-title">تحذير مهم!</div>
+        <div class="warning-message">
+            كن حذر جداً في اختيارك<br>
+            الاختيار خاطئ قد يؤدي إلى عواقب وخيمة<br>
+            هل أنت مستعد لاتخاذ القرار؟
+        </div>
+        <button class="warning-button" onclick="showNumbers()">أنا مستعد</button>
+    </div>
+    
+    <!-- اختيار الأرقام -->
+    <div class="number-selection" id="numberSelection">
+        <div class="selection-title">كن حذر جداً في اختيارك</div>
+        <div class="numbers-container">
+            <button class="number-btn" onclick="selectNumber(1)">1</button>
+            <button class="number-btn" onclick="selectNumber(2)">2</button>
+            <button class="number-btn" onclick="selectNumber(3)">3</button>
+            <button class="number-btn" onclick="selectNumber(4)">4</button>
+            <button class="number-btn" onclick="selectNumber(5)">5</button>
+        </div>
+    </div>
+    
+    <!-- رسالة الاختيار -->
+    <div class="choice-message" id="choiceMessage">
+        <div class="choice-text">اختيارك هوه</div>
+        <div class="selected-number" id="selectedNumber"></div>
+        <div class="choice-text">أحضريني من الأن ولا ترفعين حضر ابد</div>
+    </div>
+    
+    <!-- خلفية الدخان النهائية -->
+    <div class="smoke-bg" id="smokeBg">
+        <div class="smoke-overlay"></div>
+        <div class="smoke-particles"></div>
+    </div>
+    
+    <!-- صندوق النجاح -->
+    <div class="success-box" id="successBox">
+        <div class="loader" id="loader"></div>
+        <div class="success-icon">✏️☠️</div>
+        <div class="success-title">دمج ايبي هاش في موقع</div>
+        <div class="success-message" id="successMessage">جاري تنفيذ طلبك</div>
+        <div class="success-message">تم تنفيذ بنجاح</div>
+    </div>
+    
+    <!-- رسالة القفل -->
+    <div class="locked-message" id="lockedMessage">
+        <div class="locked-icon">🔒</div>
+        <div class="locked-title">تم قفل الموقع</div>
+        <div class="locked-text">تم اتخاذ اختيارك ولا يمكن الرجوع<br>تم إغلاق الموقع بشكل دائم</div>
+    </div>
+
+    <script>
+        // التحقق من وجود اختيار مسبق
+        if (localStorage.getItem('userChoice')) {
+            // إذا كان هناك اختيار سابق، عرض رسالة القفل
+            document.querySelector('.countdown-container').style.display = 'none';
+            document.getElementById('lockedMessage').style.display = 'block';
+        } else {
+            // العد التنازلي من 9 إلى 1
+            let countdownElement = document.getElementById('countdown');
+            let count = 9;
+            
+            const countdownInterval = setInterval(() => {
+                countdownElement.textContent = count;
+                count--;
+                
+                if (count < 0) {
+                    clearInterval(countdownInterval);
+                    document.querySelector('.countdown-container').style.display = 'none';
+                    document.getElementById('warningBox').style.display = 'block';
+                }
+            }, 800);
+        }
+        
+        // دالة إظهار أرقام الاختيار
+        function showNumbers() {
+            document.getElementById('warningBox').style.display = 'none';
+            document.getElementById('numberSelection').style.display = 'block';
+        }
+        
+        // دالة اختيار الرقم
+        function selectNumber(number) {
+            // حفظ الاختيار في التخزين المحلي
+            localStorage.setItem('userChoice', number);
+            
+            document.getElementById('numberSelection').style.display = 'none';
+            document.getElementById('selectedNumber').textContent = number;
+            document.getElementById('choiceMessage').style.display = 'block';
+            
+            // بعد 3 ثوانٍ نعرض رسالة النجاح
+            setTimeout(() => {
+                document.getElementById('choiceMessage').style.display = 'none';
+                document.getElementById('smokeBg').style.display = 'block';
+                document.getElementById('loader').style.display = 'block';
+                document.getElementById('successBox').style.display = 'block';
+                
+                // تحديث رسالة النجاح بعد 2 ثانية
+                setTimeout(() => {
+                    document.getElementById('successMessage').innerHTML = 'جاري تنفيذ طلبك<br>تم تنفيذ بنجاح';
+                    document.getElementById('loader').style.display = 'none';
+                }, 2000);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
