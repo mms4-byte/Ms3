@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>السادس العلمي - خطة الدراسة</title>
+    <style>
+        :root {
+            --gold: #FFD700;
+            --dark-green: #006400;
+            --light-green: #32CD32;
+            --red: #FF4444;
+            --black: #000000;
+            --dark-gray: #1a1a1a;
+            --completed-bg: rgba(50, 205, 50, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--black);
+            color: var(--gold);
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* رأس الصفحة */
+        .header {
+            background: linear-gradient(135deg, var(--black), #222);
+            padding: 30px;
+            text-align: center;
+            border-bottom: 3px solid var(--gold);
+            margin-bottom: 20px;
+            border-radius: 15px;
+        }
+
+        .main-title {
+            font-size: 3em;
+            font-weight: bold;
+            text-shadow: 0 0 10px var(--gold);
+            margin-bottom: 10px;
+            white-space: nowrap;
+            animation: none !important;
+        }
+
+        /* الخط الأخضر */
+        .green-divider {
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--light-green), transparent);
+            margin: 20px 0;
+            border-radius: 50%;
+        }
+
+        /* الرسالة التحفيزية */
+        .motivational-message {
+            background: rgba(0, 100, 0, 0.1);
+            border: 2px solid var(--light-green);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            font-size: 1.3em;
+            color: var(--light-green);
+            font-weight: bold;
+            text-align: center;
+        }
+
+        /* صناديق المعلومات */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .info-box {
+            background: linear-gradient(145deg, var(--dark-gray), #222);
+            border: 2px solid var(--gold);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .info-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(255, 215, 0, 0.2);
+        }
+
+        .info-box h3 {
+            color: var(--gold);
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .countdown-display {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: var(--light-green);
+            font-family: 'Courier New', monospace;
+        }
+
+        .status-display {
+            font-size: 1.4em;
+            color: var(--light-green);
+            font-weight: bold;
+        }
+
+        /* شريط التقدم */
+        .progress-container {
+            margin: 15px 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 25px;
+            background-color: #333;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--gold);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--dark-green), var(--light-green));
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .progress-text {
+            margin-top: 10px;
+            font-size: 1.2em;
+            color: var(--gold);
+        }
+
+        /* الجدول */
+        .schedule-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            background: rgba(26, 26, 26, 0.8);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            table-layout: fixed;
+        }
+
+        .schedule-table th {
+            background: linear-gradient(145deg, var(--dark-green), #004d00);
+            color: white;
+            padding: 15px;
+            font-size: 1.1em;
+        }
+
+        .schedule-table td {
+            padding: 12px;
+            border: 1px solid var(--gold);
+            text-align: center;
+            word-wrap: break-word;
+        }
+
+        .schedule-table tr:nth-child(even) {
+            background-color: rgba(51, 51, 51, 0.5);
+        }
+
+        .schedule-table tr:hover {
+            background-color: rgba(255, 215, 0, 0.1);
+        }
+
+        .subject-name {
+            font-weight: bold;
+            color: var(--gold);
+        }
+
+        .time-range {
+            color: var(--light-green);
+        }
+
+        .countdown-cell {
+            font-family: 'Courier New', monospace;
+            color: var(--light-green);
+            font-weight: bold;
+        }
+
+        .current-activity {
+            background-color: rgba(255, 215, 0, 0.2) !important;
+            font-weight: bold;
+        }
+
+        /* زر النجاز */
+        .completion-btn {
+            width: 40px;
+            height: 40px;
+            border: 2px solid var(--gold);
+            background: transparent;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2em;
+            color: var(--gold);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+        }
+
+        .completion-btn:hover {
+            background: var(--gold);
+            color: var(--black);
+            transform: scale(1.1);
+        }
+
+        .completion-btn.completed {
+            background: var(--light-green);
+            color: white;
+            border-color: var(--light-green);
+        }
+
+        .completed-row {
+            background-color: var(--completed-bg) !important;
+        }
+
+        /* حقوق الطبع */
+        .copyright {
+            text-align: center;
+            padding: 20px;
+            margin-top: 30px;
+            border-top: 2px solid var(--gold);
+            color: var(--light-green);
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+
+        /* التصميم للهواتف */
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 2em;
+            }
+            
+            .motivational-message {
+                font-size: 1.1em;
+                padding: 15px;
+            }
+            
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .schedule-table {
+                font-size: 0.9em;
+            }
+            
+            .schedule-table th,
+            .schedule-table td {
+                padding: 8px;
+                font-size: 0.85em;
+            }
+            
+            .completion-btn {
+                width: 35px;
+                height: 35px;
+                font-size: 1em;
+            }
+            
+            .copyright {
+                font-size: 0.9em;
+                padding: 15px;
+            }
+            
+            .countdown-display {
+                font-size: 1.4em;
+            }
+            
+            .status-display {
+                font-size: 1.2em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-title {
+                font-size: 1.5em;
+            }
+            
+            .schedule-table th,
+            .schedule-table td {
+                padding: 6px;
+                font-size: 0.75em;
+            }
+            
+            .completion-btn {
+                width: 30px;
+                height: 30px;
+                font-size: 0.9em;
+            }
+            
+            .info-box h3 {
+                font-size: 1.1em;
+            }
+            
+            .countdown-display {
+                font-size: 1.2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- رأس الصفحة -->
+        <div class="header">
+            <h1 class="main-title">السادس العلمي</h1>
+        </div>
+
+        <!-- الخط الأخضر -->
+        <div class="green-divider"></div>
+
+        <!-- الرسالة التحفيزية -->
+        <div class="motivational-message">
+            الا اخلي السادس عبره لكل واحد خايف منه<br>
+            جبناء تخافون من كتب 😡🏴‍☠️
+        </div>
+
+        <!-- الخط الأخضر -->
+        <div class="green-divider"></div>
+
+        <!-- صناديق المعلومات -->
+        <div class="info-grid">
+            <!-- عداد الوقت -->
+            <div class="info-box">
+                <h3>الوقت المتبقي حتى نهاية اليوم</h3>
+                <div id="countdown" class="countdown-display">جارٍ التحميل...</div>
+            </div>
+
+            <!-- الحالة الحالية -->
+            <div class="info-box">
+                <h3>الحالة الحالية</h3>
+                <div id="current-status" class="status-display">جارٍ التحميل...</div>
+                <div id="current-subject" style="font-size: 1em; margin-top: 10px; color: var(--light-green);"></div>
+            </div>
+
+            <!-- نسبة الإنجاز -->
+            <div class="info-box">
+                <h3>نسبة الإنجاز</h3>
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-bar"></div>
+                    </div>
+                </div>
+                <div class="progress-text" id="progress-text">0%</div>
+            </div>
+        </div>
+
+        <!-- الخط الأخضر -->
+        <div class="green-divider"></div>
+
+        <!-- جدول المحاضرات -->
+        <h2 style="text-align: center; margin: 30px 0; color: var(--gold);">جدول المحاضرات</h2>
+        
+        <table class="schedule-table">
+            <thead>
+                <tr>
+                    <th style="width: 25%;">الاسم</th>
+                    <th style="width: 25%;">الوقت</th>
+                    <th style="width: 25%;">الساعه</th>
+                    <th style="width: 25%;">نجاز</th>
+                </tr>
+            </thead>
+            <tbody id="schedule-body">
+                <tr data-id="1" data-start="06:00" data-end="07:00">
+                    <td class="subject-name">رياضيات</td>
+                    <td class="time-range">6:00 ص - 7:00 ص</td>
+                    <td class="countdown-cell" id="timer1">--:--:--</td>
+                    <td><button class="completion-btn" onclick="toggleCompletion(1)">☐</button></td>
+                </tr>
+                <tr data-id="2" data-start="07:00" data-end="08:00">
+                    <td class="subject-name">فيزياء</td>
+                    <td class="time-range">7:00 ص - 8:00 ص</td>
+                    <td class="countdown-cell" id="timer2">--:--:--</td>
+                    <td><button class="completion-btn" onclick="toggleCompletion(2)">☐</button></td>
+                </tr>
+                <tr data-id="3" data-start="08:00" data-end="09:00">
+                    <td class="subject-name">إفطار + سباحة + راحة خفيفة</td>
+                    <td class="time-range">8:00 ص - 9:00 ص</td>
+                    <td class="countdown-cell" id="timer3">--:--:--</td>
+                    <td><button class="completion-btn" onclick="toggleCompletion(3)">☐</button></td>
+                </tr>
+                <tr data-id="4" data-start="09:00" data-end="10:00">
+                    <td class="subject-name">كيمياء</td>
+                    <td class="time-range">9:00 ص - 10:00 ص</td>
+                    <td class="countdown-cell" id="timer4">--:--:--</td>
+                    <td><button class="completion-btn" onclick="toggleCompletion(4)">☐</button></td>
+                </tr>
+                <tr data-id="5" data-start="10:00" data-end="11:00">
+                    <td class="subject-name">أحياء</td>
+                    <td class="time-range">10:00 ص - 11:00 ص</td>
+                    <td class="countdown-cell" id="timer5">--:--:--</td>
+                    <td><button class="completion-btn" onclick="toggleCompletion(5)">☐</button></td>
+                </tr>
+                <tr data-id="6" data-start="11:00" data-end="12:00">
+                    <td class="subject-name">لغة عربية</td>
+                    <td class="time-range">11:00 ص - 12:00 م</td>
+                    <td class="countdown-cell" id="timer6">--:--:--</td>
+                    <td><button class="completion-btn" onclick="toggleCompletion(6)">☐</button></td>
+                </tr>
+                <tr data-id="7" data-start="12:00" data-end="14:00">
+                    <td class="subject-name">غداء + صلاة الظهر + راحة</td>
+                    <td class="time-range">12:00 م - 2:00 م</td>
+                    <td class="countdown-cell" id="timer7">--:--:--</td>
+                    <td><button class="completion-btn" onclick="toggleCompletion(7)">☐</button></td>
+                </tr>
+                <tr data-id="8" data-start="14:00" data-end="15:00">
+                    <td class="subject-name">قيلولة خفيفة + راحة</td>
+                    <td class="time-range">2:00 م - 3:00 م</td>
+                    <td class="countdown-cell" id="timer8">--:--:--</td>
+                    <td><button class="completion-btn" onclick="toggleCompletion(8)">☐</button></td>
+                </tr>
+                <tr data-id="9" data-start="15:30" data-end="16:30">
+                    <td class="subject-name">إنجليزي</td>
+                    <td class="time-range">3:30 م - 4:30 م</td>
+                    <td class="countdown-cell" id="timer9">--:--:--</td>
+                    <td><button class="completion-btn" onclick="toggleCompletion(9)">☐</button></td>
+                </tr>
+                <tr data-id="10" data-start="16:30" data-end="17:30">
+                    <td class="subject-name">حل أسئلة / تمارين</td>
+                    <td class="time-range">4:30 م - 5:30 م</td>
+                    <td class="countdown-cell" id="timer10">--:--:--</td>
+                    <td><button class="completion-btn" onclick="toggleCompletion(10)">☐</button></td>
+                </tr>
+                <tr data-id="11" data-start="17:30" data-end="21:00">
+                    <td class="subject-name">استعداد للعشاء + تنظيف</td>
+                    <td class="time-range">5:30 م - 9:00 م</td>
+                    <td class="countdown-cell" id="timer11">--:--:--</td>
+                    <td><button class="completion-btn" onclick="toggleCompletion(11)">☐</button></td>
+                </tr>
+                <tr data-id="12" data-start="21:00" data-end="22:00">
+                    <td class="subject-name">حل أسئلة المرحلة المنتهية</td>
+                    <td class="time-range">9:00 م - 10:00 م</td>
+                    <td class="countdown-cell" id="timer12">--:--:--</td>
+                    <td><button class="completion-btn" onclick="toggleCompletion(12)">☐</button></td>
+                </tr>
+                <tr data-id="13" data-start="22:00" data-end="23:00">
+                    <td class="subject-name">نوم مبكر</td>
+                    <td class="time-range">10:00 م - 11:00 م</td>
+                    <td class="countdown-cell" id="timer13">--:--:--</td>
+                    <td><button class="completion-btn" onclick="toggleCompletion(13)">☐</button></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- حقوق الطبع والنشر -->
+        <div class="copyright">
+            جميع الحقوق محفوظة © سارة علي
+        </div>
+    </div>
+
+    <script>
+        // متغير لتخزين حالة الإنجاز
+        let completionStatus = {};
+        let totalTasks = 13;
+        let completedTasks = 0;
+        let currentDay = new Date().toDateString(); // تتبع اليوم الحالي
+
+        // تحميل الحالة من localStorage مع التحقق من اليوم
+        function loadCompletionStatus() {
+            const saved = localStorage.getItem('completionStatus');
+            const savedDay = localStorage.getItem('completionDay');
+            const today = new Date().toDateString();
+            
+            // إذا كان اليوم قد تغير، نعيد تعيين كل شيء
+            if (savedDay !== today) {
+                completionStatus = {};
+                completedTasks = 0;
+                localStorage.setItem('completionDay', today);
+                localStorage.setItem('completionStatus', JSON.stringify(completionStatus));
+                updateProgress();
+                updateTableDisplay();
+                return;
+            }
+            
+            // إذا كان نفس اليوم، نحمّل الحالة المحفوظة
+            if (saved) {
+                completionStatus = JSON.parse(saved);
+                completedTasks = Object.values(completionStatus).filter(status => status).length;
+                updateProgress();
+                updateTableDisplay();
+            }
+        }
+
+        // حفظ الحالة في localStorage مع تتبع اليوم
+        function saveCompletionStatus() {
+            localStorage.setItem('completionStatus', JSON.stringify(completionStatus));
+            localStorage.setItem('completionDay', new Date().toDateString());
+        }
+
+        // دالة تبديل حالة الإنجاز
+        function toggleCompletion(taskId) {
+            const btn = document.querySelector(`tr[data-id="${taskId}"] .completion-btn`);
+            const row = document.querySelector(`tr[data-id="${taskId}"]`);
+            
+            if (completionStatus[taskId]) {
+                // إلغاء الإنجاز
+                completionStatus[taskId] = false;
+                btn.innerHTML = '☐';
+                btn.classList.remove('completed');
+                row.classList.remove('completed-row');
+                completedTasks--;
+            } else {
+                // تم الإنجاز
+                completionStatus[taskId] = true;
+                btn.innerHTML = '✓';
+                btn.classList.add('completed');
+                row.classList.add('completed-row');
+                completedTasks++;
+            }
+            
+            updateProgress();
+            saveCompletionStatus();
+        }
+
+        // تحديث عرض الجدول
+        function updateTableDisplay() {
+            for (let i = 1; i <= totalTasks; i++) {
+                const btn = document.querySelector(`tr[data-id="${i}"] .completion-btn`);
+                const row = document.querySelector(`tr[data-id="${i}"]`);
+                
+                if (completionStatus[i]) {
+                    btn.innerHTML = '✓';
+                    btn.classList.add('completed');
+                    row.classList.add('completed-row');
+                } else {
+                    btn.innerHTML = '☐';
+                    btn.classList.remove('completed');
+                    row.classList.remove('completed-row');
+                }
+            }
+        }
+
+        // تحديث شريط التقدم
+        function updateProgress() {
+            const percentage = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+            document.getElementById('progress-bar').style.width = percentage + '%';
+            document.getElementById('progress-text').innerText = percentage + '%';
+            
+            // تغيير لون شريط التقدم حسب النسبة
+            const progressBar = document.getElementById('progress-bar');
+            if (percentage >= 80) {
+                progressBar.style.background = 'linear-gradient(90deg, #006400, #32CD32)';
+            } else if (percentage >= 50) {
+                progressBar.style.background = 'linear-gradient(90deg, #FF8C00, #FFD700)';
+            } else {
+                progressBar.style.background = 'linear-gradient(90deg, #8B0000, #FF4444)';
+            }
+        }
+
+        // تحويل الوقت من نص إلى دقائق (24 ساعة)
+        function timeToMinutes(timeStr) {
+            const [hours, minutes] = timeStr.split(':').map(Number);
+            return hours * 60 + minutes;
+        }
+
+        // دالة تحديث العداد العام
+        function updateMainCountdown() {
+            const now = new Date();
+            const target = new Date();
+            target.setHours(23, 59, 59, 999); // نهاية اليوم
+
+            const diff = target - now;
+            
+            if (diff <= 0) {
+                document.getElementById('countdown').innerText = "انتهى اليوم!";
+                return;
+            }
+
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById('countdown').innerText = 
+                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // دالة تحديث الحالة الحالية بدقة
+        function updateCurrentStatus() {
+            const now = new Date();
+            const currentHours = now.getHours();
+            const currentMinutes = now.getMinutes();
+            const currentTimeInMinutes = currentHours * 60 + currentMinutes;
+
+            let currentStatus = "راحة";
+            let currentSubject = "";
+            let foundCurrent = false;
+
+            // إزالة التظليل من جميع الصفوف
+            document.querySelectorAll('#schedule-body tr').forEach(row => {
+                row.classList.remove('current-activity');
+            });
+
+            // البحث عن النشاط الحالي
+            document.querySelectorAll('#schedule-body tr').forEach(row => {
+                const startStr = row.getAttribute('data-start');
+                const endStr = row.getAttribute('data-end');
+                
+                if (startStr && endStr) {
+                    const startMinutes = timeToMinutes(startStr);
+                    const endMinutes = timeToMinutes(endStr);
+                    
+                    // التعامل مع منتصف الليل
+                    let adjustedStart = startMinutes;
+                    let adjustedEnd = endMinutes;
+                    
+                    if (adjustedEnd < adjustedStart) {
+                        adjustedEnd += 1440; // إضافة يوم كامل
+                    }
+                    let adjustedCurrent = currentTimeInMinutes;
+                    if (adjustedStart > adjustedCurrent && adjustedStart >= 1320) { // 22:00
+                        adjustedCurrent += 1440;
+                    }
+                    
+                    if (adjustedCurrent >= adjustedStart && adjustedCurrent < adjustedEnd) {
+                        currentSubject = row.querySelector('.subject-name').textContent;
+                        currentStatus = "نشط الآن";
+                        row.classList.add('current-activity');
+                        foundCurrent = true;
+                    }
+                }
+            });
+
+            if (!foundCurrent) {
+                currentStatus = "راحة";
+                currentSubject = "";
+            }
+
+            document.getElementById('current-status').innerText = currentStatus;
+            document.getElementById('current-subject').innerText = currentSubject;
+        }
+
+        // دالة تحديث العدادات الفردية بدقة
+        function updateIndividualCountdowns() {
+            const now = new Date();
+            const currentHours = now.getHours();
+            const currentMinutes = now.getMinutes();
+            const currentSeconds = now.getSeconds();
+            const currentTimeInMinutes = currentHours * 60 + currentMinutes;
+
+            document.querySelectorAll('#schedule-body tr').forEach(row => {
+                const taskId = row.getAttribute('data-id');
+                const startStr = row.getAttribute('data-start');
+                const endStr = row.getAttribute('data-end');
+                const timerElement = row.querySelector('.countdown-cell');
+                
+                if (startStr && endStr && timerElement) {
+                    const startMinutes = timeToMinutes(startStr);
+                    const endMinutes = timeToMinutes(endStr);
+                    
+                    // التعامل مع منتصف الليل
+                    let adjustedStart = startMinutes;
+                    let adjustedEnd = endMinutes;
+                    
+                    if (adjustedEnd < adjustedStart) {
+                        adjustedEnd += 1440;
+                    }
+                    
+                    let displayTime = "--:--:--";
+                    
+                    if (currentTimeInMinutes >= adjustedStart && currentTimeInMinutes < adjustedEnd) {
+                        // النشاط قيد التنفيذ - عرض الوقت المتبقي
+                        const remainingMinutes = adjustedEnd - currentTimeInMinutes;
+                        const remainingSeconds = (remainingMinutes * 60) - currentSeconds;
+                        
+                        if (remainingSeconds > 0) {
+                            const hours = Math.floor(remainingSeconds / 3600);
+                            const minutes = Math.floor((remainingSeconds % 3600) / 60);
+                            const seconds = remainingSeconds % 60;
+                            
+                            displayTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                        } else {
+                            displayTime = "00:00:00";
+                        }
+                    } else if (currentTimeInMinutes < adjustedStart) {
+                        // النشاط لم يبدأ بعد - عرض الوقت حتى البداية
+                        const minutesUntilStart = adjustedStart - currentTimeInMinutes;
+                        const secondsUntilStart = (minutesUntilStart * 60) - currentSeconds;
+                        
+                        if (secondsUntilStart > 0) {
+                            const hours = Math.floor(secondsUntilStart / 3600);
+                            const minutes = Math.floor((secondsUntilStart % 3600) / 60);
+                            const seconds = secondsUntilStart % 60;
+                            
+                            displayTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                        }
+                    }
+                    
+                    timerElement.innerText = displayTime;
+                }
+            });
+        }
+
+        // تحديث كل شيء
+        function updateAll() {
+            updateMainCountdown();
+            updateCurrentStatus();
+            updateIndividualCountdowns();
+        }
+
+        // تهيئة التطبيق
+        function initApp() {
+            loadCompletionStatus();
+            updateAll();
+            setInterval(updateAll, 1000);
+        }
+
+        // تشغيل التطبيق عند تحميل الصفحة
+        window.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
