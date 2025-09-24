@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إضافة منتجات - DEN PRO</title>
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #F7F9FB;
+            color: #102A43;
+        }
+        .primary-bg { background-color: #0B6E4F; }
+        .primary-text { color: #0B6E4F; }
+        .accent-bg { background-color: #FFC857; }
+        .accent-text { color: #FFC857; }
+        .success-bg { background-color: #2BB673; }
+        .error-bg { background-color: #E94F37; }
+        .card-shadow { box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-30">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+            <button onclick="history.back()" class="p-2 rounded-full hover:bg-gray-100">
+                <i data-feather="arrow-right"></i>
+            </button>
+            <h1 class="text-xl font-bold primary-text">إضافة منتجات</h1>
+            <div class="w-8"></div>
+        </div>
+    </header>
+
+    <div class="container mx-auto px-4 py-6">
+        <!-- Categories -->
+        <div class="mb-6">
+            <div class="flex space-x-2 space-x-reverse overflow-x-auto pb-2">
+                <button class="px-4 py-2 bg-primary-bg text-white rounded-full text-sm font-medium">فواكه</button>
+                <button class="px-4 py-2 bg-white rounded-full text-sm font-medium card-shadow">خضراوات</button>
+                <button class="px-4 py-2 bg-white rounded-full text-sm font-medium card-shadow">مواد غذائية</button>
+                <button class="px-4 py-2 bg-white rounded-full text-sm font-medium card-shadow">لحوم</button>
+                <button class="px-4 py-2 bg-white rounded-full text-sm font-medium card-shadow">أخرى</button>
+            </div>
+        </div>
+
+        <!-- Products List -->
+        <div class="space-y-3 mb-6">
+            <div class="bg-white rounded-lg p-4 card-shadow" data-aos="fade-up">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="font-medium">تفاح</span>
+                    <button class="p-1 rounded-full hover:bg-gray-100">
+                        <i data-feather="x" class="w-4 h-4"></i>
+                    </button>
+                </div>
+                <div class="flex items-center space-x-4 space-x-reverse">
+                    <div>
+                        <label class="block text-sm text-gray-600 mb-1">السعر</label>
+                        <input type="number" min="0" class="w-20 p-2 border border-gray-300 rounded text-center" value="15">
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-600 mb-1">الكمية</label>
+                        <input type="number" min="1" class="w-16 p-2 border border-gray-300 rounded text-center" value="2">
+                    </div>
+                    <div class="flex-1">
+                        <label class="block text-sm text-gray-600 mb-1">المجموع</label>
+                        <div class="p-2 bg-gray-100 rounded text-center font-medium">₪ 30.00</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg p-4 card-shadow" data-aos="fade-up">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="font-medium">موز</span>
+                    <button class="p-1 rounded-full hover:bg-gray-100">
+                        <i data-feather="x" class="w-4 h-4"></i>
+                    </button>
+                </div>
+                <div class="flex items-center space-x-4 space-x-reverse">
+                    <div>
+                        <label class="block text-sm text-gray-600 mb-1">السعر</label>
+                        <input type="number" min="0" class="w-20 p-2 border border-gray-300 rounded text-center" value="8">
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-600 mb-1">الكمية</label>
+                        <input type="number" min="1" class="w-16 p-2 border border-gray-300 rounded text-center" value="3">
+                    </div>
+                    <div class="flex-1">
+                        <label class="block text-sm text-gray-600 mb-1">المجموع</label>
+                        <div class="p-2 bg-gray-100 rounded text-center font-medium">₪ 24.00</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Manual Add Button -->
+        <button class="w-full py-4 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:border-primary hover:text-primary transition mb-6" data-aos="fade-up" onclick="window.location.href='manual-add.html'">
+            <div class="flex items-center justify-center space-x-2 space-x-reverse">
+                <i data-feather="plus" class="w-5 h-5"></i>
+                <span>إضافة منتج يدوي</span>
+            </div>
+        </button>
+
+        <!-- Total -->
+        <div class="bg-white rounded-lg p-4 card-shadow mb-6" data-aos="fade-up">
+            <div class="flex items-center justify-between">
+                <span class="font-bold text-lg">المجموع الكلي</span>
+                <span class="font-bold text-lg primary-text">₪ 54.00</span>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex space-x-3 space-x-reverse" data-aos="fade-up">
+            <button class="flex-1 py-3 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300 transition">إلغاء</button>
+            <button class="flex-1 py-3 primary-bg text-white rounded-lg font-medium hover:bg-opacity-90 transition">حفظ</button>
+        </div>
+    </div>
+
+    <!-- Manual Add Modal -->
+    <div id="manual-add-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl w-full max-w-md" data-aos="zoom-in">
+            <div class="p-6">
+                <h2 class="text-xl font-bold mb-4 primary-text">إضافة منتج يدوي</h2>
+                
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">اسم المنتج</label>
+                    <input type="text" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" placeholder="أدخل اسم المنتج">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div>
+                        <label class="block text-gray-700 mb-2">السعر</label>
+                        <input type="number" min="0" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" placeholder="0.00">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-2">الكمية</label>
+                        <input type="number" min="1" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" value="1">
+                    </div>
+                </div>
+
+                <div class="flex space-x-3 space-x-reverse">
+                    <button class="flex-1 py-3 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300 transition">إلغاء</button>
+                    <button class="flex-1 py-3 primary-bg text-white rounded-lg font-medium hover:bg-opacity-90 transition">إضافة</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize animations and icons
+        AOS.init({
+            duration: 600,
+            easing: 'ease-out-cubic'
+        });
+
+        // Show manual add modal
+        function showManualAdd() {
+            document.getElementById('manual-add-modal').classList.remove('hidden');
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('manual-add-modal').addEventListener('click', function(e) {
+            if(e.target === this) {
+                this.classList.add('hidden');
+            }
+        });
+
+        // Calculate totals dynamically
+        function calculateTotals() {
+            const priceInputs = document.querySelectorAll('input[type="number"]');
+            priceInputs.forEach(input => {
+                input.addEventListener('input', updateTotal);
+            });
+        }
+
+        function updateTotal() {
+            // This would calculate the total based on all items
+            // For demo purposes, we'll keep it static
+        }
+
+        // Initialize
+        calculateTotals();
+        feather.replace();
+    </script>
+</body>
+</html>

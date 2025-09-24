@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تفاصيل المستخدم - DEN PRO</title>
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #F7F9FB;
+            color: #102A43;
+        }
+        .primary-bg { background-color: #0B6E4F; }
+        .primary-text { color: #0B6E4F; }
+        .accent-bg { background-color: #FFC857; }
+        .accent-text { color: #FFC857; }
+        .success-bg { background-color: #2BB673; }
+        .error-bg { background-color: #E94F37; }
+        .card-shadow { box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-30">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+            <button onclick="history.back()" class="p-2 rounded-full hover:bg-gray-100">
+                <i data-feather="arrow-right"></i>
+            </button>
+            <h1 class="text-xl font-bold primary-text">تفاصيل المستخدم</h1>
+            <div class="flex items-center space-x-2 space-x-reverse">
+                <button class="p-2 rounded-full hover:bg-gray-100" onclick="window.location.href='edit-user.html'">
+                    <i data-feather="edit"></i>
+                </button>
+                <button class="p-2 rounded-full hover:bg-gray-100">
+                    <i data-feather="trash"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- User Info -->
+    <div class="container mx-auto px-4 py-6">
+        <div class="bg-white rounded-xl p-6 card-shadow" data-aos="fade-up" id="user-details">
+            <!-- User details will be dynamically populated -->
+        </div>
+    </div>
+
+    <!-- Add Products Modal -->
+    <div id="add-products-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl w-full max-w-md max-h-[90vh] overflow-hidden" data-aos="zoom-in">
+            <div class="p-6">
+                <h2 class="text-xl font-bold mb-4 primary-text">إضافة منتجات</h2>
+                
+                <!-- Categories -->
+                <div class="mb-6">
+                    <div class="flex space-x-2 space-x-reverse overflow-x-auto pb-2">
+                        <button class="px-4 py-2 bg-primary-bg text-white rounded-full text-sm font-medium">فواكه</button>
+                        <button class="px-4 py-2 bg-white rounded-full text-sm font-medium card-shadow">خضراوات</button>
+                        <button class="px-4 py-2 bg-white rounded-full text-sm font-medium card-shadow">مواد غذائية</button>
+                        <button class="px-4 py-2 bg-white rounded-full text-sm font-medium card-shadow">لحوم</button>
+                        <button class="px-4 py-2 bg-white rounded-full text-sm font-medium card-shadow">أخرى</button>
+                    </div>
+                </div>
+
+                <!-- Products List -->
+                <div class="space-y-3 mb-6">
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <span>تفاح</span>
+                        <div class="flex items-center space-x-2 space-x-reverse">
+                            <input type="number" min="0" class="w-16 p-1 border border-gray-300 rounded text-center" placeholder="السعر">
+                            <input type="number" min="1" value="1" class="w-12 p-1 border border-gray-300 rounded text-center">
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <span>موز</span>
+                        <div class="flex items-center space-x-2 space-x-reverse">
+                            <input type="number" min="0" class="w-16 p-1 border border-gray-300 rounded text-center" placeholder="السعر">
+                            <input type="number" min="1" value="1" class="w-12 p-1 border border-gray-300 rounded text-center">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Manual Add Button -->
+                <button class="w-full py-3 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:border-primary hover:text-primary transition mb-6">
+                    <div class="flex items-center justify-center space-x-2 space-x-reverse">
+                        <i data-feather="plus" class="w-5 h-5"></i>
+                        <span>إضافة يدوي</span>
+                    </div>
+                </button>
+
+                <div class="flex space-x-3 space-x-reverse">
+                    <button class="flex-1 py-3 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300 transition">إلغاء</button>
+                    <button class="flex-1 py-3 primary-bg text-white rounded-lg font-medium hover:bg-opacity-90 transition">التالي</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize animations and icons
+        AOS.init({
+            duration: 600,
+            easing: 'ease-out-cubic'
+        });
+
+        // Sample user data
+        const user = {
+            id: 1,
+            name: "مروه محمد محمد",
+            paymentMethod: "cash",
+            paymentTimeType: "salary",
+            customPaymentText: "",
+            delivered: true,
+            deliveries: [
+                {
+                    id: 1,
+                    totalAmount: 250.00,
+                    createdAt: new Date(),
+                    delivered: true,
+                    items: [
+                        { name: "تفاح", unitPrice: 15, qty: 2, total: 30 },
+                        { name: "موز", unitPrice: 8, qty: 3, total: 24 }
+                    ]
+                },
+                {
+                    id: 2,
+                    totalAmount: 180.50,
+                    createdAt: new Date(Date.now() - 86400000),
+                    delivered: false,
+                    items: [
+                        { name: "خبز", unitPrice: 5, qty: 2, total: 10 },
+                        { name: "جبن", unitPrice: 25, qty: 3, total: 75 }
+                    ]
+                }
+            ]
+        };
+
+        // Format time in 12-hour format
+        function formatTime(date) {
+            const hours = date.getHours();
+            const minutes = date.getMinutes();
+            const ampm = hours >= 12 ? 'م' : 'ص';
+            const formattedHours = hours % 12 || 12;
+            return `${formattedHours}:${minutes.toString().padStart(2, '0')} ${ampm}`;
+        }
+
+        // Format date relative to today
+        function formatDate(date) {
+            const today = new Date();
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+            
+            if (date.toDateString() === today.toDateString()) {
+                return "اليوم";
+            } else if (date.toDateString() === yesterday.toDateString()) {
+                return "أمس";
+            } else {
+                return date.toLocaleDateString('ar-EG');
+            }
+        }
+
+        // Render user details
+        function renderUserDetails() {
+            const userDetails = document.getElementById('user-details');
+            
+            userDetails.innerHTML = `
+                <div class="flex items-center space-x-4 space-x-reverse mb-6">
+                    <div class="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center">
+                        <i data-feather="user" class="w-8 h-8"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold">${user.name}</h2>
+                        <p class="text-gray-600">
+                            ${user.paymentMethod === 'cash' ? 'كاش' : 
+                              user.paymentMethod === 'electronic' ? 'إلكتروني' : 'ماستر'} · 
+                            ${user.paymentTimeType === 'salary' ? 'نزول راتب' : 
+                              user.paymentTimeType === 'month_start' ? 'بداية شهر' : user.customPaymentText}
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="flex space-x-3 space-x-reverse mb-6">
+                    <button class="flex-1 py-3 primary-bg text-white rounded-lg font-medium hover:bg-opacity-90 transition flex items-center justify-center space-x-2 space-x-reverse" onclick="window.location.href='add-products.html?userId=${user.id}'">
+                        <i data-feather="plus" class="w-5 h-5"></i>
+                        <span>إضافة منتجات</span>
+                    </button>
+                    <button class="flex-1 py-3 ${user.delivered ? 'bg-gray-200 text-gray-700' : 'success-bg text-white'} rounded-lg font-medium hover:opacity-90 transition flex items-center justify-center space-x-2 space-x-reverse" onclick="toggleDelivery()">
+                        <i data-feather="${user.delivered ? 'x' : 'check'}" class="w-5 h-5"></i>
+                        <span>${user.delivered ? 'إلغاء التوصيل' : 'تم التوصيل'}</span>
+                    </button>
+                </div>
+
+                <div class="border-t pt-4">
+                    <h3 class="font-bold mb-4">سجل العمليات</h3>
+                    <div class="space-y-3" id="deliveries-list">
+                        ${user.deliveries.map(delivery => `
+                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100 transition" onclick="window.location.href='delivery-details.html?id=${delivery.id}'">
+                                <div>
+                                    <p class="font-medium">₪ ${delivery.totalAmount.toFixed(2)}</p>
+                                    <p class="text-sm text-gray-600">${formatDate(new Date(delivery.createdAt))} ${formatTime(new Date(delivery.createdAt))}</p>
+                                </div>
+                                <div class="${delivery.delivered ? 'success-bg text-white' : 'bg-gray-200 text-gray-700'} px-3 py-1 rounded-full text-sm">
+                                    ${delivery.delivered ? 'تم' : 'قيد الانتظار'}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            
+            feather.replace();
+        }
+
+        // Toggle delivery status
+        function toggleDelivery() {
+            user.delivered = !user.delivered;
+            renderUserDetails();
+        }
+
+        // Show add products modal
+        function showAddProducts() {
+            document.getElementById('add-products-modal').classList.remove('hidden');
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('add-products-modal').addEventListener('click', function(e) {
+            if(e.target === this) {
+                this.classList.add('hidden');
+            }
+        });
+
+        // Initialize user details
+        renderUserDetails();
+        feather.replace();
+    </script>
+</body>
+</html>

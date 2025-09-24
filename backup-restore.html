@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>النسخ الاحتياطي - DEN PRO</title>
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #F7F9FB;
+            color: #102A43;
+        }
+        .primary-bg { background-color: #0B6E4F; }
+        .primary-text { color: #0B6E4F; }
+        .accent-bg { background-color: #FFC857; }
+        .accent-text { color: #FFC857; }
+        .success-bg { background-color: #2BB673; }
+        .error-bg { background-color: #E94F37; }
+        .card-shadow { box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-30">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+            <button onclick="history.back()" class="p-2 rounded-full hover:bg-gray-100">
+                <i data-feather="arrow-right"></i>
+            </button>
+            <h1 class="text-xl font-bold primary-text">النسخ الاحتياطي</h1>
+            <div class="w-8"></div>
+        </div>
+    </header>
+
+    <div class="container mx-auto px-4 py-6">
+        <!-- Export Section -->
+        <div class="bg-white rounded-xl p-6 card-shadow mb-6" data-aos="fade-up">
+            <h2 class="text-lg font-bold mb-4 primary-text">تصدير البيانات</h2>
+            
+            <div class="space-y-4">
+                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                    <div class="flex items-center space-x-3 space-x-reverse">
+                        <div class="w-10 h-10 bg-primary-bg rounded-full flex items-center justify-center">
+                            <i data-feather="download" class="text-white"></i>
+                        </div>
+                        <div>
+                            <p class="font-medium">تصدير كملف CSV</p>
+                            <p class="text-sm text-gray-600">مناسب للجداول والإكسل</p>
+                        </div>
+                    </div>
+                    <button class="p-2 rounded-full hover:bg-gray-200" onclick="exportCSV()">
+                        <i data-feather="chevron-left"></i>
+                    </button>
+                </div>
+
+                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                    <div class="flex items-center space-x-3 space-x-reverse">
+                        <div class="w-10 h-10 bg-primary-bg rounded-full flex items-center justify-center">
+                            <i data-feather="database" class="text-white"></i>
+                        </div>
+                        <div>
+                            <p class="font-medium">تصدير كملف JSON</p>
+                            <p class="text-sm text-gray-600">للاستخدام الفني والبرمجي</p>
+                        </div>
+                    </div>
+                    <button class="p-2 rounded-full hover:bg-gray-200" onclick="exportJSON()">
+                        <i data-feather="chevron-left"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Import Section -->
+        <div class="bg-white rounded-xl p-6 card-shadow mb-6" data-aos="fade-up">
+            <h2 class="text-lg font-bold mb-4 primary-text">استيراد البيانات</h2>
+            
+            <div class="space-y-4">
+                <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                    <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i data-feather="upload" class="text-gray-400"></i>
+                    </div>
+                    <p class="text-gray-600 mb-4">اسحب ملف CSV أو JSON هنا أو انقر للاختيار</p>
+                    <input type="file" accept=".csv,.json" class="hidden" id="file-input">
+                    <button class="py-2 px-4 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300 transition" onclick="document.getElementById('file-input').click()">
+                        اختيار ملف
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Backup Info -->
+        <div class="bg-white rounded-xl p-6 card-shadow" data-aos="fade-up">
+            <h2 class="text-lg font-bold mb-4 primary-text">معلومات النسخ الاحتياطي</h2>
+            
+            <div class="space-y-3 text-sm text-gray-600">
+                <p>• آخر نسخ احتياطي: لم يتم بعد</p>
+                <p>• عدد المستخدمين: 2</p>
+                <p>• عدد الفواتير: 4</p>
+                <p>• حجم البيانات: ≈ 5KB</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize animations and icons
+        AOS.init({
+            duration: 600,
+            easing: 'ease-out-cubic'
+        });
+
+        // Export functions
+        function exportCSV() {
+            alert('سيتم تحميل ملف CSV يحتوي على جميع البيانات');
+            // Simulate download
+            const link = document.createElement('a');
+            link.href = 'data:text/csv;charset=utf-8,test,csv,data';
+            link.download = 'den-pro-backup.csv';
+            link.click();
+        }
+
+        function exportJSON() {
+            alert('سيتم تحميل ملف JSON يحتوي على جميع البيانات');
+            // Simulate download
+            const link = document.createElement('a');
+            link.href = 'data:application/json;charset=utf-8,{"test":"json","data":true}';
+            link.download = 'den-pro-backup.json';
+            link.click();
+        }
+
+        // Handle file input
+        document.getElementById('file-input').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const fileName = file.name.toLowerCase();
+                if (fileName.endsWith('.csv') || fileName.endsWith('.json')) {
+                    alert(`سيتم استيراد البيانات من ${file.name}`);
+                    // Here would be the actual import logic
+                } else {
+                    alert('الرجاء اختيار ملف CSV أو JSON فقط');
+                }
+            }
+        });
+
+        feather.replace();
+    </script>
+</body>
+</html>
