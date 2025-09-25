@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الإعدادات - DEN PRO</title>
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #F7F9FB;
+            color: #102A43;
+        }
+        .primary-bg { background-color: #0B6E4F; }
+        .primary-text { color: #0B6E4F; }
+        .accent-bg { background-color: #FFC857; }
+        .accent-text { color: #FFC857; }
+        .success-bg { background-color: #2BB673; }
+        .error-bg { background-color: #E94F37; }
+        .card-shadow { box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); }
+        .error-text { color: #E94F37; }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-30">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+            <button id="back-btn" class="p-2 rounded-full hover:bg-gray-100">
+                <i data-feather="arrow-right"></i>
+            </button>
+            <h1 class="text-xl font-bold primary-text">الإعدادات</h1>
+            <div class="w-8"></div>
+        </div>
+    </header>
+
+    <div class="container mx-auto px-4 py-6">
+        <!-- Security Settings -->
+        <div class="bg-white rounded-xl p-6 card-shadow mb-6" data-aos="fade-up">
+            <h2 class="text-lg font-bold mb-4 primary-text">الأمان</h2>
+            
+            <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="font-medium">تغيير رمز الدخول</p>
+                        <p class="text-sm text-gray-600">تعديل رمز PIN الحالي</p>
+                    </div>
+                    <button id="change-pin-btn" class="p-2 rounded-full hover:bg-gray-100">
+                        <i data-feather="chevron-left"></i>
+                    </button>
+                </div>
+
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="font-medium">قفل التطبيق التلقائي</p>
+                        <p class="text-sm text-gray-600">بعد 5 دقائق من الخمول</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="auto-lock" class="sr-only peer" checked>
+                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:right-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-bg"></div>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Management -->
+        <div class="bg-white rounded-xl p-6 card-shadow mb-6" data-aos="fade-up">
+            <h2 class="text-lg font-bold mb-4 primary-text">إدارة البيانات</h2>
+            
+            <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="font-medium">تصدير البيانات</p>
+                        <p class="text-sm text-gray-600">حفظ نسخة CSV من السجلات</p>
+                    </div>
+                    <button id="export-data-btn" class="p-2 rounded-full hover:bg-gray-100">
+                        <i data-feather="chevron-left"></i>
+                    </button>
+                </div>
+
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="font-medium">استيراد البيانات</p>
+                        <p class="text-sm text-gray-600">تحميل بيانات من ملف CSV</p>
+                    </div>
+                    <button id="import-data-btn" class="p-2 rounded-full hover:bg-gray-100">
+                        <i data-feather="chevron-left"></i>
+                    </button>
+                </div>
+
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="font-medium">نسخ احتياطي محلي</p>
+                        <p class="text-sm text-gray-600">حفظ بياناتك على الجهاز</p>
+                    </div>
+                    <button id="backup-btn" class="p-2 rounded-full hover:bg-gray-100">
+                        <i data-feather="chevron-left"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notifications -->
+        <div class="bg-white rounded-xl p-6 card-shadow mb-6" data-aos="fade-up">
+            <h2 class="text-lg font-bold mb-4 primary-text">الإشعارات</h2>
+            
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="font-medium">تفعيل الإشعارات</p>
+                    <p class="text-sm text-gray-600">تذكير بمواعيد الدفع</p>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" id="notifications" class="sr-only peer" checked>
+                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:right-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-bg"></div>
+                </label>
+            </div>
+        </div>
+
+        <!-- Language -->
+        <div class="bg-white rounded-xl p-6 card-shadow mb-6" data-aos="fade-up">
+            <h2 class="text-lg font-bold mb-4 primary-text">اللغة</h2>
+            
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="font-medium">العربية</p>
+                    <p class="text-sm text-gray-600">اللغة الافتراضية</p>
+                </div>
+                <div class="success-bg text-white px-3 py-1 rounded-full text-sm">
+                    مفعلة
+                </div>
+            </div>
+        </div>
+
+        <!-- Dangerous Actions -->
+        <div class="bg-white rounded-xl p-6 card-shadow" data-aos="fade-up">
+            <h2 class="text-lg font-bold mb-4 error-text">إجراءات خطيرة</h2>
+            
+            <div class="space-y-4">
+                <button id="delete-data-btn" class="w-full text-left py-3 text-error-bg hover:bg-red-50 rounded-lg transition">
+                    <div class="flex items-center justify-between">
+                        <span class="font-medium">حذف جميع البيانات</span>
+                        <i data-feather="chevron-left"></i>
+                    </div>
+                </button>
+
+                <button id="reset-app-btn" class="w-full text-left py-3 text-error-bg hover:bg-red-50 rounded-lg transition">
+                    <div class="flex items-center justify-between">
+                        <span class="font-medium">إعادة تعيين التطبيق</span>
+                        <i data-feather="chevron-left"></i>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Change PIN Modal -->
+    <div id="change-pin-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl w-full max-w-md" data-aos="zoom-in">
+            <div class="p-6">
+                <h2 class="text-xl font-bold mb-4 primary-text">تغيير رمز الدخول</h2>
+                
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">الرمز الحالي</label>
+                    <input type="password" id="current-pin" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" maxlength="6" inputmode="numeric">
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">الرمز الجديد</label>
+                    <input type="password" id="new-pin" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" maxlength="6" inputmode="numeric">
+                </div>
+
+                <div class="mb-6">
+                    <label class="block text-gray-700 mb-2">تأكيد الرمز الجديد</label>
+                    <input type="password" id="confirm-new-pin" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" maxlength="6" inputmode="numeric">
+                </div>
+
+                <div class="flex space-x-3 space-x-reverse">
+                    <button id="cancel-change-pin" class="flex-1 py-3 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300 transition">إلغاء</button>
+                    <button id="confirm-change-pin" class="flex-1 py-3 primary-bg text-white rounded-lg font-medium hover:bg-opacity-90 transition">تغيير</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize animations and icons
+        AOS.init({
+            duration: 600,
+            easing: 'ease-out-cubic'
+        });
+
+        // Load settings from localStorage
+        function loadSettings() {
+            const autoLock = localStorage.getItem('autoLock') !== 'false';
+            const notifications = localStorage.getItem('notifications') !== 'false';
+            
+            document.getElementById('auto-lock').checked = autoLock;
+            document.getElementById('notifications').checked = notifications;
+        }
+
+        // Save settings to localStorage
+        function saveSettings() {
+            localStorage.setItem('autoLock', document.getElementById('auto-lock').checked);
+            localStorage.setItem('notifications', document.getElementById('notifications').checked);
+        }
+
+        // Change PIN functionality
+        document.getElementById('change-pin-btn').addEventListener('click', function() {
+            document.getElementById('change-pin-modal').classList.remove('hidden');
+        });
+
+        document.getElementById('cancel-change-pin').addEventListener('click', function() {
+            document.getElementById('change-pin-modal').classList.add('hidden');
+            // Clear inputs
+            document.getElementById('current-pin').value = '';
+            document.getElementById('new-pin').value = '';
+            document.getElementById('confirm-new-pin').value = '';
+        });
+
+        document.getElementById('confirm-change-pin').addEventListener('click', function() {
+            const currentPin = document.getElementById('current-pin').value;
+            const newPin = document.getElementById('new-pin').value;
+            const confirmNewPin = document.getElementById('confirm-new-pin').value;
+            const storedPin = localStorage.getItem('appPin');
+            
+            if (!storedPin) {
+                alert('لا يوجد رمز PIN محفوظ');
+                return;
+            }
+            
+            if (currentPin !== storedPin) {
+                alert('الرمز الحالي غير صحيح');
+                return;
+            }
+            
+            if (newPin.length < 4) {
+                alert('الرمز الجديد يجب أن يكون 4 أرقام على الأقل');
+                return;
+            }
+            
+            if (newPin !== confirmNewPin) {
+                alert('الرمزان الجديدين غير متطابقين');
+                return;
+            }
+            
+            localStorage.setItem('appPin', newPin);
+            alert('تم تغيير رمز الدخول بنجاح');
+            document.getElementById('change-pin-modal').classList.add('hidden');
+            // Clear inputs
+            document.getElementById('current-pin').value = '';
+            document.getElementById('new-pin').value = '';
+            document.getElementById('confirm-new-pin').value = '';
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('change-pin-modal').addEventListener('click', function(e) {
+            if(e.target === this) {
+                this.classList.add('hidden');
+                // Clear inputs
+                document.getElementById('current-pin').value = '';
+                document.getElementById('new-pin').value = '';
+                document.getElementById('confirm-new-pin').value = '';
+            }
+        });
+
+        // Auto lock toggle
+        document.getElementById('auto-lock').addEventListener('change', saveSettings);
+
+        // Notifications toggle
+        document.getElementById('notifications').addEventListener('change', saveSettings);
+
+        // Navigation buttons
+        document.getElementById('back-btn').addEventListener('click', function() {
+            history.back();
+        });
+
+        // Data management buttons
+        document.getElementById('export-data-btn').addEventListener('click', function() {
+            window.location.href = 'backup-restore.html';
+        });
+
+        document.getElementById('import-data-btn').addEventListener('click', function() {
+            window.location.href = 'backup-restore.html';
+        });
+
+        document.getElementById('backup-btn').addEventListener('click', function() {
+            window.location.href = 'backup-restore.html';
+        });
+
+        // Delete data button
+        document.getElementById('delete-data-btn').addEventListener('click', function() {
+            if (confirm('هل أنت متأكد من حذف جميع البيانات؟ لا يمكن التراجع عن هذا الإجراء.')) {
+                // Clear all localStorage data
+                localStorage.removeItem('users');
+                localStorage.removeItem('invoices');
+                localStorage.removeItem('products');
+                localStorage.removeItem('lastBackupDate');
+                localStorage.removeItem('appPin');
+                alert('تم حذف جميع البيانات');
+            }
+        });
+
+        // Reset app button
+        document.getElementById('reset-app-btn').addEventListener('click', function() {
+            if (confirm('هل أنت متأكد من إعادة تعيين التطبيق؟ سيتم حذف جميع البيانات والاعدادات.')) {
+                // Clear all localStorage data
+                localStorage.clear();
+                alert('تم إعادة تعيين التطبيق');
+                // Redirect to main page
+                window.location.href = 'index.html';
+            }
+        });
+
+        // Initialize feather icons
+        feather.replace();
+        
+        // Load settings on page load
+        loadSettings();
+    </script>
+</body>
+</html>
