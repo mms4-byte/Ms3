@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الإنكليزي - Six Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <style>
+        @font-face {
+            font-family: 'Tajawal';
+            src: url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap');
+        }
+        body {
+            font-family: 'Tajawal', sans-serif;
+        }
+        .verb-card {
+            transition: all 0.3s ease;
+            border-right: 4px solid #3b82f6;
+        }
+        .verb-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .hidden { display: none !important; }
+        .progress-ring-circle {
+            transition: stroke-dashoffset 0.3s;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-sm">
+        <div class="container mx-auto px-4 py-4 flex items-center">
+            <a href="index.html" class="text-blue-600">
+                <i data-feather="arrow-right" class="w-6 h-6"></i>
+            </a>
+            <h1 class="text-xl font-bold text-gray-800 mx-auto">الإنكليزي</h1>
+        </div>
+    </header>
+
+    <!-- Daily Phrase -->
+    <section class="container mx-auto px-4 mt-6">
+        <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl shadow-md p-6">
+            <h3 class="font-medium mb-1">العبارة اليومية</h3>
+            <p class="text-xl mb-2 font-medium">"Practice makes perfect"</p>
+            <p class="text-sm opacity-80">"الممارسة تؤدي إلى الإتقان"</p>
+        </div>
+    </section>
+
+    <!-- Main Buttons -->
+    <div class="container mx-auto px-4 mt-6 grid grid-cols-2 gap-4">
+        <button id="show-irregular-verbs" class="bg-white rounded-xl shadow-md p-4 flex flex-col items-center text-center">
+            <i data-feather="zap" class="w-8 h-8 text-blue-600 mb-2"></i>
+            <h3 class="font-medium">الأفعال الشاذة</h3>
+        </button>
+        <button id="show-vocabulary" class="bg-white rounded-xl shadow-md p-4 flex flex-col items-center text-center">
+            <i data-feather="book-open" class="w-8 h-8 text-blue-600 mb-2"></i>
+            <h3 class="font-medium">المفردات</h3>
+        </button>
+    </div>
+
+    <!-- Irregular Verbs Section -->
+    <section id="irregular-verbs-section" class="container mx-auto px-4 mt-8 hidden">
+        <h2 class="text-xl font-bold text-gray-800 mb-4">الأفعال الشاذة</h2>
+        
+        <div id="verb-display" class="bg-white rounded-xl shadow-md overflow-hidden mb-4">
+            <div class="p-4 grid grid-cols-4 gap-2 text-center bg-blue-50 text-blue-600 font-medium">
+                <p>V1</p>
+                <p>V2</p>
+                <p>V3</p>
+                <p>المعنى</p>
+            </div>
+            
+            <div class="p-4 grid grid-cols-4 gap-2 text-center">
+                <p id="current-v1">be</p>
+                <p id="current-v2">was/were</p>
+                <p id="current-v3">been</p>
+                <p id="current-meaning">يكون</p>
+            </div>
+        </div>
+
+        <div id="verb-quiz" class="bg-white rounded-xl shadow-md p-4 mb-4 hidden">
+            <h3 id="quiz-question" class="text-lg font-medium text-center mb-4">ما هو V2 للفعل be؟</h3>
+            <input type="text" id="quiz-answer" class="w-full p-2 border border-gray-300 rounded-md mb-4 text-center">
+            <button id="submit-verb-answer" class="w-full bg-blue-500 text-white py-2 rounded-md">إرسال</button>
+        </div>
+
+        <div id="verb-feedback" class="text-center mb-4 hidden">
+            <p id="feedback-text" class="text-green-500 font-medium"></p>
+        </div>
+
+        <div class="flex justify-center mb-4">
+            <button id="start-verb-quiz" class="bg-green-500 text-white py-2 px-6 rounded-md">اختبار</button>
+        </div>
+
+        <div id="verb-stats" class="bg-white rounded-xl shadow-md p-4 text-center">
+            <div class="flex justify-center mb-2">
+                <div class="relative w-32 h-32">
+                    <svg class="w-full h-full" viewBox="0 0 36 36">
+                        <path
+                            d="M18 2.0845
+                              a 15.9155 15.9155 0 0 1 0 31.831
+                              a 15.9155 15.9155 0 0 1 0 -31.831"
+                            fill="none"
+                            stroke="#eee"
+                            stroke-width="3"
+                        />
+                        <path
+                            id="verb-success-path"
+                            d="M18 2.0845
+                              a 15.9155 15.9155 0 0 1 0 31.831
+                              a 15.9155 15.9155 0 0 1 0 -31.831"
+                            fill="none"
+                            stroke="#4ade80"
+                            stroke-width="3"
+                            stroke-dasharray="0, 100"
+                            class="progress-ring-circle"
+                        />
+                    </svg>
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <span id="verb-success-rate-circle" class="text-xl font-bold text-gray-700">0%</span>
+                    </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4 mt-4">
+                <div class="bg-green-100 p-3 rounded-lg">
+                    <p class="text-green-800 font-medium">الصحيحة</p>
+                    <p id="correct-count" class="text-2xl font-bold text-green-600">0</p>
+                </div>
+                <div class="bg-red-100 p-3 rounded-lg">
+                    <p class="text-red-800 font-medium">الخاطئة</p>
+                    <p id="incorrect-count" class="text-2xl font-bold text-red-600">0</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Vocabulary Section -->
+    <section id="vocabulary-section" class="container mx-auto px-4 mt-8 hidden">
+        <h2 class="text-xl font-bold text-gray-800 mb-4">المفردات</h2>
+        
+        <div id="vocab-display" class="bg-white rounded-xl shadow-md overflow-hidden mb-4">
+            <div class="p-4 grid grid-cols-2 gap-2 text-center bg-blue-50 text-blue-600 font-medium">
+                <p>الكلمة</p>
+                <p>المعنى</p>
+            </div>
+            
+            <div class="p-4 grid grid-cols-2 gap-2 text-center">
+                <p id="current-word">accident</p>
+                <p id="current-word-meaning">حادث</p>
+            </div>
+        </div>
+
+        <div id="vocab-quiz" class="bg-white rounded-xl shadow-md p-4 mb-4 hidden">
+            <h3 id="vocab-question" class="text-lg font-medium text-center mb-4">ما معنى الكلمة accident بالعربية؟</h3>
+            <input type="text" id="vocab-answer" class="w-full p-2 border border-gray-300 rounded-md mb-4 text-center">
+            <button id="submit-vocab-answer" class="w-full bg-blue-500 text-white py-2 rounded-md">إرسال</button>
+        </div>
+
+        <div id="vocab-feedback" class="text-center mb-4 hidden">
+            <p id="vocab-feedback-text" class="text-green-500 font-medium"></p>
+        </div>
+
+        <div class="flex justify-center mb-4">
+            <button id="start-vocab-quiz" class="bg-green-500 text-white py-2 px-6 rounded-md">اختبار</button>
+        </div>
+
+        <div id="vocab-stats" class="bg-white rounded-xl shadow-md p-4 text-center">
+            <div class="flex justify-center mb-2">
+                <div class="relative w-32 h-32">
+                    <svg class="w-full h-full" viewBox="0 0 36 36">
+                        <path
+                            d="M18 2.0845
+                              a 15.9155 15.9155 0 0 1 0 31.831
+                              a 15.9155 15.9155 0 0 1 0 -31.831"
+                            fill="none"
+                            stroke="#eee"
+                            stroke-width="3"
+                        />
+                        <path
+                            id="vocab-success-path"
+                            d="M18 2.0845
+                              a 15.9155 15.9155 0 0 1 0 31.831
+                              a 15.9155 15.9155 0 0 1 0 -31.831"
+                            fill="none"
+                            stroke="#4ade80"
+                            stroke-width="3"
+                            stroke-dasharray="0, 100"
+                            class="progress-ring-circle"
+                        />
+                    </svg>
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <span id="vocab-success-rate-circle" class="text-xl font-bold text-gray-700">0%</span>
+                    </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4 mt-4">
+                <div class="bg-green-100 p-3 rounded-lg">
+                    <p class="text-green-800 font-medium">الصحيحة</p>
+                    <p id="vocab-correct-count" class="text-2xl font-bold text-green-600">0</p>
+                </div>
+                <div class="bg-red-100 p-3 rounded-lg">
+                    <p class="text-red-800 font-medium">الخاطئة</p>
+                    <p id="vocab-incorrect-count" class="text-2xl font-bold text-red-600">0</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        feather.replace();
+
+        // بيانات الأفعال الشاذة - 134 فعلًا
+        const verbs = [
+            { v1: "be", v2: "was/were", v3: "been", meaning: "يكون" },
+            { v1: "become", v2: "became", v3: "become", meaning: "يصبح" },
+            { v1: "begin", v2: "began", v3: "begun", meaning: "يبدأ" },
+            { v1: "bend", v2: "bent", v3: "bent", meaning: "ينحني" },
+            { v1: "bet", v2: "bet", v3: "bet", meaning: "يراهن" },
+            { v1: "bite", v2: "bit", v3: "bitten", meaning: "يعض" },
+            { v1: "bleed", v2: "bled", v3: "bled", meaning: "ينزف" },
+            { v1: "blow", v2: "blew", v3: "blown", meaning: "ينفخ" },
+            { v1: "break", v2: "broke", v3: "broken", meaning: "يكسر" },
+            { v1: "bring", v2: "brought", v3: "brought", meaning: "يجلب" },
+            { v1: "build", v2: "built", v3: "built", meaning: "يبني" },
+            { v1: "burn", v2: "burnt/burned", v3: "burnt/burned", meaning: "يحرق" },
+            { v1: "buy", v2: "bought", v3: "bought", meaning: "يشتري" },
+            { v1: "catch", v2: "caught", v3: "caught", meaning: "يمسك" },
+            { v1: "choose", v2: "chose", v3: "chosen", meaning: "يختار" },
+            { v1: "cling", v2: "clung", v3: "clung", meaning: "يتشبث" },
+            { v1: "come", v2: "came", v3: "come", meaning: "يأتي" },
+            { v1: "cost", v2: "cost", v3: "cost", meaning: "يكلف" },
+            { v1: "creep", v2: "crept", v3: "crept", meaning: "يزحف/يتسلل" },
+            { v1: "cut", v2: "cut", v3: "cut", meaning: "يقطع" },
+            { v1: "deal", v2: "dealt", v3: "dealt", meaning: "يتعامل" },
+            { v1: "dig", v2: "dug", v3: "dug", meaning: "يحفر" },
+            { v1: "do", v2: "did", v3: "done", meaning: "يفعل" },
+            { v1: "draw", v2: "drew", v3: "drawn", meaning: "يرسم" },
+            { v1: "dream", v2: "dreamt/dreamed", v3: "dreamt/dreamed", meaning: "يحلم" },
+            { v1: "drink", v2: "drank", v3: "drunk", meaning: "يشرب" },
+            { v1: "drive", v2: "drove", v3: "driven", meaning: "يقود" },
+            { v1: "eat", v2: "ate", v3: "eaten", meaning: "يأكل" },
+            { v1: "fall", v2: "fell", v3: "fallen", meaning: "يسقط" },
+            { v1: "feed", v2: "fed", v3: "fed", meaning: "يطعم" },
+            { v1: "feel", v2: "felt", v3: "felt", meaning: "يشعر" },
+            { v1: "fight", v2: "fought", v3: "fought", meaning: "يقاتل" },
+            { v1: "find", v2: "found", v3: "found", meaning: "يجد" },
+            { v1: "fit", v2: "fit/fitted", v3: "fit/fitted", meaning: "يلائم" },
+            { v1: "flee", v2: "fled", v3: "fled", meaning: "يهرب" },
+            { v1: "fling", v2: "flung", v3: "flung", meaning: "يقذف" },
+            { v1: "fly", v2: "flew", v3: "flown", meaning: "يطير" },
+            { v1: "forbid", v2: "forbade", v3: "forbidden", meaning: "يمنع" },
+            { v1: "forget", v2: "forgot", v3: "forgotten", meaning: "ينسى" },
+            { v1: "forgive", v2: "forgave", v3: "forgiven", meaning: "يغفر" },
+            { v1: "freeze", v2: "froze", v3: "frozen", meaning: "يتجمد" },
+            { v1: "get", v2: "got", v3: "got", meaning: "يحصل على" },
+            { v1: "give", v2: "gave", v3: "given", meaning: "يعطي" },
+            { v1: "go", v2: "went", v3: "gone", meaning: "يذهب" },
+            { v1: "grow", v2: "grew", v3: "grown", meaning: "ينمو" },
+            { v1: "hang", v2: "hung", v3: "hung", meaning: "يعلق" },
+            { v1: "have", v2: "had", v3: "had", meaning: "يملك / لديه" },
+            { v1: "hear", v2: "heard", v3: "heard", meaning: "يسمع" },
+            { v1: "hide", v2: "hid", v3: "hidden", meaning: "يختبيء" },
+            { v1: "hit", v2: "hit", v3: "hit", meaning: "يضرب" },
+            { v1: "hold", v2: "held", v3: "held", meaning: "يمسك" },
+            { v1: "hurt", v2: "hurt", v3: "hurt", meaning: "يجرح / يؤذي" },
+            { v1: "keep", v2: "kept", v3: "kept", meaning: "يحتفظ" },
+            { v1: "kneel", v2: "knelt", v3: "knelt", meaning: "يركع" },
+            { v1: "know", v2: "knew", v3: "known", meaning: "يعرف" },
+            { v1: "lay", v2: "laid", v3: "laid", meaning: "يضع" },
+            { v1: "lead", v2: "led", v3: "led", meaning: "يقود" },
+            { v1: "lean", v2: "leant/leaned", v3: "leant/leaned", meaning: "يميل" },
+            { v1: "leap", v2: "leapt/leaped", v3: "leapt/leaped", meaning: "يقفز" },
+            { v1: "leave", v2: "left", v3: "left", meaning: "يغادر / يترك" },
+            { v1: "lend", v2: "lent", v3: "lent", meaning: "يقرض" },
+            { v1: "let", v2: "let", v3: "let", meaning: "يسمح / يترك" },
+            { v1: "lie", v2: "lay", v3: "lain", meaning: "يستلقي" },
+            { v1: "light", v2: "lit", v3: "lit", meaning: "يضيء" },
+            { v1: "lose", v2: "lost", v3: "lost", meaning: "يفقد" },
+            { v1: "make", v2: "made", v3: "made", meaning: "يصنع / يجعل" },
+            { v1: "mean", v2: "meant", v3: "meant", meaning: "يعني" },
+            { v1: "meet", v2: "met", v3: "met", meaning: "يلتقي" },
+            { v1: "overcome", v2: "overcame", v3: "overcome", meaning: "يتغلب على" },
+            { v1: "pay", v2: "paid", v3: "paid", meaning: "يدفع" },
+            { v1: "put", v2: "put", v3: "put", meaning: "يضع" },
+            { v1: "quit", v2: "quit", v3: "quit", meaning: "يترك / يستقيل" },
+            { v1: "read", v2: "read", v3: "read", meaning: "يقرأ" },
+            { v1: "ride", v2: "rode", v3: "ridden", meaning: "يركب" },
+            { v1: "ring", v2: "rang", v3: "rung", meaning: "يرن / يتصل" },
+            { v1: "rise", v2: "rose", v3: "risen", meaning: "ينهض / يرتفع" },
+            { v1: "run", v2: "ran", v3: "run", meaning: "يركض" },
+            { v1: "say", v2: "said", v3: "said", meaning: "يقول" },
+            { v1: "see", v2: "saw", v3: "seen", meaning: "يرى" },
+            { v1: "sell", v2: "sold", v3: "sold", meaning: "يبيع" },
+            { v1: "send", v2: "sent", v3: "sent", meaning: "يرسل" },
+            { v1: "set", v2: "set", v3: "set", meaning: "يضع / يثبت" },
+            { v1: "sew", v2: "sewed", v3: "sewn/sewed", meaning: "يخيط" },
+            { v1: "shake", v2: "shook", v3: "shaken", meaning: "يهز" },
+            { v1: "shed", v2: "shed", v3: "shed", meaning: "يذرف / يطرح" },
+            { v1: "shine", v2: "shone", v3: "shone", meaning: "يلمع" },
+            { v1: "shoot", v2: "shot", v3: "shot", meaning: "يطلق / يقتل (بطلقة)" },
+            { v1: "show", v2: "showed", v3: "shown", meaning: "يظهر / يعرض" },
+            { v1: "shrink", v2: "shrank", v3: "shrunk", meaning: "ينكمش" },
+            { v1: "shut", v2: "shut", v3: "shut", meaning: "يغلق" },
+            { v1: "sing", v2: "sang", v3: "sung", meaning: "يغني" },
+            { v1: "sink", v2: "sank", v3: "sunk", meaning: "يغرق" },
+            { v1: "sit", v2: "sat", v3: "sat", meaning: "يجلس" },
+            { v1: "sleep", v2: "slept", v3: "slept", meaning: "ينام" },
+            { v1: "slide", v2: "slid", v3: "slid", meaning: "ينزلق" },
+            { v1: "sling", v2: "slung", v3: "slung", meaning: "يرمي / يلقي بقوة" },
+            { v1: "smell", v2: "smelt/smelled", v3: "smelt/smelled", meaning: "يشم / يصدر رائحة" },
+            { v1: "speak", v2: "spoke", v3: "spoken", meaning: "يتحدث" },
+            { v1: "speed", v2: "sped/speeded", v3: "sped/speeded", meaning: "يسرع" },
+            { v1: "spend", v2: "spent", v3: "spent", meaning: "ينفق / يقضي وقتًا" },
+            { v1: "spin", v2: "spun", v3: "spun", meaning: "يدور / يدور شيئًا" },
+            { v1: "spit", v2: "spat/spit", v3: "spat/spit", meaning: "يبصق" },
+            { v1: "split", v2: "split", v3: "split", meaning: "يقسم / ينقسم" },
+            { v1: "spoil", v2: "spoilt/spoiled", v3: "spoilt/spoiled", meaning: "يفسد" },
+            { v1: "spread", v2: "spread", v3: "spread", meaning: "ينشر / يفرد" },
+            { v1: "spring", v2: "sprang", v3: "sprung", meaning: "يقفز / ينطلق" },
+            { v1: "stand", v2: "stood", v3: "stood", meaning: "يقف" },
+            { v1: "steal", v2: "stole", v3: "stolen", meaning: "يسرق" },
+            { v1: "stick", v2: "stuck", v3: "stuck", meaning: "يلتصق" },
+            { v1: "sting", v2: "stung", v3: "stung", meaning: "يلدغ / يلسع" },
+            { v1: "stink", v2: "stank", v3: "stunk", meaning: "ينبعث منه رائحة كريهة" },
+            { v1: "strike", v2: "struck", v3: "struck", meaning: "يضرب / يضرب إضرابًا" },
+            { v1: "string", v2: "strung", v3: "strung", meaning: "يربط / ينسج خيطًا" },
+            { v1: "strive", v2: "strove", v3: "striven", meaning: "يسعى / يجتهد" },
+            { v1: "swear", v2: "swore", v3: "sworn", meaning: "يقسم / يشتم أحيانًا" },
+            { v1: "sweep", v2: "swept", v3: "swept", meaning: "يكنس" },
+            { v1: "swell", v2: "swelled", v3: "swollen/swelled", meaning: "ينتفخ" },
+            { v1: "swim", v2: "swam", v3: "swum", meaning: "يسبح" },
+            { v1: "swing", v2: "swung", v3: "swung", meaning: "يتأرجح" },
+            { v1: "take", v2: "took", v3: "taken", meaning: "يأخذ" },
+            { v1: "teach", v2: "taught", v3: "taught", meaning: "يعلّم" },
+            { v1: "tear", v2: "tore", v3: "torn", meaning: "يمزق" },
+            { v1: "tell", v2: "told", v3: "told", meaning: "يخبر" },
+            { v1: "think", v2: "thought", v3: "thought", meaning: "يفكر" },
+            { v1: "throw", v2: "threw", v3: "thrown", meaning: "يرمي" },
+            { v1: "understand", v2: "understood", v3: "understood", meaning: "يفهم" },
+            { v1: "wake", v2: "woke", v3: "woken", meaning: "يستيقظ" },
+            { v1: "wear", v2: "wore", v3: "worn", meaning: "يرتدي" },
+            { v1: "weave", v2: "wove", v3: "woven", meaning: "ينسج" },
+            { v1: "weep", v2: "wept", v3: "wept", meaning: "يبكي" },
+            { v1: "win", v2: "won", v3: "won", meaning: "يفوز" },
+            { v1: "wind", v2: "wound", v3: "wound", meaning: "يلف / يلوّي" },
+            { v1: "withdraw", v2: "withdrew", v3: "withdrawn", meaning: "يسحب" },
+            { v1: "write", v2: "wrote", v3: "written", meaning: "يكتب" }
+        ];
+
+        // بيانات المفردات - 90 كلمة
+        const vocabulary = [
+            { word: "accident", meaning: "حادث" },
+            { word: "head", meaning: "رأس" },
+            { word: "awful", meaning: "مروّع / سيّئ جدًا" },
+            { word: "swimming", meaning: "السباحة" },
+            { word: "back", meaning: "ظهر / خلف" },
+            { word: "house", meaning: "منزل" },
+            { word: "sports", meaning: "رياضات" },
+            { word: "bang", meaning: "دوي / انفجار" },
+            { word: "flowers", meaning: "أزهار" },
+            { word: "beach", meaning: "شاطئ" },
+            { word: "call", meaning: "ينادي / يتصل" },
+            { word: "friend", meaning: "صديق" },
+            { word: "crash", meaning: "تحطم / اصطدام" },
+            { word: "hospital", meaning: "مستشفى" },
+            { word: "exciting", meaning: "مثير" },
+            { word: "fall", meaning: "يسقط / خريف" },
+            { word: "thank", meaning: "يشكر" },
+            { word: "high", meaning: "مرتفع" },
+            { word: "miss", meaning: "يفتقد" },
+            { word: "goodness", meaning: "طيبة / صلاح" },
+            { word: "sad", meaning: "حزين" },
+            { word: "stairs", meaning: "سلالم" },
+            { word: "need", meaning: "يحتاج" },
+            { word: "great", meaning: "عظيم" },
+            { word: "noise", meaning: "ضوضاء" },
+            { word: "summer", meaning: "صيف" },
+            { word: "time", meaning: "وقت" },
+            { word: "fast", meaning: "سريع" },
+            { word: "camp", meaning: "مخيم" },
+            { word: "fun", meaning: "مرح" },
+            { word: "feel", meaning: "يشعر" },
+            { word: "tired", meaning: "متعب" },
+            { word: "holiday", meaning: "عطلة" },
+            { word: "enjoy", meaning: "يستمتع" },
+            { word: "nice", meaning: "جميل" },
+            { word: "hurt", meaning: "يؤذي" },
+            { word: "glass", meaning: "زجاج / كأس" },
+            { word: "arm", meaning: "ذراع" },
+            { word: "driver", meaning: "سائق" },
+            { word: "English", meaning: "الإنجليزية" },
+            { word: "verb", meaning: "فعل" },
+            { word: "regular", meaning: "منتظم" },
+            { word: "irregular", meaning: "شاذ" },
+            { word: "past", meaning: "الماضي" },
+            { word: "story", meaning: "قصة" },
+            { word: "healthy", meaning: "صحي" },
+            { word: "food", meaning: "طعام" },
+            { word: "always", meaning: "دائمًا" },
+            { word: "sometimes", meaning: "أحيانًا" },
+            { word: "chocolate", meaning: "شوكولاتة" },
+            { word: "meat", meaning: "لحم" },
+            { word: "vegetables", meaning: "خضروات" },
+            { word: "soup", meaning: "حساء" },
+            { word: "bread", meaning: "خبز" },
+            { word: "chicken", meaning: "دجاج" },
+            { word: "milk", meaning: "حليب" },
+            { word: "strong", meaning: "قوي" },
+            { word: "fish", meaning: "سمك" },
+            { word: "sweet", meaning: "حلو" },
+            { word: "pyramid", meaning: "هرم" },
+            { word: "school", meaning: "مدرسة" },
+            { word: "family", meaning: "عائلة" },
+            { word: "sister", meaning: "أخت" },
+            { word: "farm", meaning: "مزرعة" },
+            { word: "river", meaning: "نهر" },
+            { word: "horse", meaning: "حصان" },
+            { word: "bird", meaning: "طائر" },
+            { word: "beautiful", meaning: "جميل" },
+            { word: "party", meaning: "حفلة" },
+            { word: "team", meaning: "فريق" },
+            { word: "share", meaning: "يشارك" },
+            { word: "invite", meaning: "يدعو" },
+            { word: "borrow", meaning: "يستعير" },
+            { word: "understand", meaning: "يفهم" },
+            { word: "know", meaning: "يعرف" },
+            { word: "give", meaning: "يعطي" },
+            { word: "come", meaning: "يأتي" },
+            { word: "analyze", meaning: "يحلّل" },
+            { word: "effect", meaning: "تأثير" },
+            { word: "solution", meaning: "حل" },
+            { word: "experiment", meaning: "تجربة" },
+            { word: "variable", meaning: "متغيّر" },
+            { word: "process", meaning: "عملية" },
+            { word: "measure", meaning: "يقيس" },
+            { word: "research", meaning: "بحث" },
+            { word: "observe", meaning: "يلاحظ" },
+            { word: "depend", meaning: "يعتمد" },
+            { word: "provide", meaning: "يوفّر" },
+            { word: "increase", meaning: "يزيد" },
+            { word: "decrease", meaning: "يقلّل" },
+            { word: "transport", meaning: "نقل" },
+            { word: "technology", meaning: "تقنية" },
+            { word: "environment", meaning: "بيئة" },
+            { word: "pollution", meaning: "تلوث" },
+            { word: "natural", meaning: "طبيعي" },
+            { word: "resource", meaning: "مورد" },
+            { word: "species", meaning: "نوع / فصيلة" },
+            { word: "energy", meaning: "طاقة" },
+            { word: "ecosystem", meaning: "نظام بيئي" },
+            { word: "society", meaning: "مجتمع" },
+            { word: "culture", meaning: "ثقافة" },
+            { word: "affect", meaning: "يؤثر" },
+            { word: "cause", meaning: "سبب" },
+            { word: "factor", meaning: "عامل" },
+            { word: "specific", meaning: "محدّد" },
+            { word: "usual", meaning: "معتاد" },
+            { word: "suggest", meaning: "يقترح" },
+            { word: "develop", meaning: "يطور" },
+            { word: "represent", meaning: "يمثّل" },
+            { word: "method", meaning: "طريقة" },
+            { word: "pattern", meaning: "نمط" },
+            { word: "compare", meaning: "يقارن" },
+            { word: "difference", meaning: "فرق" },
+            { word: "similar", meaning: "مشابه" },
+            { word: "benefit", meaning: "فائدة" },
+            { word: "issue", meaning: "قضية / مسألة" },
+            { word: "problem", meaning: "مشكلة" },
+            { word: "quality", meaning: "جودة" },
+            { word: "quantity", meaning: "كمية" }
+        ];
+
+        // التحفيزات
+        const encouragements = ["عااش", "بطل", "واو", "استمر", "رائع", "ذيب"];
+
+        // متغيرات الأفعال الشاذة
+        let currentVerbIndex = 0;
+        let verbQuestionsAnswered = 0;
+        let verbCorrect = 0;
+        let verbIncorrect = 0;
+        let currentVerbQuestion = null;
+
+        // متغيرات المفردات
+        let currentVocabIndex = 0;
+        let vocabQuestionsAnswered = 0;
+        let vocabCorrect = 0;
+        let vocabIncorrect = 0;
+        let currentVocabQuestion = null;
+
+        // عناصر DOM
+        const showIrregularVerbsBtn = document.getElementById('show-irregular-verbs');
+        const showVocabularyBtn = document.getElementById('show-vocabulary');
+        const irregularVerbsSection = document.getElementById('irregular-verbs-section');
+        const vocabularySection = document.getElementById('vocabulary-section');
+        const startVerbQuizBtn = document.getElementById('start-verb-quiz');
+        const startVocabQuizBtn = document.getElementById('start-vocab-quiz');
+
+        // وظائف الأفعال الشاذة
+        function showVerb() {
+            const verb = verbs[currentVerbIndex];
+            document.getElementById('current-v1').textContent = verb.v1;
+            document.getElementById('current-v2').textContent = verb.v2;
+            document.getElementById('current-v3').textContent = verb.v3;
+            document.getElementById('current-meaning').textContent = verb.meaning;
+        }
+
+        function startVerbQuiz() {
+            document.getElementById('verb-display').classList.add('hidden');
+            document.getElementById('verb-quiz').classList.remove('hidden');
+            document.getElementById('verb-feedback').classList.add('hidden');
+            startVerbQuizBtn.classList.add('hidden');
+            
+            // اختيار سؤال عشوائي
+            const questions = [
+                { type: 'v2', text: `ما هو V2 للفعل ${verbs[currentVerbIndex].v1}؟` },
+                { type: 'v3', text: `ما هو V3 للفعل ${verbs[currentVerbIndex].v1}؟` },
+                { type: 'meaning', text: `ما معنى الفعل ${verbs[currentVerbIndex].v1}؟` }
+            ];
+            
+            const randomIndex = Math.floor(Math.random() * questions.length);
+            currentVerbQuestion = questions[randomIndex];
+            document.getElementById('quiz-question').textContent = currentVerbQuestion.text;
+            document.getElementById('quiz-answer').value = '';
+        }
+
+        function checkVerbAnswer() {
+            const userAnswer = document.getElementById('quiz-answer').value.trim().toLowerCase();
+            const correctAnswer = getCorrectVerbAnswer(currentVerbQuestion.type).toLowerCase();
+            
+            if (userAnswer === correctAnswer) {
+                verbCorrect++;
+                showVerbFeedback(true);
+            } else {
+                verbIncorrect++;
+                showVerbFeedback(false);
+            }
+            
+            verbQuestionsAnswered++;
+            updateVerbStats();
+            
+            if (verbQuestionsAnswered >= 2) {
+                // الانتقال إلى الفعل التالي
+                setTimeout(() => {
+                    currentVerbIndex = (currentVerbIndex + 1) % verbs.length;
+                    verbQuestionsAnswered = 0;
+                    showVerb();
+                    document.getElementById('verb-quiz').classList.add('hidden');
+                    document.getElementById('verb-display').classList.remove('hidden');
+                    startVerbQuizBtn.classList.remove('hidden');
+                }, 1500);
+            } else {
+                // طرح سؤال ثاني
+                setTimeout(() => {
+                    startVerbQuiz();
+                }, 1500);
+            }
+        }
+
+        function getCorrectVerbAnswer(type) {
+            const verb = verbs[currentVerbIndex];
+            switch(type) {
+                case 'v2': return verb.v2;
+                case 'v3': return verb.v3;
+                case 'meaning': return verb.meaning;
+                default: return '';
+            }
+        }
+
+        function showVerbFeedback(isCorrect) {
+            const feedbackElement = document.getElementById('verb-feedback');
+            const feedbackTextElement = document.getElementById('feedback-text');
+            
+            if (isCorrect) {
+                const randomEncouragement = encouragements[Math.floor(Math.random() * encouragements.length)];
+                feedbackTextElement.textContent = randomEncouragement;
+                feedbackTextElement.className = 'text-green-500 font-medium';
+            } else {
+                feedbackTextElement.textContent = 'إجابة خاطئة، حاول مرة أخرى!';
+                feedbackTextElement.className = 'text-red-500 font-medium';
+            }
+            
+            feedbackElement.classList.remove('hidden');
+        }
+
+        function updateVerbStats() {
+            document.getElementById('correct-count').textContent = verbCorrect;
+            document.getElementById('incorrect-count').textContent = verbIncorrect;
+            const total = verbCorrect + verbIncorrect;
+            const rate = total > 0 ? Math.round((verbCorrect / total) * 100) : 0;
+            document.getElementById('verb-success-rate-circle').textContent = `${rate}%`;
+            
+            // تحديث الدائرة
+            const circle = document.getElementById('verb-success-path');
+            circle.style.strokeDasharray = `${rate}, 100`;
+        }
+
+        // وظائف المفردات
+        function showVocab() {
+            const word = vocabulary[currentVocabIndex];
+            document.getElementById('current-word').textContent = word.word;
+            document.getElementById('current-word-meaning').textContent = word.meaning;
+        }
+
+        function startVocabQuiz() {
+            document.getElementById('vocab-display').classList.add('hidden');
+            document.getElementById('vocab-quiz').classList.remove('hidden');
+            document.getElementById('vocab-feedback').classList.add('hidden');
+            startVocabQuizBtn.classList.add('hidden');
+            
+            // اختيار سؤال عشوائي
+            const questions = [
+                { type: 'english', text: `ما معنى الكلمة ${vocabulary[currentVocabIndex].word} بالإنجليزية؟` },
+                { type: 'arabic', text: `ما معنى الكلمة ${vocabulary[currentVocabIndex].word} بالعربية؟` }
+            ];
+            
+            const randomIndex = Math.floor(Math.random() * questions.length);
+            currentVocabQuestion = questions[randomIndex];
+            document.getElementById('vocab-question').textContent = currentVocabQuestion.text;
+            document.getElementById('vocab-answer').value = '';
+        }
+
+        function checkVocabAnswer() {
+            const userAnswer = document.getElementById('vocab-answer').value.trim();
+            const correctAnswer = getCorrectVocabAnswer(currentVocabQuestion.type);
+            
+            // مقارنة غير حساسة لحالة الأحرف والمسافات
+            if (userAnswer.toLowerCase().trim() === correctAnswer.toLowerCase().trim()) {
+                vocabCorrect++;
+                showVocabFeedback(true);
+            } else {
+                vocabIncorrect++;
+                showVocabFeedback(false);
+            }
+            
+            vocabQuestionsAnswered++;
+            updateVocabStats();
+            
+            if (vocabQuestionsAnswered >= 2) {
+                // الانتقال إلى الكلمة التالية
+                setTimeout(() => {
+                    currentVocabIndex = (currentVocabIndex + 1) % vocabulary.length;
+                    vocabQuestionsAnswered = 0;
+                    showVocab();
+                    document.getElementById('vocab-quiz').classList.add('hidden');
+                    document.getElementById('vocab-display').classList.remove('hidden');
+                    startVocabQuizBtn.classList.remove('hidden');
+                }, 1500);
+            } else {
+                // طرح سؤال ثاني
+                setTimeout(() => {
+                    startVocabQuiz();
+                }, 1500);
+            }
+        }
+
+        function getCorrectVocabAnswer(type) {
+            const word = vocabulary[currentVocabIndex];
+            switch(type) {
+                case 'english': return word.word;
+                case 'arabic': return word.meaning;
+                default: return '';
+            }
+        }
+
+        function showVocabFeedback(isCorrect) {
+            const feedbackElement = document.getElementById('vocab-feedback');
+            const feedbackTextElement = document.getElementById('vocab-feedback-text');
+            
+            if (isCorrect) {
+                const randomEncouragement = encouragements[Math.floor(Math.random() * encouragements.length)];
+                feedbackTextElement.textContent = randomEncouragement;
+                feedbackTextElement.className = 'text-green-500 font-medium';
+            } else {
+                feedbackTextElement.textContent = 'إجابة خاطئة، حاول مرة أخرى!';
+                feedbackTextElement.className = 'text-red-500 font-medium';
+            }
+            
+            feedbackElement.classList.remove('hidden');
+        }
+
+        function updateVocabStats() {
+            document.getElementById('vocab-correct-count').textContent = vocabCorrect;
+            document.getElementById('vocab-incorrect-count').textContent = vocabIncorrect;
+            const total = vocabCorrect + vocabIncorrect;
+            const rate = total > 0 ? Math.round((vocabCorrect / total) * 100) : 0;
+            document.getElementById('vocab-success-rate-circle').textContent = `${rate}%`;
+            
+            // تحديث الدائرة
+            const circle = document.getElementById('vocab-success-path');
+            circle.style.strokeDasharray = `${rate}, 100`;
+        }
+
+        // معالجات الأحداث
+        showIrregularVerbsBtn.addEventListener('click', () => {
+            vocabularySection.classList.add('hidden');
+            irregularVerbsSection.classList.remove('hidden');
+            showVerb();
+            startVerbQuizBtn.classList.remove('hidden');
+        });
+
+        showVocabularyBtn.addEventListener('click', () => {
+            irregularVerbsSection.classList.add('hidden');
+            vocabularySection.classList.remove('hidden');
+            showVocab();
+            startVocabQuizBtn.classList.remove('hidden');
+        });
+
+        startVerbQuizBtn.addEventListener('click', startVerbQuiz);
+        startVocabQuizBtn.addEventListener('click', startVocabQuiz);
+
+        document.getElementById('submit-verb-answer').addEventListener('click', checkVerbAnswer);
+        document.getElementById('submit-vocab-answer').addEventListener('click', checkVocabAnswer);
+
+        // عرض أول فعل وكلمة عند التحميل
+        showVerb();
+        showVocab();
+    </script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الاحصائيات - Six Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <style>
+        @font-face {
+            font-family: 'Tajawal';
+            src: url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap');
+        }
+        body {
+            font-family: 'Tajawal', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .dark body {
+            background-color: #111827;
+            color: white;
+        }
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background-color: white;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 40;
+        }
+        .dark .bottom-nav {
+            background-color: #1f2937;
+            color: white;
+        }
+        .bottom-nav a {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #6b7280;
+            text-decoration: none;
+            font-size: 0.75rem;
+            transition: color 0.2s;
+        }
+        .dark .bottom-nav a {
+            color: #9ca3af;
+        }
+        .bottom-nav a.active, .bottom-nav a:hover {
+            color: #1e3a8a;
+        }
+        .dark .bottom-nav a.active, .dark .bottom-nav a:hover {
+            color: #93c5fd;
+        }
+        .bottom-nav i {
+            margin-bottom: 0.25rem;
+            width: 24px;
+            height: 24px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900">
+    <main class="container mx-auto px-4 py-8">
+        <h1 class="text-2xl font-bold text-center mb-6 text-gray-800 dark:text-white">الاحصائيات</h1>
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-4">
+            <p class="text-gray-600 dark:text-gray-300">هنا محتوى صفحة العدادات.</p>
+            <div class="mt-4">
+                <p class="text-sm text-gray-500 dark:text-gray-400">مثلاً:</p>
+                <ul class="mt-2 space-y-2">
+                    <li class="flex justify-between">
+                        <span>عدد المهام المكتملة:</span>
+                        <span class="font-bold">12</span>
+                    </li>
+                    <li class="flex justify-between">
+                        <span>الوقت الاجمالي للدراسة:</span>
+                        <span class="font-bold">15 ساعة</span>
+                    </li>
+                    <li class="flex justify-between">
+                        <span>الاحصائيات الشهرية:</span>
+                        <span class="font-bold">عرض الرسم البياني</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="index.html">
+            <i data-feather="home"></i>
+            <span class="font-medium">الرئيسيه</span>
+        </a>
+        <a href="adadat.html" class="active">
+            <i data-feather="bar-chart-2"></i>
+            <span class="font-medium">الاحصائيات</span>
+        </a>
+        <a href="profile.html">
+            <i data-feather="user"></i>
+            <span class="font-medium">ملف شخصي</span>
+        </a>
+        <a href="settings.html">
+            <i data-feather="settings"></i>
+            <span class="font-medium">الاعدادات</span>
+        </a>
+    </nav>
+
+    <script>
+        // تفعيل الوضع المظلم إذا كان محفوظًا
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark');
+        }
+
+        // تحديث الأيقونات
+        feather.replace();
+    </script>
+</body>
+</html>

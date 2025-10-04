@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Six Pro - البداية</title>
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Six Pro">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+<style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700;800;900&display=swap');
+        body { font-family: 'Tajawal', sans-serif; }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .hover-lift {
+            transition: all 0.3s ease;
+        }
+        .hover-lift:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+        .gradient-bg {
+            background: linear-gradient(-45deg, #667eea, #764ba2, #6B8DD6, #8E37D7);
+            background-size: 400% 400%;
+            animation: gradientShift 12s ease infinite;
+        }
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .wave-bg {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23ffffff' fill-opacity='0.1' d='M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,154.7C960,171,1056,181,1152,165.3C1248,149,1344,107,1392,85.3L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+            background-size: cover;
+            background-position: bottom;
+        }
+
+        /* زر تثبيت التطبيق */
+        #installBtn {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            background-color: #fff;
+            color: #667eea;
+            border: none;
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            display: none;
+            z-index: 50;
+        }
+        #installBtn:hover {
+            background-color: #e0e7ff;
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen overflow-x-hidden">
+    <!-- Header -->
+    <header class="relative z-10 p-6">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-3 space-x-reverse">
+                <div class="w-16 h-16 rounded-full overflow-hidden shadow-lg">
+                    <img src="https://imgur.com/1l3hICE.jpg" alt="Logo" class="w-full h-full object-cover">
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold text-white">Six Pro</h1>
+                    <p class="text-purple-200 text-sm">النجاح من البداية</p>
+                </div>
+            </div>
+            <button class="glass-card rounded-full p-3 hover-lift">
+                <i data-feather="settings" class="w-5 h-5 text-white"></i>
+            </button>
+        </div>
+    </header>
+
+<!-- Main Content -->
+    <main class="relative z-10 max-w-6xl mx-auto px-6 py-8">
+        <!-- Welcome Section -->
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-bold text-white mb-4">أهلاً بك في Six Pro</h2>
+            <p class="text-xl text-purple-100">منصتك الشاملة للنجاح في الصف السادس العلمي</p>
+        </div>
+
+        <!-- Features Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+            <!-- Daily Tasks -->
+            <a href="tasks.html" class="glass-card rounded-2xl p-6 hover-lift group">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-14 h-14 bg-gradient-to-br from-pink-400 to-pink-600 rounded-2xl flex items-center justify-center">
+                        <i data-feather="check-circle" class="w-7 h-7 text-white"></i>
+                    </div>
+                    <i data-feather="arrow-left" class="w-5 h-5 text-white opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-2">المهام اليومية</h3>
+                <p class="text-purple-100 text-sm">نظم مهامك الدراسية وتابع تقدمك اليومي</p>
+            </a>
+
+            <!-- Mathematics -->
+            <a href="math.html" class="glass-card rounded-2xl p-6 hover-lift group">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-14 h-14 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl flex items-center justify-center">
+                        <i data-feather="calculator" class="w-7 h-7 text-white"></i>
+                    </div>
+                    <i data-feather="arrow-left" class="w-5 h-5 text-white opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-2">الرياضيات</h3>
+                <p class="text-purple-100 text-sm">تعلم وتدرب على جداول الضرب والعمليات الحسابية</p>
+            </a>
+
+            <!-- English -->
+            <a href="english.html" class="glass-card rounded-2xl p-6 hover-lift group">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-14 h-14 bg-gradient-to-br from-green-400 to-green-600 rounded-2xl flex items-center justify-center">
+                        <i data-feather="book-open" class="w-7 h-7 text-white"></i>
+                    </div>
+                    <i data-feather="arrow-left" class="w-5 h-5 text-white opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-2">الإنكليزي</h3>
+                <p class="text-purple-100 text-sm">تعلم الأفعال الشاذة والمفردات الجديدة</p>
+            </a>
+
+            <!-- Schedule -->
+            <a href="schedule.html" class="glass-card rounded-2xl p-6 hover-lift group">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-14 h-14 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-2xl flex items-center justify-center">
+                        <i data-feather="calendar" class="w-7 h-7 text-white"></i>
+                    </div>
+                    <i data-feather="arrow-left" class="w-5 h-5 text-white opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-2">الجدول الدراسي</h3>
+                <p class="text-purple-100 text-sm">نظم وقتك وخلّي السادس العلمي بداية نجاحك</p>
+            </a>
+
+            <!-- Statistics -->
+            <a href="stats.html" class="glass-card rounded-2xl p-6 hover-lift group">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-14 h-14 bg-gradient-to-br from-purple-400 to-purple-600 rounded-2xl flex items-center justify-center">
+                        <i data-feather="trending-up" class="w-7 h-7 text-white"></i>
+                    </div>
+                    <i data-feather="arrow-left" class="w-5 h-5 text-white opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-2">الإحصائيات</h3>
+                <p class="text-purple-100 text-sm">تابع تقدمك وتحسنك في جميع المواد</p>
+            </a>
+
+            <!-- Profile -->
+            <a href="profile.html" class="glass-card rounded-2xl p-6 hover-lift group">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-14 h-14 bg-gradient-to-br from-indigo-400 to-indigo-600 rounded-2xl flex items-center justify-center">
+                        <i data-feather="user" class="w-7 h-7 text-white"></i>
+                    </div>
+                    <i data-feather="arrow-left" class="w-5 h-5 text-white opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-2">الاعدادات</h3>
+                <p class="text-purple-100 text-sm">إدارة حسابك ومعلوماتك الشخصية</p>
+            </a>
+        </div>
+</main>
+
+    <!-- Bottom Navigation -->
+    <nav class="fixed bottom-0 left-0 right-0 z-20 glass-card rounded-t-3xl">
+        <div class="max-w-6xl mx-auto px-6 py-4">
+            <div class="flex justify-around items-center">
+                <a href="index.html" class="flex flex-col items-center space-y-1 text-white">
+                    <i data-feather="home" class="w-6 h-6"></i>
+                    <span class="text-xs">الرئيسية</span>
+                </a>
+                <a href="tasks.html" class="flex flex-col items-center space-y-1 text-purple-200">
+                    <i data-feather="check-square" class="w-6 h-6"></i>
+                    <span class="text-xs">المهام</span>
+                </a>
+                <a href="stats.html" class="flex flex-col items-center space-y-1 text-purple-200">
+                    <i data-feather="bar-chart-2" class="w-6 h-6"></i>
+                    <span class="text-xs">الإحصائيات</span>
+                </a>
+                <a href="profile.html" class="flex flex-col items-center space-y-1 text-purple-200">
+                    <i data-feather="user" class="w-6 h-6"></i>
+                    <span class="text-xs">الاعدادات</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- زر التثبيت -->
+    <button id="installBtn">📱 تثبيت التطبيق</button>
+
+    <script>
+        // Initialize Feather Icons
+        feather.replace();
+
+        // Scroll Animation
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'all 0.6s ease';
+            observer.observe(card);
+        });
+
+        // Register Service Worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/service-worker.js')
+                .then(reg => console.log('✅ Service Worker Registered'))
+                .catch(err => console.log('❌ Registration Failed:', err));
+        }
+
+        // Manual Install Button
+        let deferredPrompt;
+        const installBtn = document.getElementById('installBtn');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installBtn.style.display = 'block';
+        });
+
+        installBtn.addEventListener('click', async () => {
+            installBtn.style.display = 'none';
+            deferredPrompt.prompt();
+            const choice = await deferredPrompt.userChoice;
+            if (choice.outcome === 'accepted') {
+                console.log('✅ تم تثبيت التطبيق');
+            } else {
+                console.log('❌ تم إلغاء التثبيت');
+            }
+            deferredPrompt = null;
+        });
+
+        // Notifications
+        if ('Notification' in window && Notification.permission === 'default') {
+            Notification.requestPermission();
+        }
+    </script>
+</body>
+</html>

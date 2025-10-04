@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الجدول الدراسي - Six Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+        }
+        .current-class {
+            border-right: 4px solid #3b82f6;
+            background-color: #f0f9ff;
+        }
+        .completed-class {
+            opacity: 0.7;
+        }
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            background: linear-gradient(90deg, #1e3a8a 0%, #0ea5e9 100%);
+        }
+        .time-indicator {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background-color: #ef4444;
+            z-index: 10;
+        }
+        .time-indicator-dot {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background-color: #ef4444;
+            border-radius: 50%;
+            top: -5px;
+            right: -6px;
+        }
+        .time-marker {
+            position: absolute;
+            width: 4px;
+            height: 100%;
+            background-color: #94a3b8;
+            z-index: 5;
+        }
+        .time-label {
+            position: absolute;
+            font-size: 12px;
+            color: #64748b;
+            top: -20px;
+        }
+        .toggle-completed {
+            cursor: pointer;
+        }
+        .card {
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        .day-tab {
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+        .day-tab.active {
+            border-bottom: 3px solid #3b82f6;
+            background-color: #dbeafe;
+        }
+        .day-tab:hover:not(.active) {
+            background-color: #e5e7eb;
+        }
+        .today-indicator {
+            background-color: #10b981;
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            margin-right: 5px;
+        }
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            display: none;
+            background-color: #3b82f6;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .back-button i {
+            margin-left: 5px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Back Button (Visible when in sections) -->
+    <button id="back-btn" class="back-button">
+        <i data-feather="arrow-right" class="w-5 h-5"></i> رجوع
+    </button>
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm">
+        <div class="container mx-auto px-4 py-4 flex items-center">
+            <h1 class="text-xl font-bold text-gray-800 mx-auto" id="page-title">الجدول الدراسي</h1>
+        </div>
+    </header>
+
+    <!-- Initial Buttons Section -->
+    <section id="initial-section" class="container mx-auto px-4 mt-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Card for ماسه -->
+            <div class="card bg-gradient-to-r from-blue-500 to-blue-700 rounded-xl shadow-lg p-6 text-center text-white cursor-pointer" id="masa-btn">
+                <i data-feather="calendar" class="w-12 h-12 mx-auto mb-3"></i>
+                <h2 class="text-xl font-bold mb-2">جدول ماسه</h2>
+                <p class="opacity-90">الجدول الأسبوعي للدراسة</p>
+            </div>
+
+            <!-- Card for الشمري -->
+            <div class="card bg-gradient-to-r from-green-500 to-green-700 rounded-xl shadow-lg p-6 text-center text-white cursor-pointer" id="shamiri-btn">
+                <i data-feather="book-open" class="w-12 h-12 mx-auto mb-3"></i>
+                <h2 class="text-xl font-bold mb-2">جدول الشمري</h2>
+                <p class="opacity-90">الجدول اليومي للدراسة</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Masa Days Selection Section -->
+    <div id="masa-days-section" class="hidden">
+        <section class="container mx-auto px-4 mt-6">
+            <div class="bg-white rounded-xl shadow-md p-6 text-center">
+                <h2 class="text-xl font-bold text-blue-600 mb-2">"الا اخلي Sixth عبره لكل واحد خايف منه"</h2>
+                <p class="text-gray-600">حدد اليوم لعرض جدوله</p>
+            </div>
+        </section>
+        
+        <!-- Days Tabs -->
+        <section class="container mx-auto px-4 mt-6">
+            <div class="bg-white rounded-xl shadow-md p-4">
+                <div class="flex overflow-x-auto pb-2 space-x-2" id="days-tabs">
+                    <button class="day-tab flex-1 min-w-[80px] py-3 px-4 rounded-lg text-center font-medium text-gray-700 bg-gray-100" data-day="sunday">
+                        <span id="sunday-indicator" class="today-indicator hidden">اليوم</span>الأحد
+                    </button>
+                    <button class="day-tab flex-1 min-w-[80px] py-3 px-4 rounded-lg text-center font-medium text-gray-700 bg-gray-100" data-day="monday">
+                        <span id="monday-indicator" class="today-indicator hidden">اليوم</span>الاثنين
+                    </button>
+                    <button class="day-tab flex-1 min-w-[80px] py-3 px-4 rounded-lg text-center font-medium text-gray-700 bg-gray-100" data-day="tuesday">
+                        <span id="tuesday-indicator" class="today-indicator hidden">اليوم</span>الثلاثاء
+                    </button>
+                    <button class="day-tab flex-1 min-w-[80px] py-3 px-4 rounded-lg text-center font-medium text-gray-700 bg-gray-100" data-day="wednesday">
+                        <span id="wednesday-indicator" class="today-indicator hidden">اليوم</span>الأربعاء
+                    </button>
+                    <button class="day-tab flex-1 min-w-[80px] py-3 px-4 rounded-lg text-center font-medium text-gray-700 bg-gray-100" data-day="thursday">
+                        <span id="thursday-indicator" class="today-indicator hidden">اليوم</span>الخميس
+                    </button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Selected Day Schedule -->
+        <div id="selected-day-schedule" class="hidden">
+            <!-- Progress -->
+            <section class="container mx-auto px-4 mt-6">
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <div class="flex justify-between items-center mb-2">
+                        <h3 class="font-medium text-gray-700">تقدم اليوم</h3>
+                        <span id="masa-progress-percent" class="font-bold text-blue-600">0%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div id="masa-progress-bar" class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Time Indicator -->
+            <section class="container mx-auto px-4 mt-6">
+                <div class="bg-white rounded-xl shadow-md p-4 relative overflow-hidden">
+                    <div class="relative h-8">
+                        <div id="masa-time-indicator" class="time-indicator">
+                            <div class="time-indicator-dot"></div>
+                        </div>
+                        <!-- Time markers -->
+                        <div class="time-marker" style="right: 0%;"></div>
+                        <div class="time-label" style="right: 0%;">12 ص</div>
+                        
+                        <div class="time-marker" style="right: 8.33%;"></div>
+                        <div class="time-label" style="right: 8.33%;">1 ص</div>
+                        
+                        <div class="time-marker" style="right: 16.66%;"></div>
+                        <div class="time-label" style="right: 16.66%;">2 ص</div>
+                        
+                        <div class="time-marker" style="right: 25%;"></div>
+                        <div class="time-label" style="right: 25%;">3 ص</div>
+                        
+                        <div class="time-marker" style="right: 33.33%;"></div>
+                        <div class="time-label" style="right: 33.33%;">4 ص</div>
+                        
+                        <div class="time-marker" style="right: 41.66%;"></div>
+                        <div class="time-label" style="right: 41.66%;">5 ص</div>
+                        
+                        <div class="time-marker" style="right: 50%;"></div>
+                        <div class="time-label" style="right: 50%;">6 ص</div>
+                        
+                        <div class="time-marker" style="right: 58.33%;"></div>
+                        <div class="time-label" style="right: 58.33%;">7 ص</div>
+                        
+                        <div class="time-marker" style="right: 66.66%;"></div>
+                        <div class="time-label" style="right: 66.66%;">8 ص</div>
+                        
+                        <div class="time-marker" style="right: 75%;"></div>
+                        <div class="time-label" style="right: 75%;">9 ص</div>
+                        
+                        <div class="time-marker" style="right: 83.33%;"></div>
+                        <div class="time-label" style="right: 83.33%;">10 ص</div>
+                        
+                        <div class="time-marker" style="right: 91.66%;"></div>
+                        <div class="time-label" style="right: 91.66%;">11 ص</div>
+                        
+                        <div class="time-marker" style="right: 100%;"></div>
+                        <div class="time-label" style="right: 100%;">12 م</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Schedule Table -->
+            <section class="container mx-auto px-4 mt-6">
+                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                    <table class="w-full">
+                        <thead class="bg-blue-50 text-blue-600">
+                            <tr>
+                                <th class="p-3 text-right">النشاط</th>
+                                <th class="p-3">من</th>
+                                <th class="p-3">إلى</th>
+                                <th class="p-3">الإنجاز</th>
+                            </tr>
+                        </thead>
+                        <tbody id="masa-schedule-body" class="divide-y divide-gray-200">
+                            <!-- Schedule rows will be inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Time Remaining -->
+            <section class="container mx-auto px-4 mt-6">
+                <div class="bg-white rounded-xl shadow-md p-6 text-center">
+                    <h3 class="font-medium text-gray-700 mb-1">الوقت المتبقي حتى نهاية اليوم</h3>
+                    <p id="masa-time-remaining" class="text-2xl font-bold text-blue-600">23:59:59</p>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Shamiri Section -->
+    <div id="shamiri-section" class="hidden">
+        <!-- Motivating Text -->
+        <section class="container mx-auto px-4 mt-6">
+            <div class="bg-white rounded-xl shadow-md p-6 text-center">
+                <h2 class="text-xl font-bold text-green-600 mb-2">"الا اخلي Sixth عبره لكل واحد خايف منه"</h2>
+                <p class="text-gray-600">جدول الشمري - الجدول اليومي</p>
+            </div>
+        </section>
+
+        <!-- Progress -->
+        <section class="container mx-auto px-4 mt-6">
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="flex justify-between items-center mb-2">
+                    <h3 class="font-medium text-gray-700">تقدم اليوم</h3>
+                    <span id="shamiri-progress-percent" class="font-bold text-green-600">0%</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                    <div id="shamiri-progress-bar" class="bg-green-600 h-2.5 rounded-full" style="width: 0%"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Time Indicator -->
+        <section class="container mx-auto px-4 mt-6">
+            <div class="bg-white rounded-xl shadow-md p-4 relative overflow-hidden">
+                <div class="relative h-8">
+                    <div id="shamiri-time-indicator" class="time-indicator">
+                        <div class="time-indicator-dot"></div>
+                    </div>
+                    <!-- Time markers -->
+                    <div class="time-marker" style="right: 0%;"></div>
+                    <div class="time-label" style="right: 0%;">12 ص</div>
+                    
+                    <div class="time-marker" style="right: 8.33%;"></div>
+                    <div class="time-label" style="right: 8.33%;">1 ص</div>
+                    
+                    <div class="time-marker" style="right: 16.66%;"></div>
+                    <div class="time-label" style="right: 16.66%;">2 ص</div>
+                    
+                    <div class="time-marker" style="right: 25%;"></div>
+                    <div class="time-label" style="right: 25%;">3 ص</div>
+                    
+                    <div class="time-marker" style="right: 33.33%;"></div>
+                    <div class="time-label" style="right: 33.33%;">4 ص</div>
+                    
+                    <div class="time-marker" style="right: 41.66%;"></div>
+                    <div class="time-label" style="right: 41.66%;">5 ص</div>
+                    
+                    <div class="time-marker" style="right: 50%;"></div>
+                    <div class="time-label" style="right: 50%;">6 ص</div>
+                    
+                    <div class="time-marker" style="right: 58.33%;"></div>
+                    <div class="time-label" style="right: 58.33%;">7 ص</div>
+                    
+                    <div class="time-marker" style="right: 66.66%;"></div>
+                    <div class="time-label" style="right: 66.66%;">8 ص</div>
+                    
+                    <div class="time-marker" style="right: 75%;"></div>
+                    <div class="time-label" style="right: 75%;">9 ص</div>
+                    
+                    <div class="time-marker" style="right: 83.33%;"></div>
+                    <div class="time-label" style="right: 83.33%;">10 ص</div>
+                    
+                    <div class="time-marker" style="right: 91.66%;"></div>
+                    <div class="time-label" style="right: 91.66%;">11 ص</div>
+                    
+                    <div class="time-marker" style="right: 100%;"></div>
+                    <div class="time-label" style="right: 100%;">12 م</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Schedule Table -->
+        <section class="container mx-auto px-4 mt-6">
+            <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                <table class="w-full">
+                    <thead class="bg-green-50 text-green-600">
+                        <tr>
+                            <th class="p-3 text-right">النشاط</th>
+                            <th class="p-3">من</th>
+                            <th class="p-3">إلى</th>
+                            <th class="p-3">الإنجاز</th>
+                        </tr>
+                    </thead>
+                    <tbody id="shamiri-schedule-body" class="divide-y divide-gray-200">
+                        <!-- Schedule rows will be inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Time Remaining -->
+        <section class="container mx-auto px-4 mt-6">
+            <div class="bg-white rounded-xl shadow-md p-6 text-center">
+                <h3 class="font-medium text-gray-700 mb-1">الوقت المتبقي حتى نهاية اليوم</h3>
+                <p id="shamiri-time-remaining" class="text-2xl font-bold text-green-600">23:59:59</p>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        feather.replace();
+
+        // الجداول
+        const masaSchedule = {
+            sunday: [
+                { subject: "نوم: 10:30 م – 6:00 ص", start: "22:30", end: "06:00", completed: false, isSleep: true },
+                { subject: "استيقاظ + صلاة الفجر", start: "06:00", end: "06:30", completed: false },
+                { subject: "استعداد للمدرسة", start: "06:30", end: "07:00", completed: false },
+                { subject: "دوام المدرسة", start: "07:00", end: "12:00", completed: false },
+                { subject: "استراحة + غداء + صلاة الظهر", start: "12:00", end: "14:00", completed: false },
+                { subject: "دراسة 1", start: "14:00", end: "14:45", completed: false },
+                { subject: "استراحة", start: "14:45", end: "15:00", completed: false },
+                { subject: "دراسة 2", start: "15:00", end: "15:45", completed: false },
+                { subject: "صلاة العصر + استراحة", start: "15:45", end: "16:00", completed: false },
+                { subject: "جلسة دراسية 3", start: "16:00", end: "16:45", completed: false },
+                { subject: "استراحة", start: "16:45", end: "17:00", completed: false },
+                { subject: "جلسة دراسية 4", start: "17:00", end: "17:45", completed: false },
+                { subject: "استراحة", start: "17:45", end: "18:00", completed: false },
+                { subject: "جلسة دراسية 5", start: "18:00", end: "18:45", completed: false },
+                { subject: "صلاة المغرب + استراحة", start: "18:45", end: "19:00", completed: false },
+                { subject: "جلسة دراسية 6", start: "19:00", end: "19:45", completed: false },
+                { subject: "استراحة", start: "19:45", end: "20:00", completed: false },
+                { subject: "صلاة العشاء + استراحة", start: "20:00", end: "21:00", completed: false },
+                { subject: "جلسة دراسية 7", start: "21:00", end: "21:45", completed: false },
+                { subject: "استراحة", start: "21:45", end: "22:00", completed: false },
+                { subject: "جلسة دراسية 8 قصيرة", start: "22:00", end: "22:30", completed: false }
+            ],
+            monday: [
+                { subject: "نوم: 10:30 م – 6:00 ص", start: "22:30", end: "06:00", completed: false, isSleep: true },
+                { subject: "استيقاظ + صلاة الفجر", start: "06:00", end: "06:30", completed: false },
+                { subject: "استعداد للمدرسة", start: "06:30", end: "07:00", completed: false },
+                { subject: "دوام المدرسة", start: "07:00", end: "12:00", completed: false },
+                { subject: "استراحة + غداء + صلاة الظهر", start: "12:00", end: "14:00", completed: false },
+                { subject: "جلسة دراسية 1", start: "14:00", end: "14:45", completed: false },
+                { subject: "استراحة", start: "14:45", end: "15:00", completed: false },
+                { subject: "جلسة دراسية 2", start: "15:00", end: "15:45", completed: false },
+                { subject: "صلاة العصر + استراحة", start: "15:45", end: "16:00", completed: false },
+                { subject: "جلسة دراسية 3", start: "16:00", end: "16:45", completed: false },
+                { subject: "استراحة", start: "16:45", end: "17:00", completed: false },
+                { subject: "جلسة دراسية 4", start: "17:00", end: "17:45", completed: false },
+                { subject: "استراحة", start: "17:45", end: "18:00", completed: false },
+                { subject: "جلسة دراسية 5", start: "18:00", end: "18:45", completed: false },
+                { subject: "صلاة المغرب + استراحة", start: "18:45", end: "19:00", completed: false },
+                { subject: "جلسة دراسية 6", start: "19:00", end: "19:45", completed: false },
+                { subject: "استراحة", start: "19:45", end: "20:00", completed: false },
+                { subject: "صلاة العشاء + استراحة", start: "20:00", end: "21:00", completed: false },
+                { subject: "جلسة دراسية 7", start: "21:00", end: "21:45", completed: false },
+                { subject: "استراحة", start: "21:45", end: "22:00", completed: false },
+                { subject: "جلسة دراسية 8 قصيرة", start: "22:00", end: "22:30", completed: false }
+            ],
+            tuesday: [
+                { subject: "نوم: 10:30 م – 6:00 ص", start: "22:30", end: "06:00", completed: false, isSleep: true },
+                { subject: "استيقاظ + صلاة الفجر", start: "06:00", end: "06:30", completed: false },
+                { subject: "استعداد للمدرسة", start: "06:30", end: "07:00", completed: false },
+                { subject: "دوام المدرسة", start: "07:00", end: "12:00", completed: false },
+                { subject: "استراحة + غداء + صلاة الظهر", start: "12:00", end: "14:00", completed: false },
+                { subject: "جلسة دراسية 1", start: "14:00", end: "14:45", completed: false },
+                { subject: "استراحة", start: "14:45", end: "15:00", completed: false },
+                { subject: "جلسة دراسية 2", start: "15:00", end: "15:45", completed: false },
+                { subject: "صلاة العصر + استراحة", start: "15:45", end: "16:00", completed: false },
+                { subject: "جلسة دراسية 3", start: "16:00", end: "16:45", completed: false },
+                { subject: "استراحة", start: "16:45", end: "17:00", completed: false },
+                { subject: "جلسة دراسية 4", start: "17:00", end: "17:45", completed: false },
+                { subject: "استراحة", start: "17:45", end: "18:00", completed: false },
+                { subject: "جلسة دراسية 5", start: "18:00", end: "18:45", completed: false },
+                { subject: "صلاة المغرب + استراحة", start: "18:45", end: "19:00", completed: false },
+                { subject: "جلسة دراسية 6", start: "19:00", end: "19:45", completed: false },
+                { subject: "استراحة", start: "19:45", end: "20:00", completed: false },
+                { subject: "صلاة العشاء + استراحة", start: "20:00", end: "21:00", completed: false },
+                { subject: "جلسة دراسية 7", start: "21:00", end: "21:45", completed: false },
+                { subject: "استراحة", start: "21:45", end: "22:00", completed: false },
+                { subject: "جلسة دراسية 8 قصيرة", start: "22:00", end: "22:30", completed: false }
+            ],
+            wednesday: [
+                { subject: "نوم: 10:30 م – 6:00 ص", start: "22:30", end: "06:00", completed: false, isSleep: true },
+                { subject: "استيقاظ + صلاة الفجر + تجهيز", start: "06:00", end: "06:30", completed: false },
+                { subject: "جلسة دراسية 1", start: "06:30", end: "07:15", completed: false },
+                { subject: "استراحة", start: "07:15", end: "07:30", completed: false },
+                { subject: "جلسة دراسية 2", start: "07:30", end: "08:15", completed: false },
+                { subject: "استراحة", start: "08:15", end: "08:30", completed: false },
+                { subject: "فطور (30 دقيقة)", start: "08:30", end: "09:00", completed: false },
+                { subject: "جلسة دراسية 3", start: "09:00", end: "09:45", completed: false },
+                { subject: "استراحة", start: "09:45", end: "10:00", completed: false },
+                { subject: "جلسة دراسية 4", start: "10:00", end: "10:45", completed: false },
+                { subject: "استراحة", start: "10:45", end: "11:00", completed: false },
+                { subject: "الدوام + الصلوات + الغداء + الاستراحة", start: "11:00", end: "16:00", completed: false },
+                { subject: "جلسة دراسية 5", start: "16:00", end: "16:45", completed: false },
+                { subject: "استراحة", start: "16:45", end: "17:00", completed: false },
+                { subject: "جلسة دراسية 6", start: "17:00", end: "17:45", completed: false },
+                { subject: "استراحة", start: "17:45", end: "18:00", completed: false },
+                { subject: "جلسة دراسية 7", start: "18:00", end: "18:45", completed: false },
+                { subject: "صلاة المغرب + استراحة", start: "18:45", end: "19:00", completed: false },
+                { subject: "جلسة دراسية 8", start: "19:00", end: "19:45", completed: false },
+                { subject: "استراحة", start: "19:45", end: "20:00", completed: false },
+                { subject: "جلسة دراسية 9", start: "20:00", end: "20:45", completed: false },
+                { subject: "استراحة", start: "20:45", end: "21:00", completed: false },
+                { subject: "جلسة دراسية 10", start: "21:00", end: "21:45", completed: false },
+                { subject: "استراحة", start: "21:45", end: "22:00", completed: false },
+                { subject: "جلسة دراسية 11 قصيرة", start: "22:00", end: "22:30", completed: false }
+            ],
+            thursday: [
+                { subject: "نوم: 10:30 م – 6:00 ص", start: "22:30", end: "06:00", completed: false, isSleep: true },
+                { subject: "استيقاظ + صلاة الفجر + تجهيز", start: "06:00", end: "06:30", completed: false },
+                { subject: "جلسة دراسية 1", start: "06:30", end: "07:15", completed: false },
+                { subject: "استراحة", start: "07:15", end: "07:30", completed: false },
+                { subject: "جلسة دراسية 2", start: "07:30", end: "08:15", completed: false },
+                { subject: "استراحة", start: "08:15", end: "08:30", completed: false },
+                { subject: "فطور (30 دقيقة)", start: "08:30", end: "09:00", completed: false },
+                { subject: "جلسة دراسية 3", start: "09:00", end: "09:45", completed: false },
+                { subject: "استراحة", start: "09:45", end: "10:00", completed: false },
+                { subject: "جلسة دراسية 4", start: "10:00", end: "10:45", completed: false },
+                { subject: "استراحة", start: "10:45", end: "11:00", completed: false },
+                { subject: "الدوام + الصلوات + الغداء + الاستراحة", start: "11:00", end: "16:00", completed: false },
+                { subject: "جلسة دراسية 5", start: "16:00", end: "16:45", completed: false },
+                { subject: "استراحة", start: "16:45", end: "17:00", completed: false },
+                { subject: "جلسة دراسية 6", start: "17:00", end: "17:45", completed: false },
+                { subject: "استراحة", start: "17:45", end: "18:00", completed: false },
+                { subject: "جلسة دراسية 7", start: "18:00", end: "18:45", completed: false },
+                { subject: "صلاة المغرب + استراحة", start: "18:45", end: "19:00", completed: false },
+                { subject: "جلسة دراسية 8", start: "19:00", end: "19:45", completed: false },
+                { subject: "استراحة", start: "19:45", end: "20:00", completed: false },
+                { subject: "جلسة دراسية 9", start: "20:00", end: "20:45", completed: false },
+                { subject: "استراحة", start: "20:45", end: "21:00", completed: false },
+                { subject: "جلسة دراسية 10", start: "21:00", end: "21:45", completed: false },
+                { subject: "استراحة", start: "21:45", end: "22:00", completed: false },
+                { subject: "جلسة دراسية 11 قصيرة", start: "22:00", end: "22:30", completed: false }
+            ]
+        };
+
+        const shamiriSchedule = [
+            { subject: "نوم: 10:00 م – 5:30 ص", start: "22:00", end: "05:30", completed: false, isSleep: true },
+            { subject: "صلاة الفجر + نوم قصير", start: "05:30", end: "06:30", completed: false },
+            { subject: "استعداد للمدرسة", start: "06:30", end: "07:00", completed: false },
+            { subject: "دوام مدرسة", start: "07:00", end: "12:00", completed: false },
+            { subject: "استراحة + غداء", start: "12:00", end: "14:00", completed: false },
+            { subject: "جلسة دراسية (رياضيات)", start: "14:00", end: "14:45", completed: false },
+            { subject: "استراحة", start: "14:45", end: "15:00", completed: false },
+            { subject: "جلسة دراسية (كيمياء)", start: "15:00", end: "15:45", completed: false },
+            { subject: "استراحة", start: "15:45", end: "16:00", completed: false },
+            { subject: "صلاة العصر + استراحة", start: "16:00", end: "16:15", completed: false },
+            { subject: "جلسة دراسية (فيزياء)", start: "16:15", end: "17:00", completed: false },
+            { subject: "استراحة", start: "17:00", end: "17:15", completed: false },
+            { subject: "جلسة دراسية (أحياء)", start: "17:15", end: "18:00", completed: false },
+            { subject: "استراحة", start: "18:00", end: "18:15", completed: false },
+            { subject: "حل أسئلة", start: "18:15", end: "19:00", completed: false },
+            { subject: "استراحة + صلاة المغرب", start: "19:00", end: "19:15", completed: false },
+            { subject: "دراسة اللغة (الإنجليزي)", start: "19:15", end: "20:00", completed: false },
+            { subject: "استراحة", start: "20:00", end: "20:15", completed: false },
+            { subject: "دراسة اللغة (العربي)", start: "20:15", end: "21:00", completed: false },
+            { subject: "استراحة + صلاة العشاء", start: "21:00", end: "21:15", completed: false },
+            { subject: "مراجعة + حفظ الصيغ", start: "21:15", end: "22:00", completed: false },
+            { subject: "استراحة", start: "22:00", end: "22:15", completed: false }
+        ];
+
+        // تحويل الوقت إلى نظام 12 ساعة
+        function convertTo12Hour(time) {
+            const [hours, minutes] = time.split(':').map(Number);
+            if (hours === 0) return `12:${minutes.toString().padStart(2, '0')} ص`;
+            if (hours < 12) return `${hours}:${minutes.toString().padStart(2, '0')} ص`;
+            if (hours === 12) return `12:${minutes.toString().padStart(2, '0')} م`;
+            return `${hours - 12}:${minutes.toString().padStart(2, '0')} م`;
+        }
+
+        // عرض الجدول
+        function renderSchedule(schedule, tbodyId, progressId, progressPercentId) {
+            const scheduleBody = document.getElementById(tbodyId);
+            scheduleBody.innerHTML = '';
+            
+            const now = new Date();
+            const currentTime = now.getHours() * 60 + now.getMinutes();
+            
+            schedule.forEach((item, index) => {
+                const [startHour, startMinute] = item.start.split(':').map(Number);
+                const [endHour, endMinute] = item.end.split(':').map(Number);
+                const startTime = startHour * 60 + startMinute;
+                const endTime = endHour * 60 + endMinute;
+                
+                let rowClass = '';
+                if (currentTime >= startTime && currentTime < endTime) {
+                    rowClass = 'current-class';
+                } else if (currentTime >= endTime) {
+                    rowClass = 'completed-class';
+                }
+                
+                // لون النص حسب نوع النشاط
+                const textColor = item.isSleep ? 'text-gray-400' : 'text-gray-800';
+                const subjectText = item.isSleep ? `(${item.day || 'اليوم'}) ${item.subject}` : item.subject;
+                
+                const row = document.createElement('tr');
+                row.className = rowClass;
+                row.innerHTML = `
+                    <td class="p-3 font-medium ${textColor}">${subjectText}</td>
+                    <td class="p-3 text-gray-500">${convertTo12Hour(item.start)}</td>
+                    <td class="p-3 text-gray-500">${convertTo12Hour(item.end)}</td>
+                    <td class="p-3">
+                        <button class="toggle-completed text-${item.completed ? 'green' : 'gray'}-500" data-index="${index}">
+                            <i data-feather="${item.completed ? 'check-circle' : 'circle'}" class="w-5 h-5"></i>
+                        </button>
+                    </td>
+                `;
+                scheduleBody.appendChild(row);
+            });
+            
+            feather.replace();
+            
+            // إضافة مستمعي الأحداث لأزرار الإنجاز
+            document.querySelectorAll('.toggle-completed').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const index = e.currentTarget.dataset.index;
+                    schedule[index].completed = !schedule[index].completed;
+                    renderSchedule(schedule, tbodyId, progressId, progressPercentId);
+                    updateProgress(schedule, progressId, progressPercentId);
+                });
+            });
+        }
+
+        // تحديث شريط التقدم
+        function updateProgress(schedule, progressBarId, progressPercentId) {
+            const totalTasks = schedule.length;
+            const completedTasks = schedule.filter(task => task.completed).length;
+            const progressPercent = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+            
+            document.getElementById(progressPercentId).textContent = `${progressPercent}%`;
+            document.getElementById(progressBarId).style.width = `${progressPercent}%`;
+        }
+
+        // تحديث مؤشر الوقت
+        function updateTimeIndicator(schedule, indicatorId, timeRemainingId) {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const totalMinutes = hours * 60 + minutes;
+            const percentage = (totalMinutes / (24 * 60)) * 100;
+            
+            document.getElementById(indicatorId).style.right = `${percentage}%`;
+            
+            // تحديث الوقت المتبقي
+            const secondsUntilEnd = (24 * 60 * 60) - (totalMinutes * 60 + now.getSeconds());
+            const hoursLeft = Math.floor(secondsUntilEnd / 3600);
+            const minutesLeft = Math.floor((secondsUntilEnd % 3600) / 60);
+            const secondsLeft = secondsUntilEnd % 60;
+            
+            document.getElementById(timeRemainingId).textContent = 
+                `${hoursLeft.toString().padStart(2, '0')}:${minutesLeft.toString().padStart(2, '0')}:${secondsLeft.toString().padStart(2, '0')}`;
+        }
+
+        // تحديد اليوم الحالي وتفعيل زر اليوم
+        function setTodayAsActive() {
+            const now = new Date();
+            const dayIndex = now.getDay(); // 0 = الأحد، 1 = الإثنين، إلخ
+            const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday'];
+            const dayName = dayNames[dayIndex];
+            
+            if (dayName) {
+                // إزالة التفعيل من جميع الأزرار
+                document.querySelectorAll('#days-tabs button').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                
+                // تفعيل زر اليوم الحالي
+                const todayButton = document.querySelector(`button[data-day="${dayName}"]`);
+                if (todayButton) {
+                    todayButton.classList.add('active');
+                    
+                    // عرض الجدول
+                    document.getElementById('selected-day-schedule').classList.remove('hidden');
+                    
+                    // تحديث العنوان
+                    const dayNamesAr = {
+                        'sunday': 'الأحد',
+                        'monday': 'الاثنين',
+                        'tuesday': 'الثلاثاء',
+                        'wednesday': 'الأربعاء',
+                        'thursday': 'الخميس'
+                    };
+                    
+                    document.getElementById('page-title').textContent = `جدول ماسه - ${dayNamesAr[dayName]}`;
+                    
+                    // عرض الجدول المحدد
+                    renderSchedule(masaSchedule[dayName], 'masa-schedule-body', 'masa-progress-bar', 'masa-progress-percent');
+                    updateProgress(masaSchedule[dayName], 'masa-progress-bar', 'masa-progress-percent');
+                    
+                    // إظهار مؤشر "اليوم" على الزر
+                    document.querySelectorAll('.today-indicator').forEach(indicator => {
+                        indicator.classList.add('hidden');
+                    });
+                    document.getElementById(`${dayName}-indicator`).classList.remove('hidden');
+                }
+            }
+        }
+
+        // إظهار الجدول عند النقر على الأزرار
+        document.getElementById('masa-btn').addEventListener('click', () => {
+            document.getElementById('initial-section').classList.add('hidden');
+            document.getElementById('masa-days-section').classList.remove('hidden');
+            document.getElementById('page-title').textContent = "جدول ماسه - حسب الأيام";
+            document.getElementById('back-btn').style.display = 'block';
+            
+            // تعيين اليوم الحالي كمفعل
+            setTodayAsActive();
+        });
+
+        document.getElementById('shamiri-btn').addEventListener('click', () => {
+            document.getElementById('initial-section').classList.add('hidden');
+            document.getElementById('shamiri-section').classList.remove('hidden');
+            document.getElementById('page-title').textContent = "جدول الشمري";
+            document.getElementById('back-btn').style.display = 'block';
+            renderSchedule(shamiriSchedule, 'shamiri-schedule-body', 'shamiri-progress-bar', 'shamiri-progress-percent');
+            updateProgress(shamiriSchedule, 'shamiri-progress-bar', 'shamiri-progress-percent');
+        });
+
+        // عرض جدول اليوم عند النقر على زر اليوم
+        document.querySelectorAll('#days-tabs button').forEach(button => {
+            button.addEventListener('click', () => {
+                // إزالة التفعيل من جميع الأزرار
+                document.querySelectorAll('#days-tabs button').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                
+                // تفعيل الزر الحالي
+                button.classList.add('active');
+                
+                // عرض الجدول
+                document.getElementById('selected-day-schedule').classList.remove('hidden');
+                
+                // الحصول على يوم الجدول
+                const day = button.dataset.day;
+                
+                // تحديث العنوان
+                const dayNames = {
+                    'sunday': 'الأحد',
+                    'monday': 'الاثنين',
+                    'tuesday': 'الثلاثاء',
+                    'wednesday': 'الأربعاء',
+                    'thursday': 'الخميس'
+                };
+                
+                document.getElementById('page-title').textContent = `جدول ماسه - ${dayNames[day]}`;
+                
+                // عرض الجدول المحدد
+                renderSchedule(masaSchedule[day], 'masa-schedule-body', 'masa-progress-bar', 'masa-progress-percent');
+                updateProgress(masaSchedule[day], 'masa-progress-bar', 'masa-progress-percent');
+            });
+        });
+
+        // زر العودة
+        document.getElementById('back-btn').addEventListener('click', () => {
+            // إخفاء جميع الأقسام
+            document.getElementById('masa-days-section').classList.add('hidden');
+            document.getElementById('selected-day-schedule').classList.add('hidden');
+            document.getElementById('shamiri-section').classList.add('hidden');
+            document.getElementById('initial-section').classList.remove('hidden');
+            document.getElementById('page-title').textContent = "الجدول الدراسي";
+            document.getElementById('back-btn').style.display = 'none';
+        });
+
+        // تحديث كل ثانية
+        setInterval(() => {
+            // تحديث الجداول إذا كانت مرئية
+            if (!document.getElementById('initial-section').classList.contains('hidden')) {
+                return; // لا شيء مفتوح
+            }
+            
+            // تحديث الجدول إذا كان مفتوح
+            if (!document.getElementById('masa-days-section').classList.contains('hidden') && 
+                !document.getElementById('selected-day-schedule').classList.contains('hidden')) {
+                
+                const activeDay = document.querySelector('#days-tabs .day-tab.active');
+                if (activeDay) {
+                    const day = activeDay.dataset.day;
+                    renderSchedule(masaSchedule[day], 'masa-schedule-body', 'masa-progress-bar', 'masa-progress-percent');
+                    updateTimeIndicator(masaSchedule[day], 'masa-time-indicator', 'masa-time-remaining');
+                }
+            }
+            
+            if (!document.getElementById('shamiri-section').classList.contains('hidden')) {
+                renderSchedule(shamiriSchedule, 'shamiri-schedule-body', 'shamiri-progress-bar', 'shamiri-progress-percent');
+                updateTimeIndicator(shamiriSchedule, 'shamiri-time-indicator', 'shamiri-time-remaining');
+            }
+        }, 1000);
+
+        // تهيئة التطبيق
+        document.addEventListener('DOMContentLoaded', () => {
+            // لا حاجة لاستدعاء render/update هنا لأن الجداول غير مرئية
+        });
+    </script>
+</body>
+</html>

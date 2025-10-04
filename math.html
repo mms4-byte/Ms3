@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الرياضيات - Six Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+        }
+        .tab-active {
+            border-bottom: 3px solid #1e3a8a;
+            color: #1e3a8a;
+            font-weight: 600;
+        }
+        .table-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .table-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+        .feedback-message {
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .stats-card {
+            transition: all 0.3s ease;
+        }
+        .stats-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .multiplication-table {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+        @media (max-width: 1024px) {
+            .multiplication-table {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 640px) {
+            .multiplication-table {
+                grid-template-columns: 1fr;
+            }
+        }
+        .circular-progress {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: 
+                radial-gradient(circle at center, white 60%, transparent 61%),
+                conic-gradient(#1e3a8a 0%, #3b82f6 0);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .circular-progress::before {
+            content: attr(data-progress) "%";
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1e3a8a;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-sm">
+        <div class="container mx-auto px-4 py-4 flex items-center">
+            <a href="index.html" class="text-blue-600">
+                <i data-feather="arrow-right" class="w-6 h-6"></i>
+            </a>
+            <h1 class="text-xl font-bold text-gray-800 mx-auto">الرياضيات</h1>
+        </div>
+    </header>
+
+    <!-- Tabs -->
+    <div class="flex border-b border-gray-200 container mx-auto px-4 mt-4">
+        <button id="tables-tab" class="px-4 py-2 text-gray-600 tab-active">الجداول</button>
+        <button id="stats-tab" class="px-4 py-2 text-gray-600">الإحصائيات</button>
+        <button id="test-tab" class="px-4 py-2 text-gray-600">الاختبار</button>
+    </div>
+
+    <!-- Tables Content -->
+    <div id="tables-content" class="container mx-auto px-4 py-6">
+        <div class="bg-white rounded-xl shadow-md p-6">
+            <h3 class="font-bold text-gray-700 mb-4 text-center">جداول الضرب</h3>
+            <div class="multiplication-table">
+                <!-- Tables will be generated here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Content -->
+    <div id="stats-content" class="container mx-auto px-4 py-6 hidden">
+        <div class="bg-white rounded-xl shadow-md p-6">
+            <h3 class="font-bold text-gray-700 mb-6 text-center">إحصائياتك</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="stats-card bg-blue-50 p-6 rounded-lg">
+                    <h4 class="font-bold text-blue-700 mb-4">الأسئلة</h4>
+                    <div class="space-y-3">
+                        <div class="flex justify-between">
+                            <span>إجمالي الأسئلة:</span>
+                            <span id="total-questions" class="font-bold">0</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>الإجابات الصحيحة:</span>
+                            <span id="correct-answers" class="font-bold text-green-600">0</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>الإجابات الخاطئة:</span>
+                            <span id="incorrect-answers" class="font-bold text-red-600">0</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stats-card bg-white p-6 rounded-lg border border-gray-200">
+                    <h4 class="font-bold text-gray-700 mb-4">نسبة النجاح</h4>
+                    <div class="flex flex-col items-center">
+                        <div class="circular-progress mb-4" data-progress="0"></div>
+                        <p id="success-advice" class="text-center text-gray-600 text-sm">
+                            ابدأ بالإجابة على بعض الأسئلة لترى إحصائياتك
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="stats-card bg-yellow-50 p-6 rounded-lg md:col-span-2">
+                    <h4 class="font-bold text-yellow-700 mb-2">أكثر الأسئلة خطأً</h4>
+                    <div id="common-mistakes" class="text-center text-gray-600">
+                        لا توجد بيانات حتى الآن
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Test Content -->
+    <div id="test-content" class="container mx-auto px-4 py-6 hidden">
+        <div class="bg-white rounded-xl shadow-md p-6">
+            <div class="text-center py-8">
+                <h2 id="test-question" class="text-4xl md:text-5xl font-bold text-blue-600 mb-8">1 × 1 = ؟</h2>
+                <input type="number" id="test-answer" class="border border-gray-300 rounded-lg px-4 py-3 mb-4 w-32 text-center text-xl focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="الجواب" autocomplete="off">
+                <button id="submit-test-answer" class="bg-blue-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-blue-700 transition-colors">تحقق</button>
+                <div id="test-feedback-container" class="mt-4 min-h-[32px]">
+                    <p id="test-feedback" class="feedback-message font-bold hidden"></p>
+                </div>
+                <div class="mt-8 text-sm text-gray-500">
+                    <p>السؤال: <span id="question-number">1</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize feather icons
+        feather.replace();
+        
+        // Global variables
+        let stats = {
+            totalQuestions: 0,
+            correctAnswers: 0,
+            incorrectAnswers: 0,
+            mistakes: {} // Object to track mistakes: { "3x7": 5 } means 3x7 was answered incorrectly 5 times
+        };
+        
+        let currentQuestion = 0;
+        let usedQuestions = new Set(); // To track used questions and avoid repetition
+        
+        // DOM Elements
+        const tablesTab = document.getElementById('tables-tab');
+        const statsTab = document.getElementById('stats-tab');
+        const testTab = document.getElementById('test-tab');
+        const tablesContent = document.getElementById('tables-content');
+        const statsContent = document.getElementById('stats-content');
+        const testContent = document.getElementById('test-content');
+        const testQuestion = document.getElementById('test-question');
+        const testAnswer = document.getElementById('test-answer');
+        const submitTestAnswer = document.getElementById('submit-test-answer');
+        const testFeedback = document.getElementById('test-feedback');
+        const questionNumber = document.getElementById('question-number');
+        const circularProgress = document.querySelector('.circular-progress');
+        const successAdvice = document.getElementById('success-advice');
+        
+        // Tab switching
+        tablesTab.addEventListener('click', () => {
+            tablesContent.classList.remove('hidden');
+            statsContent.classList.add('hidden');
+            testContent.classList.add('hidden');
+            tablesTab.classList.add('tab-active');
+            statsTab.classList.remove('tab-active');
+            testTab.classList.remove('tab-active');
+        });
+        
+        statsTab.addEventListener('click', () => {
+            tablesContent.classList.add('hidden');
+            statsContent.classList.remove('hidden');
+            testContent.classList.add('hidden');
+            statsTab.classList.add('tab-active');
+            tablesTab.classList.remove('tab-active');
+            testTab.classList.remove('tab-active');
+            updateStatsDisplay();
+        });
+        
+        testTab.addEventListener('click', () => {
+            tablesContent.classList.add('hidden');
+            statsContent.classList.add('hidden');
+            testContent.classList.remove('hidden');
+            testTab.classList.add('tab-active');
+            tablesTab.classList.remove('tab-active');
+            statsTab.classList.remove('tab-active');
+            initTest();
+        });
+        
+        // Generate all multiplication tables
+        function generateAllTables() {
+            const container = document.querySelector('.multiplication-table');
+            container.innerHTML = '';
+            
+            for (let tableNum = 1; tableNum <= 11; tableNum++) {
+                const tableContainer = document.createElement('div');
+                tableContainer.className = 'bg-gray-50 rounded-lg p-4';
+                
+                const tableTitle = document.createElement('h4');
+                tableTitle.className = 'font-bold text-center mb-2 text-blue-600';
+                tableTitle.textContent = `جدول ${tableNum}`;
+                tableContainer.appendChild(tableTitle);
+                
+                const tableList = document.createElement('ul');
+                tableList.className = 'space-y-1';
+                
+                for (let i = 1; i <= 10; i++) {
+                    const listItem = document.createElement('li');
+                    listItem.className = 'flex justify-between text-sm';
+                    listItem.innerHTML = `
+                        <span>${tableNum} × ${i} =</span>
+                        <span class="font-medium">${tableNum * i}</span>
+                    `;
+                    tableList.appendChild(listItem);
+                }
+                
+                tableContainer.appendChild(tableList);
+                container.appendChild(tableContainer);
+            }
+        }
+        
+        // Initialize test
+        function initTest() {
+            currentQuestion = 1;
+            usedQuestions.clear();
+            showTestQuestion();
+        }
+        
+        // Show test question
+        function showTestQuestion() {
+            // Generate a random question
+            const num1 = Math.floor(Math.random() * 11) + 1; // 1-11
+            const num2 = Math.floor(Math.random() * 10) + 1; // 1-10
+            const questionKey = `${num1}×${num2}`;
+            
+            // Avoid repetition
+            if (usedQuestions.has(questionKey) && usedQuestions.size < 110) {
+                showTestQuestion(); // Try again
+                return;
+            }
+            
+            usedQuestions.add(questionKey);
+            
+            testQuestion.textContent = `${num1} × ${num2} = ؟`;
+            testAnswer.value = '';
+            testAnswer.style.display = 'inline-block';
+            submitTestAnswer.style.display = 'inline-block';
+            testAnswer.focus();
+            
+            questionNumber.textContent = currentQuestion;
+            testFeedback.classList.add('hidden');
+        }
+        
+        // Check test answer
+        submitTestAnswer.addEventListener('click', checkTestAnswer);
+        testAnswer.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') checkTestAnswer();
+        });
+        
+        function checkTestAnswer() {
+            const userAnswer = parseInt(testAnswer.value);
+            const [num1, num2] = testQuestion.textContent.replace(' = ؟', '').split(' × ').map(Number);
+            const correctAnswer = num1 * num2;
+            
+            if (isNaN(userAnswer)) {
+                showTestFeedback('يرجى إدخال رقم', 'text-yellow-600');
+                return;
+            }
+            
+            stats.totalQuestions++;
+            currentQuestion++;
+            
+            if (userAnswer === correctAnswer) {
+                const successMessages = ['عاش!', 'بطل!', 'واو!', 'رائع!', 'ذيب!', 'استمر!'];
+                const message = successMessages[Math.floor(Math.random() * successMessages.length)];
+                showTestFeedback(message, 'text-green-600');
+                stats.correctAnswers++;
+            } else {
+                const encouragementMessages = ['حاول لا بد من النجاح!', 'استمر، ستفعلها!', 'لا تستسلم!', 'المحاولة القادمة ستكون أفضل!'];
+                const message = encouragementMessages[Math.floor(Math.random() * encouragementMessages.length)];
+                showTestFeedback(`${message} الإجابة الصحيحة: ${correctAnswer}`, 'text-red-600');
+                stats.incorrectAnswers++;
+                
+                // Track mistake
+                const mistakeKey = `${num1}×${num2}`;
+                stats.mistakes[mistakeKey] = (stats.mistakes[mistakeKey] || 0) + 1;
+            }
+            
+            // Save stats to localStorage
+            localStorage.setItem('mathStats', JSON.stringify(stats));
+            
+            // Move to next question after delay
+            setTimeout(() => {
+                showTestQuestion();
+            }, 1500);
+        }
+        
+        // Show test feedback
+        function showTestFeedback(message, colorClass) {
+            testFeedback.textContent = message;
+            testFeedback.className = `feedback-message font-bold ${colorClass}`;
+            testFeedback.classList.remove('hidden');
+        }
+        
+        // Update stats display
+        function updateStatsDisplay() {
+            document.getElementById('total-questions').textContent = stats.totalQuestions;
+            document.getElementById('correct-answers').textContent = stats.correctAnswers;
+            document.getElementById('incorrect-answers').textContent = stats.incorrectAnswers;
+            
+            // Update circular progress
+            const successRate = stats.totalQuestions > 0 ? 
+                Math.round((stats.correctAnswers / stats.totalQuestions) * 100) : 0;
+            circularProgress.setAttribute('data-progress', successRate);
+            circularProgress.style.background = 
+                `radial-gradient(circle at center, white 60%, transparent 61%), conic-gradient(#1e3a8a 0% ${successRate}%, #e5e7eb ${successRate}% 100%)`;
+            
+            // Update advice
+            if (stats.totalQuestions === 0) {
+                successAdvice.textContent = 'ابدأ بالإجابة على بعض الأسئلة لترى إحصائياتك';
+            } else if (successRate >= 90) {
+                successAdvice.textContent = 'ممتاز! استمر بالتحسن';
+            } else if (successRate >= 70) {
+                successAdvice.textContent = 'جيد جداً! واصل العمل الجيد';
+            } else if (successRate >= 50) {
+                successAdvice.textContent = 'جيد، لكن يمكنك التحسن أكثر مع الممارسة';
+            } else {
+                successAdvice.textContent = 'لا تستسلم! الممارسة تؤدي إلى التميز';
+            }
+            
+            // Show common mistakes
+            const mistakesContainer = document.getElementById('common-mistakes');
+            if (Object.keys(stats.mistakes).length === 0) {
+                mistakesContainer.textContent = 'لا توجد بيانات حتى الآن';
+            } else {
+                // Sort mistakes by frequency
+                const sortedMistakes = Object.entries(stats.mistakes)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 5); // Top 5 mistakes
+                
+                if (sortedMistakes.length === 0) {
+                    mistakesContainer.textContent = 'لا توجد بيانات حتى الآن';
+                } else {
+                    mistakesContainer.innerHTML = '';
+                    sortedMistakes.forEach(([question, count]) => {
+                        const mistakeElement = document.createElement('div');
+                        mistakeElement.className = 'mb-2';
+                        mistakeElement.textContent = `${question} - أخطأت ${count} مرة`;
+                        mistakesContainer.appendChild(mistakeElement);
+                    });
+                }
+            }
+        }
+        
+        // Load stats from localStorage
+        function loadStats() {
+            const savedStats = localStorage.getItem('mathStats');
+            if (savedStats) {
+                stats = JSON.parse(savedStats);
+            }
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadStats();
+            generateAllTables();
+        });
+    </script>
+</body>
+</html>
