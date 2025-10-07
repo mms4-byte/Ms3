@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نور بغداد - الإعدادات</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #3b82f6;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #3b82f6;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-b from-blue-900 to-indigo-900 text-white min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <header class="flex justify-between items-center mb-8">
+            <div class="flex items-center">
+                <a href="index.html" class="mr-2">
+                    <i data-feather="arrow-right"></i>
+                </a>
+                <h1 class="text-2xl font-bold">الإعدادات</h1>
+            </div>
+        </header>
+
+        <!-- Settings Options -->
+        <div class="space-y-6">
+            <!-- Notification Settings -->
+            <div class="glass-card rounded-2xl p-4">
+                <h2 class="text-xl font-semibold mb-4">إشعارات الأذان</h2>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center">
+                        <span>تشغيل الإشعارات</span>
+                        <div class="relative inline-block w-10 mr-2 align-middle select-none">
+                            <input type="checkbox" id="notifications-toggle" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer" checked/>
+                            <label for="notifications-toggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span>الإشعارات قبل الأذان</span>
+                        <select class="glass-card rounded-lg px-3 py-2 bg-transparent border border-gray-400">
+                            <option>5 دقائق</option>
+                            <option>10 دقائق</option>
+                            <option>15 دقائق</option>
+                            <option>30 دقائق</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Location Settings -->
+            <div class="glass-card rounded-2xl p-4">
+                <h2 class="text-xl font-semibold mb-4">الموقع</h2>
+                <div class="space-y-4">
+                    <div class="flex items-center space-x-3">
+                        <i data-feather="map-pin"></i>
+                        <span>بغداد، العراق</span>
+                    </div>
+                    <button class="w-full glass-card rounded-lg py-3 flex items-center justify-center space-x-2">
+                        <i data-feather="navigation"></i>
+                        <span>تغيير الموقع</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- App Settings -->
+            <div class="glass-card rounded-2xl p-4">
+                <h2 class="text-xl font-semibold mb-4">إعدادات التطبيق</h2>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center">
+                        <span>المظهر الداكن</span>
+                        <div class="relative inline-block w-10 mr-2 align-middle select-none">
+                            <input type="checkbox" id="dark-mode-toggle" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"/>
+                            <label for="dark-mode-toggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span>تأثيرات اللمس</span>
+                        <div class="relative inline-block w-10 mr-2 align-middle select-none">
+                            <input type="checkbox" id="haptic-toggle" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer" checked/>
+                            <label for="haptic-toggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span>أصوات العد</span>
+                        <div class="relative inline-block w-10 mr-2 align-middle select-none">
+                            <input type="checkbox" id="sounds-toggle" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer" checked/>
+                            <label for="sounds-toggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- About Section -->
+            <div class="glass-card rounded-2xl p-4">
+                <h2 class="text-xl font-semibold mb-4">حول التطبيق</h2>
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span>الإصدار</span>
+                        <span class="text-blue-200">1.0.0</span>
+                    </div>
+                    <button class="w-full glass-card rounded-lg py-3 flex items-center justify-center space-x-2">
+                        <i data-feather="share-2"></i>
+                        <span>مشاركة التطبيق</span>
+                    </button>
+                    <button class="w-full glass-card rounded-lg py-3 flex items-center justify-center space-x-2">
+                        <i data-feather="star"></i>
+                        <span>قيم التطبيق</span>
+                    </button>
+                    <button class="w-full glass-card rounded-lg py-3 flex items-center justify-center space-x-2">
+                        <i data-feather="mail"></i>
+                        <span>اتصل بنا</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize feather icons
+        feather.replace();
+
+        // Load settings
+        let settings = JSON.parse(localStorage.getItem('appSettings')) || {
+            darkMode: false,
+            notifications: true,
+            hapticFeedback: true
+        };
+
+        // Apply saved settings
+        document.getElementById('dark-mode-toggle').checked = settings.darkMode;
+        document.getElementById('notifications-toggle').checked = settings.notifications;
+        document.getElementById('haptic-toggle').checked = settings.hapticFeedback;
+
+        if (settings.darkMode) {
+            document.body.classList.add('bg-gray-900');
+        }
+
+        // Save settings on toggle
+        document.querySelectorAll('.toggle-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                if(this.id === 'dark-mode-toggle') {
+                    settings.darkMode = this.checked;
+                    document.body.classList.toggle('bg-gray-900');
+                } else if(this.id === 'notifications-toggle') {
+                    settings.notifications = this.checked;
+                } else if(this.id === 'haptic-toggle') {
+                    settings.hapticFeedback = this.checked;
+                }
+                localStorage.setItem('appSettings', JSON.stringify(settings));
+            });
+        });
+
+        // Location change functionality
+        document.querySelector('button').addEventListener('click', () => {
+            alert('سيتم فتح خريطة لتحديد الموقع الجديد');
+        });
+    </script>
+</body>
+</html>
