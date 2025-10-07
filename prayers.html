@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#1e40af">
+    <meta name="description" content="نور بغداد - مواقيت الصلاة">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#1e40af">
+    <meta name="apple-mobile-web-app-title" content="نور بغداد">
+    
+    <!-- Icons -->
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+    <link rel="manifest" href="manifest.json">
+    
+    <title>نور بغداد - مواقيت الصلاة</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Feather Icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+    
+    <!-- Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        .active-prayer {
+            background: linear-gradient(135deg, rgba(0, 119, 255, 0.3), rgba(0, 217, 255, 0.3));
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+        }
+        .adhan-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background-color: #10b981;
+            z-index: 9999;
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-b from-blue-900 to-indigo-900 text-white min-h-screen">
+    <div class="adhan-bar" id="adhan-bar"></div>
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <header class="flex justify-between items-center mb-8">
+            <div class="flex items-center">
+                <a href="index.html" class="mr-2">
+                    <i data-feather="arrow-right"></i>
+                </a>
+                <h1 class="text-2xl font-bold">مواقيت الصلاة</h1>
+            </div>
+            <div class="flex items-center space-x-4">
+                <a href="settings.html" class="p-2 rounded-full glass-card">
+                    <i data-feather="settings"></i>
+                </a>
+            </div>
+        </header>
+
+        <!-- Current Time & Date -->
+        <div class="glass-card rounded-2xl p-4 mb-6 text-center">
+            <div id="current-time" class="text-3xl font-bold">جاري التحميل...</div>
+            <div id="current-date-hijri" class="text-lg mt-2">جاري التحميل...</div>
+        </div>
+
+        <!-- Prayer Times -->
+        <div class="mt-6 glass-card rounded-2xl p-4">
+            <h2 class="text-xl font-semibold mb-4 text-center">مواقيت اليوم</h2>
+            
+            <div class="space-y-4">
+                <div class="flex justify-between items-center p-3" data-prayer="Fajr">
+                    <div class="flex items-center space-x-3">
+                        <div class="p-2 bg-blue-500 bg-opacity-30 rounded-lg">
+                            <i data-feather="sunrise"></i>
+                        </div>
+                        <span class="font-medium">الفجر</span>
+                    </div>
+                    <span class="font-bold" id="fajr-time">-</span>
+                </div>
+
+                <div class="flex justify-between items-center p-3" data-prayer="Sunrise">
+                    <div class="flex items-center space-x-3">
+                        <div class="p-2 bg-blue-500 bg-opacity-30 rounded-lg">
+                            <i data-feather="sun"></i>
+                        </div>
+                        <span class="font-medium">الشروق</span>
+                    </div>
+                    <span class="font-bold" id="sunrise-time">-</span>
+                </div>
+
+                <div class="flex justify-between items-center p-3" data-prayer="Dhuhr">
+                    <div class="flex items-center space-x-3">
+                        <div class="p-2 bg-blue-500 bg-opacity-30 rounded-lg">
+                            <i data-feather="sun"></i>
+                        </div>
+                        <span class="font-medium">الظهر</span>
+                    </div>
+                    <span class="font-bold" id="dhuhr-time">-</span>
+                </div>
+
+                <div class="flex justify-between items-center p-3" data-prayer="Asr">
+                    <div class="flex items-center space-x-3">
+                        <div class="p-2 bg-blue-500 bg-opacity-30 rounded-lg">
+                            <i data-feather="cloud"></i>
+                        </div>
+                        <span class="font-medium">العصر</span>
+                    </div>
+                    <span class="font-bold" id="asr-time">-</span>
+                </div>
+
+                <div class="flex justify-between items-center p-3" data-prayer="Maghrib">
+                    <div class="flex items-center space-x-3">
+                        <div class="p-2 bg-blue-500 bg-opacity-30 rounded-lg">
+                            <i data-feather="sunset"></i>
+                        </div>
+                        <span class="font-medium">المغرب</span>
+                    </div>
+                    <span class="font-bold" id="maghrib-time">-</span>
+                </div>
+
+                <div class="flex justify-between items-center p-3" data-prayer="Isha">
+                    <div class="flex items-center space-x-3">
+                        <div class="p-2 bg-blue-500 bg-opacity-30 rounded-lg">
+                            <i data-feather="moon"></i>
+                        </div>
+                        <span class="font-medium">العشاء</span>
+                    </div>
+                    <span class="font-bold" id="isha-time">-</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Register Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(registration => console.log('SW registered'))
+                    .catch(err => console.log('SW registration failed:', err));
+            });
+        }
+
+        // Initialize feather icons
+        feather.replace();
+
+        // Load settings from localStorage
+        let settings = JSON.parse(localStorage.getItem('prayerSettings')) || {
+            notifications: true,
+            darkMode: false
+        };
+
+        // Apply settings
+        if(settings.darkMode) {
+            document.body.classList.add('bg-gray-900');
+        }
+
+        // Fetch prayer times from API
+        async function fetchPrayerTimes() {
+            try {
+                const response = await fetch('http://api.aladhan.com/v1/timingsByCity?city=Baghdad&country=Iraq&method=2');
+                const data = await response.json();
+                if (data.code === 200) {
+                    return data.data.timings;
+                } else {
+                    console.error('API Error:', data);
+                    return null;
+                }
+            } catch (error) {
+                console.error('Error fetching prayer times:', error);
+                return null;
+            }
+        }
+
+        // Convert 24-hour format to 12-hour format (AM/PM)
+        function to12Hour(time24) {
+            if (!time24 || time24 === '-') return '-';
+            const [h, m] = time24.split(':').map(Number);
+            const period = h >= 12 ? 'م' : 'ص';
+            const hour = h % 12 || 12;
+            return `${hour}:${m.toString().padStart(2, '0')} ${period}`;
+        }
+
+        // Fetch Hijri date
+        async function fetchHijriDate() {
+            try {
+                const now = new Date();
+                const dateStr = now.toISOString().split('T')[0];
+                const response = await fetch(`http://api.aladhan.com/v1/gToH/${dateStr}`);
+                const data = await response.json();
+                if (data.code === 200) {
+                    return data.data.hijri;
+                } else {
+                    console.error('API Error:', data);
+                    return null;
+                }
+            } catch (error) {
+                console.error('Error fetching Hijri date:', error);
+                return null;
+            }
+        }
+
+        // Update current time and date
+        function updateCurrentTime() {
+            const now = new Date();
+            const options = { hour: '2-digit', minute: '2-digit', hour12: true };
+            const timeStr = now.toLocaleTimeString('ar-IQ', options); // Baghdad timezone
+            document.getElementById('current-time').textContent = timeStr;
+
+            // Update Hijri date once per minute
+            if (now.getSeconds() === 0) {
+                fetchHijriDate().then(hijri => {
+                    if (hijri) {
+                        document.getElementById('current-date-hijri').textContent = 
+                            `${hijri.day} ${hijri.month.ar} ${hijri.year} هـ`;
+                    }
+                });
+            }
+        }
+
+        // Play Adhan sound
+        function playAdhan() {
+            if (settings.notifications) {
+                const audio = new Audio('https://www.soundjay.com/islamic/adhan-1.mp3');
+                audio.play().catch(e => console.log('Audio play failed:', e));
+            }
+        }
+
+        // Show adhan bar
+        function showAdhanBar() {
+            const bar = document.getElementById('adhan-bar');
+            bar.style.display = 'block';
+            setTimeout(() => bar.style.display = 'none', 5000);
+        }
+
+        // Update prayer times and highlight current prayer
+        async function updatePrayerTimes() {
+            const times = await fetchPrayerTimes();
+            if (times) {
+                // Update times in 12-hour format
+                document.getElementById('fajr-time').textContent = to12Hour(times.Fajr);
+                document.getElementById('sunrise-time').textContent = to12Hour(times.Sunrise);
+                document.getElementById('dhuhr-time').textContent = to12Hour(times.Dhuhr);
+                document.getElementById('asr-time').textContent = to12Hour(times.Asr);
+                document.getElementById('maghrib-time').textContent = to12Hour(times.Maghrib);
+                document.getElementById('isha-time').textContent = to12Hour(times.Isha);
+
+                const now = new Date();
+                const currentTime = now.getHours() * 60 + now.getMinutes();
+
+                // Prayer times in minutes
+                const fajrMin = timeToMinutes(times.Fajr);
+                const sunriseMin = timeToMinutes(times.Sunrise);
+                const dhuhrMin = timeToMinutes(times.Dhuhr);
+                const asrMin = timeToMinutes(times.Asr);
+                const maghribMin = timeToMinutes(times.Maghrib);
+                const ishaMin = timeToMinutes(times.Isha);
+
+                const prayerTimes = [fajrMin, sunriseMin, dhuhrMin, asrMin, maghribMin, ishaMin];
+                const prayerNames = ['Fajr', 'Sunrise', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
+
+                // Remove all active classes first
+                document.querySelectorAll('[data-prayer]').forEach(el => {
+                    el.classList.remove('active-prayer');
+                });
+
+                // Find current prayer
+                let currentPrayer = null;
+                for (let i = 0; i < prayerTimes.length; i++) {
+                    if (currentTime < prayerTimes[i]) {
+                        currentPrayer = prayerNames[i - 1];
+                        break;
+                    }
+                }
+                if (!currentPrayer && currentTime >= ishaMin) {
+                    currentPrayer = 'Isha';
+                }
+
+                if (currentPrayer) {
+                    const currentEl = document.querySelector(`[data-prayer="${currentPrayer}"]`);
+                    if (currentEl) {
+                        currentEl.classList.add('active-prayer');
+                    }
+                }
+
+                // Check for upcoming prayer (±1 minute)
+                for (let i = 0; i < prayerTimes.length; i++) {
+                    if (Math.abs(currentTime - prayerTimes[i]) <= 1) {
+                        playAdhan();
+                        showAdhanBar();
+                    }
+                }
+            }
+        }
+
+        function timeToMinutes(timeStr) {
+            if (!timeStr) return 0;
+            const [h, m] = timeStr.split(':').map(Number);
+            return h * 60 + m;
+        }
+
+        // Initial updates
+        updateCurrentTime();
+        updatePrayerTimes();
+
+        // Update every second
+        setInterval(updateCurrentTime, 1000);
+        setInterval(updatePrayerTimes, 60000); // Update prayer times every minute
+    </script>
+</body>
+</html>

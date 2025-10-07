@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#1e40af">
+    <meta name="description" content="نور بغداد - تطبيق إسلامي شامل">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#1e40af">
+    <meta name="apple-mobile-web-app-title" content="نور بغداد">
+    
+    <!-- Icons -->
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+    <link rel="manifest" href="manifest.json">
+    
+    <title>نور بغداد - التطبيق الإسلامي</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Feather Icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+    
+    <!-- Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-b from-blue-900 to-indigo-900 text-white min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <header class="flex justify-between items-center mb-8">
+            <div class="flex items-center">
+                <h1 class="text-2xl font-bold">نور بغداد</h1>
+            </div>
+            <a href="settings.html" class="p-2 rounded-full glass-card">
+                <i data-feather="settings"></i>
+            </a>
+        </header>
+
+        <!-- Main Navigation -->
+        <div class="grid grid-cols-2 gap-4 mb-8">
+            <a href="prayers.html" class="glass-card rounded-xl p-6 flex flex-col items-center">
+                <i data-feather="clock" class="w-8 h-8 mb-2"></i>
+                <span>مواقيت الصلاة</span>
+            </a>
+            <a href="quran.html" class="glass-card rounded-xl p-6 flex flex-col items-center">
+                <i data-feather="book" class="w-8 h-8 mb-2"></i>
+                <span>القرآن الكريم</span>
+            </a>
+            <!-- زر المسبحة الإلكترونية -->
+            <a href="dhikr.html" class="glass-card rounded-xl p-6 flex flex-col items-center">
+                <i data-feather="circle" class="w-8 h-8 mb-2"></i>
+                <span>المسبحة الإلكترونية</span>
+            </a>
+            <a href="dua.html" class="glass-card rounded-xl p-6 flex flex-col items-center">
+                <i data-feather="heart" class="w-8 h-8 mb-2"></i>
+                <span>أدعية وأذكار</span>
+            </a>
+        </div>
+
+        <!-- Prayer Times Preview -->
+        <div class="glass-card rounded-2xl p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4 text-center">مواقيت الصلاة</h2>
+            <div class="grid grid-cols-3 gap-2 text-center">
+                <div>
+                    <p class="text-blue-200">الفجر</p>
+                    <p class="font-bold" id="fajr-time">-</p>
+                </div>
+                <div>
+                    <p class="text-blue-200">الظهر</p>
+                    <p class="font-bold" id="dhuhr-time">-</p>
+                </div>
+                <div>
+                    <p class="text-blue-200">العصر</p>
+                    <p class="font-bold" id="asr-time">-</p>
+                </div>
+                <div>
+                    <p class="text-blue-200">المغرب</p>
+                    <p class="font-bold" id="maghrib-time">-</p>
+                </div>
+                <div>
+                    <p class="text-blue-200">العشاء</p>
+                    <p class="font-bold" id="isha-time">-</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="text-center text-sm text-gray-300 mt-8">
+            <p>© 2025 نور بغداد - جميع الحقوق محفوظة</p>
+        </footer>
+    </div>
+
+    <script>
+        // Register Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(registration => console.log('SW registered'))
+                    .catch(err => console.log('SW registration failed:', err));
+            });
+        }
+
+        // Initialize feather icons
+        feather.replace();
+
+        // Fetch prayer times from API
+        async function fetchPrayerTimes() {
+            try {
+                const response = await fetch('http://api.aladhan.com/v1/timingsByCity?city=Baghdad&country=Iraq&method=2');
+                const data = await response.json();
+                const times = data.data.timings;
+                
+                document.getElementById('fajr-time').textContent = times.Fajr;
+                document.getElementById('dhuhr-time').textContent = times.Dhuhr;
+                document.getElementById('asr-time').textContent = times.Asr;
+                document.getElementById('maghrib-time').textContent = times.Maghrib;
+                document.getElementById('isha-time').textContent = times.Isha;
+            } catch (error) {
+                console.error('Error fetching prayer times:', error);
+            }
+        }
+
+        // Load prayer times
+        fetchPrayerTimes();
+    </script>
+</body>
+</html>

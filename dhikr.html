@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#1e40af">
+    <meta name="description" content="نور بغداد - المسبحة الإلكترونية">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#1e40af">
+    <meta name="apple-mobile-web-app-title" content="نور بغداد">
+    
+    <!-- Icons -->
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+    <link rel="manifest" href="manifest.json">
+    
+    <title>نور بغداد - المسبحة الإلكترونية</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Feather Icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+    
+    <!-- Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        .dhikr-bead {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        .dhikr-bead.active {
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(0, 217, 255, 0.5);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-b from-blue-900 to-indigo-900 text-white min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Dhikr Counter -->
+        <div class="glass-card rounded-2xl p-6 mb-6 flex flex-col items-center">
+            <h2 class="text-xl font-semibold mb-2" id="dhikr-text">سبحان الله</h2>
+            <div class="text-5xl font-bold my-6" id="counter">0</div>
+            <div class="flex space-x-4">
+                <button class="glass-card rounded-full p-3" id="reset-btn">
+                    <i data-feather="refresh-cw"></i>
+                </button>
+                <button class="bg-blue-500 rounded-full px-6 py-3 font-semibold" id="count-btn">
+                    اضغط هنا
+                </button>
+            </div>
+        </div>
+
+        <!-- Dhikr Selection -->
+        <div class="glass-card rounded-2xl p-4 mb-6">
+            <h2 class="text-xl font-semibold mb-4 text-center">اختر الذكر</h2>
+            <div class="grid grid-cols-2 gap-4">
+                <button class="dhikr-option glass-card rounded-xl p-4 text-center active">
+                    <p class="font-medium">سبحان الله</p>
+                    <p class="text-blue-200 text-sm">٣٣ مرة</p>
+                </button>
+                <button class="dhikr-option glass-card rounded-xl p-4 text-center">
+                    <p class="font-medium">الحمد لله</p>
+                    <p class="text-blue-200 text-sm">٣٣ مرة</p>
+                </button>
+                <button class="dhikr-option glass-card rounded-xl p-4 text-center">
+                    <p class="font-medium">الله أكبر</p>
+                    <p class="text-blue-200 text-sm">٣٣ مرة</p>
+                </button>
+                <button class="dhikr-option glass-card rounded-xl p-4 text-center">
+                    <p class="font-medium">لا إله إلا الله</p>
+                    <p class="text-blue-200 text-sm">٣٣ مرة</p>
+                </button>
+            </div>
+        </div>
+
+        <!-- Dhikr Beads -->
+        <div class="glass-card rounded-2xl p-4">
+            <h2 class="text-xl font-semibold mb-4 text-center">المسبحة</h2>
+            <div class="flex justify-center flex-wrap gap-4">
+                <div class="dhikr-bead glass-card" data-bead="1">1</div>
+                <div class="dhikr-bead glass-card" data-bead="2">2</div>
+                <div class="dhikr-bead glass-card" data-bead="3">3</div>
+                <div class="dhikr-bead glass-card" data-bead="4">4</div>
+                <div class="dhikr-bead glass-card" data-bead="5">5</div>
+                <div class="dhikr-bead glass-card" data-bead="6">6</div>
+                <div class="dhikr-bead glass-card" data-bead="7">7</div>
+                <div class="dhikr-bead glass-card" data-bead="8">8</div>
+                <div class="dhikr-bead glass-card" data-bead="9">9</div>
+                <div class="dhikr-bead glass-card" data-bead="10">10</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Register Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(registration => console.log('SW registered'))
+                    .catch(err => console.log('SW registration failed:', err));
+            });
+        }
+
+        // Initialize feather icons
+        feather.replace();
+
+        // Load settings from localStorage
+        let settings = JSON.parse(localStorage.getItem('dhikrSettings')) || {
+            hapticFeedback: true,
+            sounds: true
+        };
+
+        // Dhikr Counter
+        let count = 0;
+        const counter = document.getElementById('counter');
+        const countBtn = document.getElementById('count-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const dhikrText = document.getElementById('dhikr-text');
+        const dhikrOptions = document.querySelectorAll('.dhikr-option');
+        const beads = document.querySelectorAll('.dhikr-bead');
+
+        // Haptic feedback function
+        function vibrate() {
+            if(settings.hapticFeedback && 'vibrate' in navigator) {
+                navigator.vibrate(50);
+            }
+        }
+
+        countBtn.addEventListener('click', () => {
+            count++;
+            counter.textContent = count;
+            vibrate();
+
+            // Highlight the corresponding bead
+            beads.forEach(bead => {
+                bead.classList.remove('active');
+                if (parseInt(bead.getAttribute('data-bead')) === count % 10 || (count % 10 === 0 && parseInt(bead.getAttribute('data-bead')) === 10)) {
+                    bead.classList.add('active');
+                }
+            });
+
+            // Play click sound if enabled
+            if(settings.sounds) {
+                const audio = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-select-click-1109.mp3');
+                audio.play().catch(() => {}); // لا تظهر أية أخطاء
+            }
+        });
+
+        resetBtn.addEventListener('click', () => {
+            count = 0;
+            counter.textContent = count;
+            beads.forEach(bead => bead.classList.remove('active'));
+        });
+
+        // Dhikr selection
+        dhikrOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                dhikrOptions.forEach(opt => opt.classList.remove('active'));
+                option.classList.add('active');
+                const firstP = option.querySelector('p:first-child');
+                if (firstP) {
+                    dhikrText.textContent = firstP.textContent;
+                }
+                count = 0;
+                counter.textContent = count;
+                beads.forEach(bead => bead.classList.remove('active'));
+            });
+        });
+    </script>
+</body>
+</html>

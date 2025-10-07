@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نور بغداد - الإعدادات</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #3b82f6;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #3b82f6;
+        }
+        .dev-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: linear-gradient(45deg, #ff6b6b, #ffa500);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: bold;
+            padding: 2px 8px;
+            border-radius: 20px;
+            z-index: 10;
+        }
+        .dev-card {
+            position: relative;
+            overflow: hidden;
+        }
+        .dev-glow {
+            box-shadow: 0 0 15px rgba(255, 107, 107, 0.5);
+        }
+        .dev-img {
+            width: 160px; /* Increase image width */
+            height: 160px; /* Increase image height */
+            border-radius: 50%; /* Keep it circular */
+            object-fit: cover; /* Ensure image covers the area */
+            margin: 0 auto 15px; /* Center the image and add bottom margin */
+            display: block; /* Ensure it's a block element */
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-b from-blue-900 to-indigo-900 text-white min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <header class="flex justify-between items-center mb-8">
+            <div class="flex items-center">
+                <a href="index.html" class="mr-2 text-white hover:text-blue-300 transition-colors">
+                    <i data-feather="arrow-right"></i>
+                </a>
+                <h1 class="text-2xl font-bold">الإعدادات</h1>
+            </div>
+        </header>
+
+        <!-- Developer Section -->
+        <div class="dev-card glass-card rounded-2xl p-4 mb-6 dev-glow">
+            <div class="dev-badge">مطور</div>
+            <div class="flex flex-col items-center"> <!-- Center content -->
+                <img src="https://i.imgur.com/1l3hICE.jpeg" alt="صورة مروة محمد" class="dev-img"> <!-- Developer image -->
+                <div class="text-center"> <!-- Center text -->
+                    <h3 class="text-xl font-semibold">مروة محمد</h3>
+                    <p class="text-blue-200">مطورة ويب متخصصة</p>
+                </div>
+            </div>
+            <div class="mt-4 text-sm text-gray-300">
+                <p>• تصميم وتطوير تطبيقات الويب الحديثة</p>
+                <p>• خبرة في HTML, CSS, JavaScript</p>
+                <p>• تطوير تطبيقات React و Tailwind CSS</p>
+            </div>
+        </div>
+
+        <!-- Settings Options -->
+        <div class="space-y-6">
+            <!-- Notification Settings -->
+            <div class="glass-card rounded-2xl p-4">
+                <h2 class="text-xl font-semibold mb-4">إشعارات الأذان</h2>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center">
+                        <span>تشغيل الإشعارات</span>
+                        <div class="relative inline-block w-10 mr-2 align-middle select-none">
+                            <input type="checkbox" id="notifications-toggle" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer" checked/>
+                            <label for="notifications-toggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span>الإشعارات قبل الأذان</span>
+                        <select id="pre-notification-select" class="glass-card rounded-lg px-3 py-2 bg-transparent border border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="5">5 دقائق</option>
+                            <option value="10">10 دقائق</option>
+                            <option value="15">15 دقائق</option>
+                            <option value="30">30 دقائق</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Location Settings -->
+            <div class="glass-card rounded-2xl p-4">
+                <h2 class="text-xl font-semibold mb-4">الموقع</h2>
+                <div class="space-y-4">
+                    <div class="flex items-center space-x-3">
+                        <i data-feather="map-pin"></i>
+                        <span id="current-location">...</span>
+                    </div>
+                    <button id="change-location-btn" class="w-full glass-card rounded-lg py-3 flex items-center justify-center space-x-2 hover:bg-white/20 transition-colors">
+                        <i data-feather="navigation"></i>
+                        <span>تغيير الموقع</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- App Settings -->
+            <div class="glass-card rounded-2xl p-4">
+                <h2 class="text-xl font-semibold mb-4">إعدادات التطبيق</h2>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center">
+                        <span>المظهر الداكن</span>
+                        <div class="relative inline-block w-10 mr-2 align-middle select-none">
+                            <input type="checkbox" id="dark-mode-toggle" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"/>
+                            <label for="dark-mode-toggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span>تأثيرات اللمس</span>
+                        <div class="relative inline-block w-10 mr-2 align-middle select-none">
+                            <input type="checkbox" id="haptic-toggle" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer" checked/>
+                            <label for="haptic-toggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span>أصوات العد</span>
+                        <div class="relative inline-block w-10 mr-2 align-middle select-none">
+                            <input type="checkbox" id="sounds-toggle" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer" checked/>
+                            <label for="sounds-toggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- About Section -->
+            <div class="glass-card rounded-2xl p-4">
+                <h2 class="text-xl font-semibold mb-4">حول التطبيق</h2>
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span>الإصدار</span>
+                        <span class="text-blue-200">1.0.0</span>
+                    </div>
+                    <!-- Removed: Share, Rate, Contact buttons -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize feather icons
+        feather.replace();
+
+        // Load settings from localStorage or set defaults
+        let settings = JSON.parse(localStorage.getItem('appSettings')) || {
+            darkMode: false,
+            notifications: true,
+            hapticFeedback: true,
+            preNotificationTime: "5", // minutes
+            location: "..." // Default location
+        };
+
+        // Apply saved settings
+        document.getElementById('dark-mode-toggle').checked = settings.darkMode;
+        document.getElementById('notifications-toggle').checked = settings.notifications;
+        document.getElementById('haptic-toggle').checked = settings.hapticFeedback;
+        document.getElementById('sounds-toggle').checked = settings.soundsEnabled !== false; // Default true
+        document.getElementById('pre-notification-select').value = settings.preNotificationTime;
+        document.getElementById('current-location').textContent = settings.location;
+
+        // Update body class based on dark mode setting
+        if (settings.darkMode) {
+            document.body.classList.remove('from-blue-900', 'to-indigo-900');
+            document.body.classList.add('from-gray-900', 'to-gray-800');
+        } else {
+            document.body.classList.remove('from-gray-900', 'to-gray-800');
+            document.body.classList.add('from-blue-900', 'to-indigo-900');
+        }
+
+        // Save settings on toggle
+        document.querySelectorAll('.toggle-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                if(this.id === 'dark-mode-toggle') {
+                    settings.darkMode = this.checked;
+                    if (this.checked) {
+                        document.body.classList.remove('from-blue-900', 'to-indigo-900');
+                        document.body.classList.add('from-gray-900', 'to-gray-800');
+                    } else {
+                        document.body.classList.remove('from-gray-900', 'to-gray-800');
+                        document.body.classList.add('from-blue-900', 'to-indigo-900');
+                    }
+                } else if(this.id === 'notifications-toggle') {
+                    settings.notifications = this.checked;
+                } else if(this.id === 'haptic-toggle') {
+                    settings.hapticFeedback = this.checked;
+                } else if(this.id === 'sounds-toggle') {
+                    settings.soundsEnabled = this.checked;
+                }
+                localStorage.setItem('appSettings', JSON.stringify(settings));
+            });
+        });
+
+        // Save pre-notification time on change
+        document.getElementById('pre-notification-select').addEventListener('change', function() {
+            settings.preNotificationTime = this.value;
+            localStorage.setItem('appSettings', JSON.stringify(settings));
+        });
+
+        // Location change functionality
+        document.getElementById('change-location-btn').addEventListener('click', () => {
+            // Simulate location change (in a real app, you'd use Geolocation API or a map picker)
+            const newLocation = prompt("الرجاء إدخال اسم المكان الجديد:", settings.location);
+            if (newLocation !== null && newLocation.trim() !== "") {
+                settings.location = newLocation.trim();
+                document.getElementById('current-location').textContent = settings.location;
+                localStorage.setItem('appSettings', JSON.stringify(settings));
+                alert(`تم تغيير الموقع إلى: ${settings.location}`);
+            }
+        });
+
+        // Removed: Share, Rate, Contact, Delete button handlers
+    </script>
+</body>
+</html>
