@@ -1,60 +1,43 @@
 {
-  "name": "Six Pro - منصة نجاحك الدراسي",
+  "name": "Six Pro",
   "short_name": "Six Pro",
-  "description": "منصتك الشاملة للنجاح في الصف السادس العلمي",
+  "lang": "ar",
+  "dir": "rtl",
   "start_url": "/index.html",
   "display": "standalone",
-  "background_color": "#f5f7fa",
+  "background_color": "#1a237e",
   "theme_color": "#1a237e",
-  "orientation": "portrait-primary",
+  "orientation": "portrait",
   "icons": [
     {
-      "src": "https://imgur.com/1l3hICE",
+      "src": "https://imgur.com/1l3hICE.png",
       "sizes": "72x72",
-      "type": "image/png",
-      "purpose": "any"
+      "type": "image/png"
     },
     {
-      "src": "https://imgur.com/1l3hICE",
+      "src": "https://imgur.com/1l3hICE.png",
       "sizes": "96x96",
-      "type": "image/png",
-      "purpose": "any"
+      "type": "image/png"
     },
     {
-      "src": "https://imgur.com/1l3hICE",
+      "src": "https://imgur.com/1l3hICE.png",
       "sizes": "128x128",
-      "type": "image/png",
-      "purpose": "any"
+      "type": "image/png"
     },
     {
-      "src": "https://imgur.com/1l3hICE",
+      "src": "https://imgur.com/1l3hICE.png",
       "sizes": "144x144",
-      "type": "image/png",
-      "purpose": "any"
+      "type": "image/png"
     },
     {
-      "src": "https://imgur.com/1l3hICE",
-      "sizes": "152x152",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "https://imgur.com/1l3hICE",
+      "src": "https://imgur.com/1l3hICE.png",
       "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
+      "type": "image/png"
     },
     {
-      "src": "https://imgur.com/1l3hICE",
-      "sizes": "384x384",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "https://imgur.com/1l3hICE",
+      "src": "https://imgur.com/1l3hICE.png",
       "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
+      "type": "image/png"
     }
   ]
 }
