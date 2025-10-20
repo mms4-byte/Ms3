@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الإعدادات - Six Pro</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #1a237e, #4db6ac);
+            --accent-color: #4caf50;
+            --primary-color: #29b6f6;
+            --secondary-color: #f44336;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --card-bg-hover: rgba(255, 255, 255, 0.98);
+            --text-primary: #2c3e50;
+            --text-secondary: #7f8c8d;
+            --text-light: #ffffff;
+            --border-radius: 20px;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            --shadow-hover: 0 15px 40px rgba(0, 0, 0, 0.2);
+            --glass-blur: blur(14px);
+            --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-arabic: 'Cairo', 'Tahoma', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-arabic), var(--font-main);
+            background: var(--primary-gradient);
+            color: var(--text-primary);
+            padding-bottom: 80px;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .bubble-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            animation: float 18s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            25% { transform: translate(25px, 20px); }
+            50% { transform: translate(-15px, 25px); }
+            75% { transform: translate(20px, -15px); }
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 10;
+            background: rgba(245, 247, 250, 0.92);
+            border-top-left-radius: var(--border-radius);
+            border-top-right-radius: var(--border-radius);
+            padding: 25px 20px;
+            min-height: calc(100vh - 80px);
+            margin-top: 20px;
+            box-shadow: 0 -15px 40px rgba(0, 0, 0, 0.25);
+        }
+
+        .app-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px 20px;
+            background: var(--primary-gradient);
+            z-index: 1001;
+        }
+
+        .app-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text-light);
+            letter-spacing: -0.5px;
+        }
+
+        .main-screen {
+            padding-top: 70px;
+        }
+
+        .page-title {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .dev-info-card {
+            background: var(--card-bg);
+            backdrop-filter: var(--glass-blur);
+            border-radius: var(--border-radius);
+            padding: 25px 20px;
+            margin-bottom: 25px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            position: relative;
+        }
+
+        .dev-badge {
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .dev-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 15px;
+            border: 3px solid var(--accent-color);
+        }
+
+        .dev-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 5px;
+        }
+
+        .version-info {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+        }
+
+        .update-button {
+            padding: 10px 25px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin: 0 auto;
+            box-shadow: var(--shadow);
+        }
+
+        .update-button:hover {
+            background-color: #43a047;
+        }
+
+        .settings-section {
+            background: var(--card-bg);
+            backdrop-filter: var(--glass-blur);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title::before {
+            content: "⚙️";
+            margin-left: 10px;
+            font-size: 1.1rem;
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+
+        .setting-label {
+            font-size: 1.05rem;
+            color: var(--text-primary);
+        }
+
+        .setting-action {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--accent-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        .button-action {
+            padding: 8px 16px;
+            background-color: #e0e0e0;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 0.95rem;
+            cursor: pointer;
+            color: var(--text-primary);
+        }
+
+        .button-action:hover {
+            background-color: #d0d0d0;
+        }
+
+        /* --- زر الدعم --- */
+        .support-button-container {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+        }
+
+        .support-button {
+            padding: 15px 40px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 50px; /* زر دائري */
+            font-size: 1.2rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: var(--shadow);
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .support-button:hover {
+            background-color: #43a047;
+            transform: scale(1.05);
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 75px;
+            background: var(--card-bg);
+            backdrop-filter: var(--glass-blur);
+            border-top: 1px solid rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 25%;
+            height: 100%;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            transition: color 0.3s ease, transform 0.2s ease;
+        }
+
+        .nav-item:hover {
+            transform: scale(1.05);
+        }
+
+        .nav-item.active {
+            color: var(--accent-color);
+        }
+
+        .nav-icon {
+            font-size: 1.7rem;
+            margin-bottom: 5px;
+        }
+
+        .nav-item.active .nav-icon {
+            background: var(--accent-color);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 10px rgba(76, 175, 80, 0.4);
+        }
+
+        /* --- نمط الإشعار (Toast) --- */
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100%);
+            background-color: var(--accent-color);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            z-index: 2000;
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="bubble-container" id="bubbleContainer"></div>
+
+    <header class="app-header">
+        <h1 class="app-title">Six Pro</h1>
+    </header>
+
+    <div class="content-wrapper">
+        <main class="main-screen">
+            <h2 class="page-title">الإعدادات</h2>
+
+            <!-- --- قسم معلومات المطور --- -->
+            <div class="dev-info-card">
+                <div class="dev-badge">مطور</div>
+                <!-- --- تحديث الصورة --- -->
+                <img src="https://i.imgur.com/1l3hICE.png" alt="صورة المطور" class="dev-avatar">
+                <div class="dev-name">مروة محمد</div>
+                <div class="version-info">النسخة: v1.1</div>
+                <button class="update-button" onclick="checkForUpdate()">
+                    <span class="material-icons">autorenew</span>
+                    تحديث
+                </button>
+            </div>
+
+            <!-- --- قسم التنبيهات والأذونات --- -->
+            <div class="settings-section">
+                <h3 class="section-title">التنبيهات والأذونات</h3>
+                <div class="setting-item">
+                    <span class="setting-label">تفعيل الشعارات</span>
+                    <div class="setting-action">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="notificationsToggle" onchange="toggleNotifications(this.checked)">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="setting-item">
+                    <span class="setting-label">أذونات الوصول</span>
+                    <div class="setting-action">
+                        <button class="button-action" onclick="requestPermissions()">السماح</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- --- قسم الخيارات المتقدمة --- -->
+            <div class="settings-section">
+                <h3 class="section-title">خيارات متقدمة</h3>
+                <div class="setting-item">
+                    <span class="setting-label">بقاء الشاشة مفتوحة</span>
+                    <div class="setting-action">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="keepScreenOnToggle" onchange="toggleScreenWakeLock(this.checked)">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="setting-item">
+                    <span class="setting-label">مسح البيانات المؤقتة</span>
+                    <div class="setting-action">
+                        <button class="button-action" onclick="clearCache()">حذف</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- --- زر الدعم المركزي --- -->
+            <div class="support-button-container">
+                <button class="support-button" onclick="goToSupport()">
+                    <span class="material-icons">support_agent</span>
+                    الدعم
+                </button>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- --- إشعار التحديث --- -->
+    <div id="toast" class="toast">تم التحديث بنجاح.</div>
+
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <span class="nav-icon material-icons">home</span>
+            <span>الرئيسية</span>
+        </a>
+        <a href="stats.html" class="nav-item">
+            <span class="nav-icon material-icons">bar_chart</span>
+            <span>الإحصائيات</span>
+        </a>
+        <a href="alerts.html" class="nav-item">
+            <span class="nav-icon material-icons">notifications</span>
+            <span>التنبيهات</span>
+        </a>
+        <a href="settings.html" class="nav-item active">
+            <span class="nav-icon material-icons">settings</span>
+            <span>الإعدادات</span>
+        </a>
+    </nav>
+
+    <script>
+        // --- دالة إنشاء الفقاعات ---
+        function createBubbles() {
+            const container = document.getElementById('bubbleContainer');
+            const bubbleCount = 20;
+            for (let i = 0; i < bubbleCount; i++) {
+                const bubble = document.createElement('div');
+                bubble.classList.add('bubble');
+                const size = Math.random() * 120 + 25;
+                bubble.style.width = `${size}px`;
+                bubble.style.height = `${size}px`;
+                bubble.style.left = `${Math.random() * 100}%`;
+                bubble.style.top = `${Math.random() * 100}%`;
+                bubble.style.animationDelay = `${Math.random() * 8}s`;
+                bubble.style.animationDuration = `${Math.random() * 10 + 15}s`;
+                container.appendChild(bubble);
+            }
+        }
+
+        // --- دالة التحديث ---
+        function checkForUpdate() {
+            console.log("جاري التحقق من التحديث...");
+            setTimeout(() => {
+                showToast();
+            }, 500);
+        }
+
+        // --- دالة عرض الإشعار ---
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // --- دالة تبديل الإشعارات ---
+        function toggleNotifications(checked) {
+            if (checked) {
+                console.log("تم تفعيل الإشعارات.");
+            } else {
+                console.log("تم إيقاف الإشعارات.");
+            }
+        }
+
+        // --- دالة طلب الأذونات ---
+        function requestPermissions() {
+            console.log("طلب الأذونات...");
+            alert("يرجى السماح بالأذونات من إعدادات المتصفح.");
+        }
+
+        // --- دالة تبديل بقاء الشاشة مفتوحة ---
+        let wakeLock = null;
+        async function toggleScreenWakeLock(checked) {
+            if (checked) {
+                try {
+                    wakeLock = await navigator.wakeLock.request('screen');
+                    console.log('تم تفعيل Wake Lock');
+                } catch (err) {
+                    console.error('فشل في تفعيل Wake Lock:', err);
+                    alert(" Wake Lock غير مدعوم في هذا المتصفح.");
+                    document.getElementById('keepScreenOnToggle').checked = false;
+                }
+            } else {
+                if (wakeLock) {
+                    await wakeLock.release();
+                    wakeLock = null;
+                    console.log('تم إيقاف Wake Lock');
+                }
+            }
+        }
+
+        // --- دالة مسح ذاكرة التخزين المؤقت ---
+        function clearCache() {
+            if (confirm("هل أنت متأكد من حذف البيانات المؤقتة؟")) {
+                console.log("جاري مسح الذاكرة المؤقتة...");
+                setTimeout(() => {
+                    alert("تم مسح البيانات المؤقتة.");
+                }, 500);
+            }
+        }
+
+        // --- دالة الانتقال إلى دعم ---
+        function goToSupport() {
+            window.location.href = 'support.html';
+        }
+
+        // --- تهيئة عند تحميل الصفحة ---
+        window.onload = function() {
+            createBubbles();
+            const notificationsEnabled = localStorage.getItem('notificationsEnabled') === 'true';
+            const keepScreenOn = localStorage.getItem('keepScreenOn') === 'true';
+            document.getElementById('notificationsToggle').checked = notificationsEnabled;
+            document.getElementById('keepScreenOnToggle').checked = keepScreenOn;
+        };
+
+        document.getElementById('notificationsToggle').addEventListener('change', function() {
+            localStorage.setItem('notificationsEnabled', this.checked);
+        });
+
+        document.getElementById('keepScreenOnToggle').addEventListener('change', function() {
+            localStorage.setItem('keepScreenOn', this.checked);
+        });
+    </script>
+
+</body>
+</html>

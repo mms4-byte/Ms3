@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المهام اليومية - Six Pro</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #1a237e, #4db6ac);
+            --accent-color: #4caf50;
+            --primary-color: #29b6f6;
+            --secondary-color: #f44336; /* لون الحذف أحمر */
+            --card-bg: rgba(255, 255, 255, 0.92);
+            --card-bg-hover: rgba(255, 255, 255, 0.98);
+            --text-primary: #2c3e50;
+            --text-secondary: #7f8c8d;
+            --border-radius: 18px;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            --shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.25);
+            --glass-blur: blur(12px);
+            --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-arabic: 'Cairo', 'Tahoma', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-arabic), var(--font-main);
+            background: var(--primary-gradient);
+            color: var(--text-primary);
+            padding-bottom: 80px;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .bubble-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            animation: float 15s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            25% { transform: translate(20px, 15px); }
+            50% { transform: translate(-10px, 20px); }
+            75% { transform: translate(15px, -10px); }
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 10;
+            background: rgba(245, 247, 250, 0.9);
+            border-top-left-radius: var(--border-radius);
+            border-top-right-radius: var(--border-radius);
+            padding: 20px;
+            min-height: calc(100vh - 80px);
+            margin-top: 20px;
+            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .app-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px 20px;
+            background: var(--primary-gradient);
+            z-index: 1001;
+        }
+
+        .back-button {
+            position: absolute;
+            left: 20px;
+            font-size: 1.8rem;
+            color: white;
+            cursor: pointer;
+            z-index: 1002;
+        }
+
+        .app-title {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: white;
+            letter-spacing: -0.5px;
+        }
+
+        .placeholder-for-back {
+            width: 40px;
+        }
+
+        .main-screen {
+            padding-top: 70px;
+        }
+
+        .stats-section {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 25px 20px;
+            background: var(--card-bg);
+            backdrop-filter: var(--glass-blur);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        .stats-title {
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+        }
+
+        .stats-details {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 15px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .progress-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .progress-bar {
+            flex-grow: 1;
+            height: 16px;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 0 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--accent-color);
+            border-radius: 10px;
+            width: 67%;
+            transition: width 0.4s ease;
+        }
+
+        .progress-text {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            min-width: 50px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .achievement-text {
+            font-size: 1rem;
+            color: var(--accent-color);
+            font-weight: 500;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .achievement-text.completed {
+            display: block;
+        }
+
+        .tasks-section {
+            margin-bottom: 20px;
+        }
+
+        .tasks-title {
+            font-size: 1.3rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 15px;
+        }
+
+        .empty-message {
+            text-align: center;
+            color: var(--text-secondary);
+            padding: 40px 20px;
+            font-size: 1rem;
+        }
+
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            background: var(--card-bg);
+            backdrop-filter: var(--glass-blur);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            box-shadow: var(--shadow);
+        }
+
+        .task-checkbox {
+            margin-left: 10px;
+            transform: scale(1.3);
+            cursor: pointer;
+        }
+
+        .task-text {
+            flex-grow: 1;
+            font-size: 1rem;
+            color: var(--text-primary);
+        }
+
+        .task-text.completed {
+            text-decoration: line-through;
+            color: var(--text-secondary);
+        }
+
+        .delete-button {
+            color: var(--secondary-color); /* لون الحذف أحمر */
+            background: none;
+            border: none;
+            font-size: 1.4rem;
+            cursor: pointer;
+            padding: 0 5px;
+        }
+
+        /* --- نمط المودال --- */
+        .modal {
+            display: none; /* مخفي افتراضياً */
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5); /* خلفية شفافة */
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            margin: 15% auto; /* يظهر في المنتصف */
+            padding: 20px;
+            border-radius: var(--border-radius);
+            width: 80%;
+            max-width: 400px;
+            box-shadow: var(--shadow-hover);
+            backdrop-filter: var(--glass-blur);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .close-button {
+            color: var(--text-secondary);
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+        }
+
+        .modal-body {
+            margin-bottom: 20px;
+        }
+
+        .task-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-family: var(--font-arabic), var(--font-main);
+            box-sizing: border-box;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .save-button, .cancel-button {
+            padding: 8px 20px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        .save-button {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .cancel-button {
+            background-color: #e0e0e0;
+            color: var(--text-primary);
+        }
+
+        .fab {
+            position: fixed;
+            bottom: 100px;
+            left: 20px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+
+        .fab:hover {
+            background: #43a047;
+            transform: scale(1.05);
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: var(--card-bg);
+            backdrop-filter: var(--glass-blur);
+            border-top: 1px solid rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 25%;
+            height: 100%;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-item.active {
+            color: var(--accent-color);
+        }
+
+        .nav-icon {
+            font-size: 1.6rem;
+            margin-bottom: 4px;
+        }
+
+        .nav-item.active .nav-icon {
+            background: var(--accent-color);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 8px rgba(76, 175, 80, 0.3);
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="bubble-container" id="bubbleContainer"></div>
+
+    <header class="app-header">
+        <span class="back-button material-icons" onclick="goBack()">arrow_back</span>
+        <h1 class="app-title">Six Pro</h1>
+        <span class="placeholder-for-back"></span>
+    </header>
+
+    <div class="content-wrapper">
+        <main class="main-screen">
+            <section class="stats-section">
+                <h2 class="stats-title">تقدمك اليومي</h2>
+                <div class="stats-details">
+                    <div class="stat-item">
+                        <div class="stat-number" id="completed-count">4</div>
+                        <div class="stat-label">مكتملة</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">6</div>
+                        <div class="stat-label">المجموع</div>
+                    </div>
+                </div>
+                <div class="progress-container">
+                    <span class="progress-text" id="progress-percent">67%</span>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                </div>
+                <p class="achievement-text" id="achievement-text">ممتاز! أكملت كل مهامك اليوم.</p>
+            </section>
+
+            <section class="tasks-section">
+                <h3 class="tasks-title">المهام اليومية</h3>
+                <div id="task-list-container">
+                    <div id="empty-message" class="empty-message">
+                        لا توجد مهام<br>
+                        اضغط على زر "+" لإضافة مهمة جديدة
+                    </div>
+                    <div id="task-list" class="task-list" style="display: none;">
+                        <div class="task-item">
+                            <input type="checkbox" class="task-checkbox" onchange="toggleTask(this)">
+                            <span class="task-text">مراجعة الفصل الثالث فيزياء</span>
+                            <button class="delete-button material-icons" onclick="deleteTask(this)">delete</button>
+                        </div>
+                        <div class="task-item">
+                            <input type="checkbox" class="task-checkbox" onchange="toggleTask(this)" checked>
+                            <span class="task-text completed">حل واجب الرياضيات</span>
+                            <button class="delete-button material-icons" onclick="deleteTask(this)">delete</button>
+                        </div>
+                        <div class="task-item">
+                            <input type="checkbox" class="task-checkbox" onchange="toggleTask(this)">
+                            <span class="task-text">قراءة قصيدة إنجليزية</span>
+                            <button class="delete-button material-icons" onclick="deleteTask(this)">delete</button>
+                        </div>
+                        <div class="task-item">
+                            <input type="checkbox" class="task-checkbox" onchange="toggleTask(this)" checked>
+                            <span class="task-text completed">كتابة تقرير الكيمياء</span>
+                            <button class="delete-button material-icons" onclick="deleteTask(this)">delete</button>
+                        </div>
+                        <div class="task-item">
+                            <input type="checkbox" class="task-checkbox" onchange="toggleTask(this)">
+                            <span class="task-text">مراجعة امتحان الأحياء</span>
+                            <button class="delete-button material-icons" onclick="deleteTask(this)">delete</button>
+                        </div>
+                        <div class="task-item">
+                            <input type="checkbox" class="task-checkbox" onchange="toggleTask(this)">
+                            <span class="task-text">حفظ جدول الضرب 7</span>
+                            <button class="delete-button material-icons" onclick="deleteTask(this)">delete</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- --- زر الإضافة العائم --- -->
+    <button class="fab material-icons" onclick="openAddTaskModal()">add</button>
+
+    <!-- --- مودال إضافة مهمة --- -->
+    <div id="addTaskModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">إضافة مهمة جديدة</h2>
+                <button class="close-button" onclick="closeAddTaskModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="newTaskInput" class="task-input" placeholder="اكتب اسم المهمة..." onkeypress="handleEnterKeyPress(event)">
+            </div>
+            <div class="modal-footer">
+                <button class="cancel-button" onclick="closeAddTaskModal()">إلغاء</button>
+                <button class="save-button" onclick="addTaskFromModal()">حفظ</button>
+            </div>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item active">
+            <span class="nav-icon material-icons">home</span>
+            <span>الرئيسية</span>
+        </a>
+        <a href="stats.html" class="nav-item">
+            <span class="nav-icon material-icons">bar_chart</span>
+            <span>الإحصائيات</span>
+        </a>
+        <a href="alerts.html" class="nav-item">
+            <span class="nav-icon material-icons">notifications</span>
+            <span>التنبيهات</span>
+        </a>
+        <a href="settings.html" class="nav-item">
+            <span class="nav-icon material-icons">settings</span>
+            <span>الإعدادات</span>
+        </a>
+    </nav>
+
+    <script>
+        function createBubbles() {
+            const container = document.getElementById('bubbleContainer');
+            const bubbleCount = 15;
+            for (let i = 0; i < bubbleCount; i++) {
+                const bubble = document.createElement('div');
+                bubble.classList.add('bubble');
+                const size = Math.random() * 100 + 20;
+                bubble.style.width = `${size}px`;
+                bubble.style.height = `${size}px`;
+                bubble.style.left = `${Math.random() * 100}%`;
+                bubble.style.top = `${Math.random() * 100}%`;
+                bubble.style.animationDelay = `${Math.random() * 5}s`;
+                container.appendChild(bubble);
+            }
+        }
+
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+
+        function deleteTask(button) {
+            const taskItem = button.parentElement;
+            taskItem.remove();
+            updateStats();
+        }
+
+        function toggleTask(checkbox) {
+            const taskText = checkbox.nextElementSibling;
+            if (checkbox.checked) {
+                taskText.classList.add('completed');
+            } else {
+                taskText.classList.remove('completed');
+            }
+            updateStats();
+        }
+
+        function updateStats() {
+            const allTasks = document.querySelectorAll('#task-list .task-item');
+            const completedTasks = document.querySelectorAll('#task-list .task-item .task-checkbox:checked');
+
+            const completedCount = completedTasks.length;
+            const totalCount = allTasks.length;
+
+            document.getElementById('completed-count').textContent = completedCount;
+
+            if (totalCount > 0) {
+                const percent = Math.round((completedCount / totalCount) * 100);
+                document.getElementById('progress-percent').textContent = `${percent}%`;
+                document.getElementById('progress-fill').style.width = `${percent}%`;
+
+                const achievementText = document.getElementById('achievement-text');
+                if (percent === 100 && completedCount > 0) {
+                    achievementText.classList.add('completed');
+                } else {
+                    achievementText.classList.remove('completed');
+                }
+
+                const emptyMessage = document.getElementById('empty-message');
+                const taskList = document.getElementById('task-list');
+                if (totalCount === 0) {
+                    emptyMessage.style.display = 'block';
+                    taskList.style.display = 'none';
+                } else {
+                    emptyMessage.style.display = 'none';
+                    taskList.style.display = 'flex';
+                }
+            } else {
+                document.getElementById('progress-percent').textContent = '0%';
+                document.getElementById('progress-fill').style.width = '0%';
+                document.getElementById('achievement-text').classList.remove('completed');
+                document.getElementById('empty-message').style.display = 'block';
+                document.getElementById('task-list').style.display = 'none';
+            }
+        }
+
+        // --- وظائف المودال ---
+        function openAddTaskModal() {
+            document.getElementById('addTaskModal').style.display = 'block';
+            document.getElementById('newTaskInput').value = ''; // مسح الحقل عند الفتح
+            document.getElementById('newTaskInput').focus(); // تحديد الحقل
+        }
+
+        function closeAddTaskModal() {
+            document.getElementById('addTaskModal').style.display = 'none';
+        }
+
+        function addTaskFromModal() {
+            const input = document.getElementById('newTaskInput');
+            const taskName = input.value.trim();
+
+            if (taskName) { // تأكد من أن الاسم ليس فارغًا
+                const taskList = document.getElementById('task-list');
+                const emptyMessage = document.getElementById('empty-message');
+
+                if (taskList.style.display === 'none') {
+                    taskList.style.display = 'flex';
+                    emptyMessage.style.display = 'none';
+                }
+
+                const newTaskItem = document.createElement('div');
+                newTaskItem.className = 'task-item';
+                newTaskItem.innerHTML = `
+                    <input type="checkbox" class="task-checkbox" onchange="toggleTask(this)">
+                    <span class="task-text">${taskName}</span>
+                    <button class="delete-button material-icons" onclick="deleteTask(this)">delete</button>
+                `;
+                taskList.appendChild(newTaskItem);
+
+                updateStats(); // تحديث الإحصائيات
+                closeAddTaskModal(); // إغلاق المودال
+            } else {
+                // يمكن إضافة تنبيه للمستخدم إذا أراد
+                alert("الرجاء إدخال اسم المهمة.");
+            }
+        }
+
+        // دالة للتعامل مع زر Enter
+        function handleEnterKeyPress(event) {
+            if (event.key === 'Enter') {
+                addTaskFromModal();
+            }
+        }
+
+        // --- تهيئة عند تحميل الصفحة ---
+        window.onload = function() {
+            createBubbles();
+            updateStats();
+        };
+    </script>
+
+</body>
+</html>

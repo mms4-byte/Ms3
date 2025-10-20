@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الدعم - Six Pro</title>
+    <!-- 1. Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 2. Tailwind Config for consistent theme -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sans': ['Tajawal', 'sans-serif'],
+                    },
+                    colors: {
+                        'primary': {
+                            50: '#f0f4ff',
+                            100: '#e0e7ff',
+                            200: '#c7d2fe',
+                            300: '#a5b4fc',
+                            400: '#818cf8',
+                            500: '#667eea', // Main primary color
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            800: '#3730a3',
+                            900: '#312e81',
+                        },
+                        'secondary': {
+                            50: '#f0f1f9',
+                            100: '#e0e1f0',
+                            200: '#c8cbe6',
+                            300: '#a9afda',
+                            400: '#8a93ce',
+                            500: '#764ba2', // Main secondary color
+                            600: '#6b4193',
+                            700: '#5a377a',
+                            800: '#492d60',
+                            900: '#382447',
+                        },
+                        'glass': {
+                            DEFAULT: 'rgba(255, 255, 255, 0.1)',
+                            'border': 'rgba(255, 255, 255, 0.2)',
+                        }
+                    },
+                    borderRadius: {
+                        'xl': '0.75rem',
+                        '2xl': '1rem',
+                        '3xl': '1.5rem',
+                    },
+                    boxShadow: {
+                        'glass': '0 4px 30px rgba(0, 0, 0, 0.1)',
+                        'glass-hover': '0 20px 40px rgba(0, 0, 0, 0.2), 0 4px 20px rgba(102, 126, 234, 0.6), 0 6px 30px rgba(118, 75, 162, 0.4)',
+                        'button-hover': '0 0 15px rgba(102, 126, 234, 0.7)',
+                    },
+                    animation: {
+                        'gradient-shift': 'gradientShift 12s ease infinite',
+                        'scale-click': 'scaleClick 0.2s ease-in-out forwards',
+                        'fade-click': 'fadeClick 0.2s ease-in-out forwards',
+                    },
+                    keyframes: {
+                        gradientShift: {
+                            '0%, 100%': { 'background-position': '0% 50%' },
+                            '50%': { 'background-position': '100% 50%' },
+                        },
+                        scaleClick: {
+                            '0%': { transform: 'scale(1)' },
+                            '50%': { transform: 'scale(0.95)' },
+                            '100%': { transform: 'scale(1)' },
+                        },
+                        fadeClick: {
+                            '0%': { opacity: '0.8' },
+                            '50%': { opacity: '0.6' },
+                            '100%': { opacity: '0.8' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- 3. Feather Icons -->
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <!-- 4. Tajawal Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- 5. Custom CSS -->
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: linear-gradient(-45deg, #667eea, #764ba2, #6B8DD6, #8E37D7);
+            background-size: 400% 400%;
+            animation: gradientShift 12s ease infinite;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .glass-card {
+            background: theme('colors.glass.DEFAULT');
+            backdrop-filter: blur(10px);
+            border: 1px solid theme('colors.glass.border');
+            transition: all 0.3s ease;
+            box-shadow: theme('boxShadow.glass');
+        }
+
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .chat-header {
+            padding: 16px;
+            border-bottom: 1px solid theme('colors.glass.border');
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: theme('colors.glass.DEFAULT');
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            margin-bottom: 12px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .received {
+            background-color: #ffffff;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        .sent {
+            background-color: #dbeafe;
+            color: #1e40af;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message-image {
+            max-width: 100%;
+            border-radius: 12px;
+            margin-top: 8px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .message-audio {
+            width: 250px;
+            margin-top: 8px;
+        }
+
+        .message-time {
+            font-size: 0.7rem;
+            margin-top: 4px;
+            opacity: 0.8;
+        }
+
+        .sent .message-time {
+            text-align: left;
+            color: #3b82f6;
+        }
+
+        .received .message-time {
+            text-align: right;
+            color: #64748b;
+        }
+
+        .chat-input {
+            padding: 16px;
+            border-top: 1px solid theme('colors.glass.border');
+            display: flex;
+            background-color: theme('colors.glass.DEFAULT');
+            align-items: center;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 24px;
+            margin: 0 8px;
+            outline: none;
+            transition: border-color 0.2s;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .chat-input input:focus {
+            border-color: #3b82f6;
+        }
+
+        .send-button, .attach-button {
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .attach-button {
+            background-color: #94a3b8;
+            width: 44px;
+            height: 44px;
+        }
+
+        .send-button:hover {
+            background-color: #2563eb;
+        }
+
+        .attach-button:hover {
+            background-color: #64748b;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 16px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background-color: #10b981;
+        }
+
+        .notification.error {
+            background-color: #ef4444;
+        }
+
+        .typing-indicator {
+            display: none;
+            align-self: flex-start;
+            background-color: #ffffff;
+            padding: 12px 16px;
+            border-radius: 18px;
+            margin-bottom: 12px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .typing-indicator span {
+            height: 8px;
+            width: 8px;
+            background-color: #94a3b8;
+            border-radius: 50%;
+            display: inline-block;
+            margin: 0 2px;
+            animation: bounce 1.3s linear infinite;
+        }
+
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.15s;
+        }
+
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        @keyframes bounce {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .user-id-display {
+            font-size: 0.75rem;
+            color: #cbd5e1;
+            margin-top: 2px;
+        }
+
+        /* تحسين تصميم زر الثلاث نقاط */
+        .message-options {
+            position: absolute;
+            top: -12px;
+            right: -12px;
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 50%;
+            transition: background-color 0.2s;
+            background-color: #f1f5f9;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+
+        .message-options:hover {
+            background-color: #e2e8f0;
+        }
+
+        .message-options i {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* تصميم القائمة المنبثقة */
+        .options-menu {
+            position: absolute;
+            top: 25px;
+            right: 0;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 100;
+            display: none;
+            min-width: 120px;
+        }
+
+        .options-menu.show {
+            display: block;
+        }
+
+        .options-menu-item {
+            padding: 10px 16px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+        }
+
+        .options-menu-item:hover {
+            background-color: #f1f5f9;
+        }
+
+        .options-menu-item i {
+            margin-left: 8px;
+        }
+
+        /* For preventing text selection and touch highlight */
+        * {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            overscroll-behavior: none;
+            touch-action: manipulation;
+        }
+
+        /* NEW: Bottom Navigation Styles */
+        .nav-item {
+            transition: color 0.2s ease, transform 0.2s ease, opacity 0.2s ease;
+        }
+
+        .nav-item.active {
+            color: theme('colors.white');
+        }
+
+        .nav-item:active {
+            animation: scale-click 0.2s ease-in-out forwards, fade-click 0.2s ease-in-out forwards;
+        }
+
+        /* Content Area Styling */
+        .main-content {
+            padding-bottom: 80px; /* Space for fixed nav bar */
+            flex: 1; /* For chat container layout */
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col overflow-x-hidden relative">
+    <div class="chat-container flex flex-col">
+        <!-- Header -->
+        <header class="relative z-10 p-6">
+            <div class="max-w-6xl mx-auto flex justify-between items-center">
+                <a href="index.html" class="text-white">
+                    <i data-feather="arrow-right" class="w-6 h-6"></i>
+                </a>
+                <h1 class="text-2xl font-bold text-white">الدعم الفني</h1>
+                <div class="w-6"></div> <!-- Spacer for alignment -->
+            </div>
+        </header>
+
+        <!-- Chat Header -->
+        <div class="chat-header glass-card">
+            <div></div> <!-- Spacer -->
+            <div class="text-center">
+                <h3 class="text-lg font-bold text-white">الدردشة مع الدعم</h3>
+                <div class="user-id-display" id="user-id-display">المستخدم: </div>
+            </div>
+            <div class="w-6"></div> <!-- Spacer for alignment -->
+        </div>
+
+        <!-- Chat Messages and Input Container -->
+        <div class="main-content flex flex-col">
+            <div class="chat-messages glass-card" id="chat-messages">
+                <!-- سيتم تحميل الرسائل من localStorage هنا -->
+                <div class="typing-indicator" id="typing-indicator">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+
+            <!-- Chat Input -->
+            <div class="chat-input glass-card">
+                <input type="file" id="image-input" accept="image/*" style="display: none;">
+                <button class="attach-button" id="attach-button" title="إرفاق صورة">
+                    <i data-feather="paperclip" class="w-5 h-5"></i>
+                </button>
+                <input type="text" id="message-input" placeholder="اكتب رسالتك..." class="text-white placeholder:text-white/50">
+                <button class="send-button" id="send-message" title="إرسال">
+                    <i data-feather="send" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification"></div>
+
+    <!-- NEW: Bottom Navigation Bar -->
+    <nav class="fixed bottom-0 left-0 right-0 z-20 glass-card rounded-t-3xl">
+        <div class="max-w-6xl mx-auto px-4 py-3">
+            <div class="flex justify-around items-center">
+                <a href="index.html" class="nav-item flex flex-col items-center space-y-1 text-purple-200 button-hover-glow btn-nav" data-title="الصفحة الرئيسية" title="الصفحة الرئيسية">
+                    <i data-feather="home" class="w-6 h-6"></i>
+                    <span class="text-xs">الرئيسية</span>
+                </a>
+                <a href="tasks.html" class="nav-item flex flex-col items-center space-y-1 text-purple-200 button-hover-glow btn-nav" data-title="المهام" title="المهام">
+                    <i data-feather="check-square" class="w-6 h-6"></i>
+                    <span class="text-xs">المهام</span>
+                </a>
+                <a href="stats.html" class="nav-item flex flex-col items-center space-y-1 text-purple-200 button-hover-glow btn-nav" data-title="الإحصائيات" title="الإحصائيات">
+                    <i data-feather="bar-chart-2" class="w-6 h-6"></i>
+                    <span class="text-xs">الإحصائيات</span>
+                </a>
+                <a href="notifications.html" class="nav-item flex flex-col items-center space-y-1 text-purple-200 button-hover-glow btn-nav" data-title="التنبيهات" title="التنبيهات">
+                    <i data-feather="bell" class="w-6 h-6"></i>
+                    <span class="text-xs">التنبيهات</span>
+                </a>
+                <a href="profile.html" class="nav-item flex flex-col items-center space-y-1 text-purple-200 button-hover-glow btn-nav" data-title="الاعدادات" title="الإعدادات">
+                    <i data-feather="user" class="w-6 h-6"></i>
+                    <span class="text-xs">الاعدادات</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <script>
+        // Initialize feather icons
+        document.addEventListener('DOMContentLoaded', function() {
+            feather.replace();
+            
+            // === إعداد بوت تليجرام ===
+            const BOT_TOKEN = '8246585020:AAF95qYlUKBS4L_2vmS5my_qFRJz4vfjAfA';
+            const ADMIN_CHAT_ID = '8186093463';
+
+            // DOM Elements
+            const sendMessage = document.getElementById('send-message');
+            const messageInput = document.getElementById('message-input');
+            const chatMessages = document.getElementById('chat-messages');
+            const notification = document.getElementById('notification');
+            const attachButton = document.getElementById('attach-button');
+            const imageInput = document.getElementById('image-input');
+            const typingIndicator = document.getElementById('typing-indicator');
+            const userIdDisplay = document.getElementById('user-id-display');
+            
+            // Chat state
+            let userId = null;
+            const CHAT_STORAGE_KEY = 'sixpro_support_chat_'; // Prefix for localStorage keys
+            let lastUpdateId = 0;
+            let pollingInterval = null;
+
+            // Generate or retrieve a stable user ID
+            function generateUserId() {
+                // Try to get existing user ID from localStorage
+                let storedId = localStorage.getItem('sixpro_support_user_id');
+                if (storedId) {
+                    return storedId;
+                }
+                
+                // If not found, generate a new one and store it
+                const newId = 'user_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
+                localStorage.setItem('sixpro_support_user_id', newId);
+                return newId;
+            }
+            
+            // Load chat history from localStorage
+            function loadChatHistory() {
+                const historyKey = CHAT_STORAGE_KEY + userId;
+                const history = localStorage.getItem(historyKey);
+                if (history) {
+                    try {
+                        const messages = JSON.parse(history);
+                        messages.forEach(msg => {
+                            if (msg.type === 'image') {
+                                addImageMessage(msg.content, msg.sender, false, msg.id);
+                            } else if (msg.type === 'audio') {
+                                addAudioMessage(msg.content, msg.sender, false, msg.id);
+                            } else {
+                                addMessage(msg.content, msg.sender, false, msg.id);
+                            }
+                        });
+                    } catch (e) {
+                        console.error('Error loading chat history:', e);
+                    }
+                } else {
+                    // Add initial welcome message if no history
+                    addMessage(`مرحباً بك في دعم Six Pro. كيف يمكنني مساعدتك اليوم؟ (معرفك: ${userId})`, 'received', false);
+                }
+            }
+
+            // Save message to localStorage
+            function saveMessageToHistory(content, sender, type = 'text', messageId = null) {
+                const historyKey = CHAT_STORAGE_KEY + userId;
+                let history = [];
+                const storedHistory = localStorage.getItem(historyKey);
+                if (storedHistory) {
+                    try {
+                        history = JSON.parse(storedHistory);
+                    } catch (e) {
+                        console.error('Error parsing chat history:', e);
+                    }
+                }
+                
+                // Generate a unique ID if not provided
+                if (!messageId) {
+                    messageId = 'msg_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
+                }
+                
+                history.push({ id: messageId, content, sender, type, timestamp: new Date().toISOString() });
+                localStorage.setItem(historyKey, JSON.stringify(history));
+                return messageId;
+            }
+
+            // Delete message from localStorage and UI
+            function deleteMessage(messageId, messageElement) {
+                // Remove from localStorage
+                const historyKey = CHAT_STORAGE_KEY + userId;
+                let history = [];
+                const storedHistory = localStorage.getItem(historyKey);
+                if (storedHistory) {
+                    try {
+                        history = JSON.parse(storedHistory);
+                    } catch (e) {
+                        console.error('Error parsing chat history:', e);
+                    }
+                }
+                
+                // Filter out the message to be deleted
+                history = history.filter(msg => msg.id !== messageId);
+                localStorage.setItem(historyKey, JSON.stringify(history));
+                
+                // Remove from UI
+                if (messageElement) {
+                    messageElement.remove();
+                }
+                
+                showNotification('تم حذف الرسالة', 'success');
+            }
+
+            // Initialize chat
+            userId = generateUserId();
+            userIdDisplay.textContent = `المستخدم: ${userId}`;
+            loadChatHistory();
+            startPolling(); // بدء الاستطلاع للردود
+            
+            // Attach button functionality
+            attachButton.addEventListener('click', () => {
+                imageInput.click();
+            });
+            
+            // Image input change
+            imageInput.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    const file = e.target.files[0];
+                    if (file.type.startsWith('image/')) {
+                        sendImage(file);
+                    } else {
+                        showNotification('الرجاء اختيار ملف صورة فقط', 'error');
+                    }
+                }
+            });
+            
+            // Send message functionality
+            sendMessage.addEventListener('click', sendMessageHandler);
+            messageInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    sendMessageHandler();
+                }
+            });
+            
+            function sendMessageHandler() {
+                const message = messageInput.value.trim();
+                if (message && userId) {
+                    // Add user message to UI immediately and save it
+                    const messageId = saveMessageToHistory(message, 'sent');
+                    addMessage(message, 'sent', true, messageId);
+                    messageInput.value = '';
+                    
+                    // Send message to Telegram bot
+                    sendToTelegram(message);
+                }
+            }
+            
+            // === وظيفة إرسال الرسالة الفعلية إلى بوت تليجرام ===
+            function sendToTelegram(message) {
+                // Show typing indicator
+                typingIndicator.style.display = 'block';
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                
+                // Format the message to include user ID
+                const fullMessage = `رسالة جديدة من المستخدم (${userId}):\n${message}`;
+                
+                // Send message to Telegram bot using fetch API
+                fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, { // FIXED: Removed space
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        chat_id: ADMIN_CHAT_ID,
+                        text: fullMessage
+                    })
+                })
+                .then(response => {
+                    typingIndicator.style.display = 'none';
+                    if (response.ok) {
+                        console.log('تم إرسال الرسالة بنجاح');
+                    } else {
+                        console.error('خطأ في إرسال الرسالة:', response.statusText);
+                        showNotification('حدث خطأ أثناء إرسال الرسالة', 'error');
+                        addMessage('عذراً، حدث خطأ أثناء إرسال رسالتك. يرجى المحاولة مرة أخرى.', 'received', true);
+                    }
+                })
+                .catch(error => {
+                    typingIndicator.style.display = 'none';
+                    console.error('خطأ في الاتصال:', error);
+                    showNotification('حدث خطأ في الاتصال', 'error');
+                    addMessage('عذراً، حدث خطأ في الاتصال. يرجى التحقق من اتصالك بالإنترنت.', 'received', true);
+                });
+            }
+            
+            // === وظيفة إرسال الصورة إلى بوت تليجرام ===
+            function sendImage(file) {
+                // Show typing indicator
+                typingIndicator.style.display = 'block';
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                
+                const formData = new FormData();
+                formData.append('chat_id', ADMIN_CHAT_ID);
+                formData.append('photo', file);
+                formData.append('caption', `صورة من المستخدم (${userId})`);
+                
+                // Send image to Telegram bot
+                fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, { // FIXED: Removed space
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    typingIndicator.style.display = 'none';
+                    if (response.ok) {
+                        console.log('تم إرسال الصورة بنجاح');
+                        // Create object URL for image preview and add to UI
+                        const imageUrl = URL.createObjectURL(file);
+                        const messageId = saveMessageToHistory(imageUrl, 'sent', 'image');
+                        addImageMessage(imageUrl, 'sent', true, messageId);
+                    } else {
+                        console.error('خطأ في إرسال الصورة:', response.statusText);
+                        showNotification('حدث خطأ أثناء إرسال الصورة', 'error');
+                        addMessage('عذراً، حدث خطأ أثناء إرسال صورتك. يرجى المحاولة مرة أخرى.', 'received', true);
+                    }
+                })
+                .catch(error => {
+                    typingIndicator.style.display = 'none';
+                    console.error('خطأ في الاتصال:', error);
+                    showNotification('حدث خطأ في الاتصال', 'error');
+                    addMessage('عذراً، حدث خطأ في الاتصال. يرجى التحقق من اتصالك بالإنترنت.', 'received', true);
+                });
+            }
+            
+            // Function to add text message to UI
+            function addMessage(text, type, save = true, messageId = null) {
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add('message', type);
+                messageDiv.setAttribute('data-timestamp', new Date().toISOString());
+                
+                // Generate ID if not provided
+                if (!messageId) {
+                    messageId = 'msg_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
+                }
+                messageDiv.setAttribute('data-message-id', messageId);
+                
+                // Add message options button only for sent messages
+                if (type === 'sent') {
+                    const optionsDiv = document.createElement('div');
+                    optionsDiv.classList.add('message-options');
+                    optionsDiv.innerHTML = '<i data-feather="more-vertical" class="w-5 h-5"></i>';
+                    messageDiv.appendChild(optionsDiv);
+                    
+                    // Add options menu
+                    const menuDiv = document.createElement('div');
+                    menuDiv.classList.add('options-menu');
+                    menuDiv.innerHTML = `
+                        <div class="options-menu-item" data-action="delete">
+                            <i data-feather="trash-2" class="w-4 h-4"></i>
+                            حذف
+                        </div>
+                    `;
+                    messageDiv.appendChild(menuDiv);
+                    
+                    // Add event listeners for options menu
+                    optionsDiv.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        menuDiv.classList.toggle('show');
+                    });
+                    
+                    // Add event listener for delete action
+                    const deleteItem = menuDiv.querySelector('[data-action="delete"]');
+                    if (deleteItem) {
+                        deleteItem.addEventListener('click', () => {
+                            deleteMessage(messageId, messageDiv);
+                        });
+                    }
+                    
+                    // Close menu when clicking outside
+                    document.addEventListener('click', (e) => {
+                        if (!messageDiv.contains(e.target)) {
+                            menuDiv.classList.remove('show');
+                        }
+                    });
+                }
+                
+                // Add message icon
+                const iconSpan = document.createElement('span');
+                iconSpan.classList.add('message-icon');
+                const icon = document.createElement('i');
+                icon.setAttribute('data-feather', type === 'sent' ? 'user' : 'headphones');
+                icon.classList.add('w-4', 'h-4');
+                iconSpan.appendChild(icon);
+                messageDiv.appendChild(iconSpan);
+                
+                const messageContent = document.createElement('div');
+                messageContent.classList.add('inline');
+                messageContent.textContent = text;
+                messageDiv.appendChild(messageContent);
+                
+                const timeSpan = document.createElement('div');
+                timeSpan.classList.add('message-time');
+                timeSpan.textContent = getCurrentTime();
+                messageDiv.appendChild(timeSpan);
+                
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                feather.replace(); // Re-initialize feather icons
+
+                // Save to localStorage if requested
+                if (save) {
+                    saveMessageToHistory(text, type, 'text', messageId);
+                }
+                
+                return messageDiv;
+            }
+            
+            // Function to add image message to UI
+            function addImageMessage(imageSrc, type, save = true, messageId = null) {
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add('message', type);
+                messageDiv.setAttribute('data-timestamp', new Date().toISOString());
+                
+                // Generate ID if not provided
+                if (!messageId) {
+                    messageId = 'msg_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
+                }
+                messageDiv.setAttribute('data-message-id', messageId);
+                
+                // Add message options button only for sent messages
+                if (type === 'sent') {
+                    const optionsDiv = document.createElement('div');
+                    optionsDiv.classList.add('message-options');
+                    optionsDiv.innerHTML = '<i data-feather="more-vertical" class="w-5 h-5"></i>';
+                    messageDiv.appendChild(optionsDiv);
+                    
+                    // Add options menu
+                    const menuDiv = document.createElement('div');
+                    menuDiv.classList.add('options-menu');
+                    menuDiv.innerHTML = `
+                        <div class="options-menu-item" data-action="delete">
+                            <i data-feather="trash-2" class="w-4 h-4"></i>
+                            حذف
+                        </div>
+                    `;
+                    messageDiv.appendChild(menuDiv);
+                    
+                    // Add event listeners for options menu
+                    optionsDiv.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        menuDiv.classList.toggle('show');
+                    });
+                    
+                    // Add event listener for delete action
+                    const deleteItem = menuDiv.querySelector('[data-action="delete"]');
+                    if (deleteItem) {
+                        deleteItem.addEventListener('click', () => {
+                            deleteMessage(messageId, messageDiv);
+                        });
+                    }
+                    
+                    // Close menu when clicking outside
+                    document.addEventListener('click', (e) => {
+                        if (!messageDiv.contains(e.target)) {
+                            menuDiv.classList.remove('show');
+                        }
+                    });
+                }
+                
+                // Add image icon
+                const iconSpan = document.createElement('span');
+                iconSpan.classList.add('message-icon');
+                const icon = document.createElement('i');
+                icon.setAttribute('data-feather', 'image');
+                icon.classList.add('w-4', 'h-4');
+                iconSpan.appendChild(icon);
+                messageDiv.appendChild(iconSpan);
+                
+                const img = document.createElement('img');
+                img.src = imageSrc;
+                img.classList.add('message-image');
+                messageDiv.appendChild(img);
+                
+                const timeSpan = document.createElement('div');
+                timeSpan.classList.add('message-time');
+                timeSpan.textContent = getCurrentTime();
+                messageDiv.appendChild(timeSpan);
+                
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                feather.replace(); // Re-initialize feather icons
+
+                // Save to localStorage if requested
+                if (save) {
+                    saveMessageToHistory(imageSrc, type, 'image', messageId);
+                }
+                
+                return messageDiv;
+            }
+            
+            // Function to add audio message to UI
+            function addAudioMessage(audioSrc, type, save = true, messageId = null) {
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add('message', type);
+                messageDiv.setAttribute('data-timestamp', new Date().toISOString());
+                
+                // Generate ID if not provided
+                if (!messageId) {
+                    messageId = 'msg_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
+                }
+                messageDiv.setAttribute('data-message-id', messageId);
+                
+                // Add message options button only for sent messages
+                if (type === 'sent') {
+                    const optionsDiv = document.createElement('div');
+                    optionsDiv.classList.add('message-options');
+                    optionsDiv.innerHTML = '<i data-feather="more-vertical" class="w-5 h-5"></i>';
+                    messageDiv.appendChild(optionsDiv);
+                    
+                    // Add options menu
+                    const menuDiv = document.createElement('div');
+                    menuDiv.classList.add('options-menu');
+                    menuDiv.innerHTML = `
+                        <div class="options-menu-item" data-action="delete">
+                            <i data-feather="trash-2" class="w-4 h-4"></i>
+                            حذف
+                        </div>
+                    `;
+                    messageDiv.appendChild(menuDiv);
+                    
+                    // Add event listeners for options menu
+                    optionsDiv.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        menuDiv.classList.toggle('show');
+                    });
+                    
+                    // Add event listener for delete action
+                    const deleteItem = menuDiv.querySelector('[data-action="delete"]');
+                    if (deleteItem) {
+                        deleteItem.addEventListener('click', () => {
+                            deleteMessage(messageId, messageDiv);
+                        });
+                    }
+                    
+                    // Close menu when clicking outside
+                    document.addEventListener('click', (e) => {
+                        if (!messageDiv.contains(e.target)) {
+                            menuDiv.classList.remove('show');
+                        }
+                    });
+                }
+                
+                // Add audio icon
+                const iconSpan = document.createElement('span');
+                iconSpan.classList.add('message-icon');
+                const icon = document.createElement('i');
+                icon.setAttribute('data-feather', 'mic');
+                icon.classList.add('w-4', 'h-4');
+                iconSpan.appendChild(icon);
+                messageDiv.appendChild(iconSpan);
+                
+                const audio = document.createElement('audio');
+                audio.src = audioSrc;
+                audio.controls = true;
+                audio.classList.add('message-audio');
+                messageDiv.appendChild(audio);
+                
+                const timeSpan = document.createElement('div');
+                timeSpan.classList.add('message-time');
+                timeSpan.textContent = getCurrentTime();
+                messageDiv.appendChild(timeSpan);
+                
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                feather.replace(); // Re-initialize feather icons
+
+                // Save to localStorage if requested
+                if (save) {
+                    saveMessageToHistory(audioSrc, type, 'audio', messageId);
+                }
+                
+                return messageDiv;
+            }
+            
+            function getCurrentTime() {
+                const now = new Date();
+                return `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+            }
+            
+            // Show notification
+            function showNotification(message, type) {
+                notification.textContent = message;
+                notification.className = `notification ${type} show`;
+                
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 3000);
+            }
+            
+            // === Polling for new messages from bot ===
+            function startPolling() {
+                // Reset last update ID
+                lastUpdateId = 0;
+                
+                // Get updates from Telegram bot
+                pollingInterval = setInterval(() => {
+                    getBotMessages();
+                }, 3000); // Check every 3 seconds
+            }
+            
+            function stopPolling() {
+                if (pollingInterval) {
+                    clearInterval(pollingInterval);
+                    pollingInterval = null;
+                }
+            }
+            
+            function getBotMessages() {
+                // Get updates from Telegram bot
+                fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getUpdates?offset=${lastUpdateId + 1}`) // FIXED: Removed space
+                .then(response => response.json())
+                .then(data => {
+                    if (data.ok && data.result.length > 0) {
+                        // Process new messages
+                        data.result.forEach(update => {
+                            // Update last update ID
+                            if (update.update_id > lastUpdateId) {
+                                lastUpdateId = update.update_id;
+                            }
+                            
+                            // Handle text messages from admin
+                            if (update.message && update.message.text && update.message.reply_to_message) {
+                                const replyText = update.message.reply_to_message.text || '';
+                                const currentUserMessage = `رسالة جديدة من المستخدم (${userId}):`;
+                                
+                                // Check if this reply is for current user
+                                if (replyText.includes(currentUserMessage)) {
+                                    const messageText = update.message.text;
+                                    // Only show messages that are replies from support
+                                    if (!messageText.startsWith('رسالة جديدة من المستخدم:')) {
+                                        addMessage(messageText, 'received', true);
+                                    }
+                                }
+                            }
+                            
+                            // Handle photo messages from admin
+                            if (update.message && update.message.photo && update.message.caption) {
+                                const caption = update.message.caption;
+                                const currentUserMessage = `صورة من المستخدم (${userId})`;
+                                
+                                // Check if this reply is for current user
+                                if (caption.includes(currentUserMessage)) {
+                                    const fileId = update.message.photo[update.message.photo.length - 1].file_id;
+                                    // Get file path and display image
+                                    getFileAndDisplay(fileId, 'photo');
+                                }
+                            }
+                            
+                            // Handle voice messages from admin
+                            if (update.message && update.message.voice && update.message.caption) {
+                                const caption = update.message.caption;
+                                const currentUserMessage = `رسالة صوتية من المستخدم (${userId})`;
+                                
+                                // Check if this reply is for current user
+                                if (caption.includes(currentUserMessage)) {
+                                    const fileId = update.message.voice.file_id;
+                                    // Get file path and display audio
+                                    getFileAndDisplay(fileId, 'voice');
+                                }
+                            }
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error getting bot messages:', error);
+                });
+            }
+            
+            function getFileAndDisplay(fileId, type) {
+                // Get file path
+                fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getFile?file_id=${fileId}`) // FIXED: Removed space
+                .then(response => response.json())
+                .then(data => {
+                    if (data.ok) {
+                        const filePath = data.result.file_path;
+                        const fileUrl = `https://api.telegram.org/file/bot${BOT_TOKEN}/${filePath}`; // FIXED: Removed space
+                        
+                        // Add file to UI based on type
+                        if (type === 'photo') {
+                            addImageMessage(fileUrl, 'received', true);
+                        } else if (type === 'voice') {
+                            addAudioMessage(fileUrl, 'received', true);
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error getting file:', error);
+                });
+            }
+            
+            // Cleanup on page unload
+            window.addEventListener('beforeunload', () => {
+                stopPolling();
+            });
+
+            // --- NEW: Handle Bottom Navigation Clicks ---
+            document.querySelectorAll('.btn-nav').forEach(button => {
+                button.addEventListener('click', function(event) {
+                    event.preventDefault(); // Prevent default navigation for now
+
+                    // Remove 'active' class from all nav items
+                    document.querySelectorAll('.nav-item').forEach(item => {
+                        item.classList.remove('active');
+                        item.classList.remove('text-white');
+                        item.classList.add('text-purple-200');
+                    });
+
+                    // Add 'active' class to clicked item
+                    this.classList.add('active');
+                    this.classList.remove('text-purple-200');
+                    this.classList.add('text-white');
+
+                    const title = this.getAttribute('data-title');
+                    const href = this.getAttribute('href');
+                    console.log(`Navigating to: ${href} (Title: ${title})`); // Log for clarity
+                    // In a real SPA, this would trigger page load
+                    window.location.href = href; // Navigate to the page
+                });
+            });
+        });
+    </script>
+</body>
+</html>

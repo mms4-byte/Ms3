@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الرياضيات - Six Pro</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #1a237e, #4db6ac);
+            --accent-color: #4caf50;
+            --primary-color: #29b6f6;
+            --secondary-color: #f44336;
+            --card-bg: rgba(255, 255, 255, 0.92);
+            --card-bg-hover: rgba(255, 255, 255, 0.98);
+            --text-primary: #2c3e50;
+            --text-secondary: #7f8c8d;
+            --border-radius: 18px;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            --shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.25);
+            --glass-blur: blur(12px);
+            --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-arabic: 'Cairo', 'Tahoma', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-arabic), var(--font-main);
+            background: var(--primary-gradient);
+            color: var(--text-primary);
+            padding-bottom: 80px;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .bubble-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            animation: float 15s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            25% { transform: translate(20px, 15px); }
+            50% { transform: translate(-10px, 20px); }
+            75% { transform: translate(15px, -10px); }
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 10;
+            background: rgba(245, 247, 250, 0.9);
+            border-top-left-radius: var(--border-radius);
+            border-top-right-radius: var(--border-radius);
+            padding: 20px;
+            min-height: calc(100vh - 80px);
+            margin-top: 20px;
+            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .app-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px 20px;
+            background: var(--primary-gradient);
+            z-index: 1001;
+        }
+
+        .back-button {
+            position: absolute;
+            left: 20px;
+            font-size: 1.8rem;
+            color: white;
+            cursor: pointer;
+            z-index: 1002;
+        }
+
+        .app-title {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: white;
+            letter-spacing: -0.5px;
+        }
+
+        .placeholder-for-back {
+            width: 40px;
+        }
+
+        .main-screen {
+            padding-top: 70px;
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .tab-buttons {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+            background: var(--card-bg);
+            backdrop-filter: var(--glass-blur);
+            border-radius: var(--border-radius);
+            padding: 5px;
+            box-shadow: var(--shadow);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            background: none;
+            color: var(--text-secondary);
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: var(--border-radius);
+            transition: color 0.3s ease;
+        }
+
+        .tab-btn.active {
+            color: var(--accent-color);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* --- محتوى التبويب "جداول" --- */
+        .tables-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .table-card {
+            background: var(--card-bg);
+            backdrop-filter: var(--glass-blur);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            box-shadow: var(--shadow);
+        }
+
+        .table-number {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .table-items {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* --- محتوى التبويب "اختبار" --- */
+        .test-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 300px;
+        }
+
+        .question-card {
+            background: var(--card-bg);
+            backdrop-filter: var(--glass-blur);
+            border-radius: var(--border-radius);
+            padding: 30px 40px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .question-text {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+        }
+
+        .answer-input {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.5rem;
+            text-align: center;
+            border: 2px solid var(--accent-color);
+            border-radius: var(--border-radius);
+            font-family: var(--font-arabic), var(--font-main);
+            box-sizing: border-box;
+        }
+
+        .check-button {
+            margin-top: 15px;
+            padding: 12px 30px;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+        }
+
+        .check-button:hover {
+            background: #43a047;
+        }
+
+        .feedback-message {
+            margin-top: 15px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            min-height: 1.5em;
+            text-align: center;
+        }
+
+        .feedback-message.success {
+            color: #4caf50;
+        }
+
+        .feedback-message.failure {
+            color: var(--secondary-color);
+        }
+
+        /* --- محتوى التبويب "إحصائيات" --- */
+        .stats-container {
+            text-align: center;
+        }
+
+        .progress-circle {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 20px;
+            position: relative;
+        }
+
+        .progress-circle svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--text-primary);
+        }
+
+        .stats-card {
+            background: var(--card-bg);
+            backdrop-filter: var(--glass-blur);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-top: 20px;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+        }
+
+        .stat-value {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .common-mistakes {
+            margin-top: 20px;
+            text-align: right;
+        }
+
+        .mistake-item {
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: var(--border-radius);
+            margin-bottom: 10px;
+        }
+
+        .motivational-message {
+            margin-top: 20px;
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: var(--card-bg);
+            backdrop-filter: var(--glass-blur);
+            border-top: 1px solid rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 25%;
+            height: 100%;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-item.active {
+            color: var(--accent-color);
+        }
+
+        .nav-icon {
+            font-size: 1.6rem;
+            margin-bottom: 4px;
+        }
+
+        .nav-item.active .nav-icon {
+            background: var(--accent-color);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 8px rgba(76, 175, 80, 0.3);
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="bubble-container" id="bubbleContainer"></div>
+
+    <header class="app-header">
+        <span class="back-button material-icons" onclick="goBack()">arrow_back</span>
+        <h1 class="app-title">Six Pro</h1>
+        <span class="placeholder-for-back"></span>
+    </header>
+
+    <div class="content-wrapper">
+        <main class="main-screen">
+            <h2 class="page-title">الرياضيات</h2>
+
+            <div class="tab-buttons">
+                <button class="tab-btn active" onclick="switchTab('tables')">جداول</button>
+                <button class="tab-btn" onclick="switchTab('test')">اختبار</button>
+                <button class="tab-btn" onclick="switchTab('stats')">إحصائيات</button>
+            </div>
+
+            <div id="tables-content" class="tab-content active">
+                <h3 class="tables-title">جداول الضرب (1-12)</h3>
+                <div class="tables-grid" id="tablesGrid">
+                    <!-- --- سيتم ملء الجداول ديناميكيًا --- -->
+                </div>
+            </div>
+
+            <div id="test-content" class="tab-content">
+                <div class="test-container">
+                    <div class="question-card">
+                        <div class="question-text" id="questionText">؟ × ؟ = ؟</div>
+                        <input type="number" class="answer-input" id="answerInput" placeholder="الإجابة..." onkeypress="handleAnswerKeyPress(event)">
+                        <button class="check-button" onclick="checkAnswer()">تحقق</button>
+                    </div>
+                    <div class="feedback-message" id="feedbackMessage"></div>
+                </div>
+            </div>
+
+            <div id="stats-content" class="tab-content">
+                <div class="stats-container">
+                    <h3>الرياضيات: إحصائياتك</h3>
+                    <div class="progress-circle">
+                        <svg viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="45" fill="none" stroke="#e0e0e0" stroke-width="8"></circle>
+                            <circle cx="50" cy="50" r="45" fill="none" stroke="var(--accent-color)" stroke-width="8" stroke-dasharray="283" stroke-dashoffset="283" id="progressCircleArc"></circle>
+                        </svg>
+                        <div class="progress-text" id="progressText">0%</div>
+                    </div>
+                    <div class="stats-card">
+                        <div class="stat-row">
+                            <span class="stat-label">إجمالي الأسئلة:</span>
+                            <span class="stat-value" id="totalQuestions">0</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">الإجابات الصحيحة:</span>
+                            <span class="stat-value" id="correctAnswers">0</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">الإجابات الخاطئة:</span>
+                            <span class="stat-value" id="wrongAnswers">0</span>
+                        </div>
+                    </div>
+                    <div class="common-mistakes">
+                        <h4>الأخطاء الشائعة</h4>
+                        <div id="commonMistakesList">
+                            <!-- --- سيتم ملء الأخطاء ديناميكيًا --- -->
+                        </div>
+                    </div>
+                    <div class="motivational-message" id="motivationalMessage">
+                        ابدأ الإختبار لترى تقدمك!
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item active">
+            <span class="nav-icon material-icons">home</span>
+            <span>الرئيسية</span>
+        </a>
+        <a href="stats.html" class="nav-item">
+            <span class="nav-icon material-icons">bar_chart</span>
+            <span>الإحصائيات</span>
+        </a>
+        <a href="alerts.html" class="nav-item">
+            <span class="nav-icon material-icons">notifications</span>
+            <span>التنبيهات</span>
+        </a>
+        <a href="settings.html" class="nav-item">
+            <span class="nav-icon material-icons">settings</span>
+            <span>الإعدادات</span>
+        </a>
+    </nav>
+
+    <script>
+        // --- بيانات جداول الضرب ---
+        const multiplicationTables = [];
+        for (let i = 1; i <= 12; i++) {
+            const table = [];
+            for (let j = 1; j <= 12; j++) {
+                table.push(`${i} × ${j} = ${i * j}`);
+            }
+            multiplicationTables.push(table);
+        }
+
+        // --- متغيرات الإحصائيات ---
+        let totalQuestions = 0;
+        let correctAnswers = 0;
+        let wrongAnswers = 0;
+        let currentQuestion = { num1: 0, num2: 0, answer: 0 };
+        let currentInput = 0;
+        // --- متغير لتتبع الأخطاء ---
+        let mistakeTracker = {}; // مثلاً: { "1x5": 2, "3x4": 1 }
+
+        // --- إنشاء الجداول ---
+        function createTables() {
+            const grid = document.getElementById('tablesGrid');
+            grid.innerHTML = '';
+            multiplicationTables.forEach((table, index) => {
+                const tableNum = index + 1;
+                const card = document.createElement('div');
+                card.className = 'table-card';
+                card.innerHTML = `
+                    <div class="table-number">جدول ${tableNum}</div>
+                    <div class="table-items">${table.join('<br>')}</div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // --- تبديل التبويبات ---
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`${tabName}-content`).classList.add('active');
+            event.target.classList.add('active');
+
+            if (tabName === 'test') {
+                generateQuestion();
+            }
+            if (tabName === 'stats') {
+                updateStatsDisplay();
+            }
+        }
+
+        // --- إنشاء سؤال عشوائي ---
+        function generateQuestion() {
+            const num1 = Math.floor(Math.random() * 12) + 1;
+            const num2 = Math.floor(Math.random() * 12) + 1;
+            currentQuestion = {
+                num1: num1,
+                num2: num2,
+                answer: num1 * num2
+            };
+            document.getElementById('questionText').textContent = `${num1} × ${num2} =`;
+            document.getElementById('answerInput').value = '';
+            document.getElementById('answerInput').focus();
+            // لا نمسح رسالة الملاحظة عند توليد سؤال جديد
+        }
+
+        // --- التحقق من الإجابة ---
+        function checkAnswer() {
+            const inputElement = document.getElementById('answerInput');
+            const userInput = inputElement.value.trim();
+
+            if (userInput === '') {
+                document.getElementById('feedbackMessage').textContent = 'الرجاء إدخال إجابة.';
+                document.getElementById('feedbackMessage').className = 'feedback-message failure';
+                // توليد سؤال جديد حتى بدون إدخال
+                generateQuestion();
+                updateStatsDisplay(); // تحديث الإحصائيات
+                return;
+            }
+
+            currentInput = parseInt(userInput);
+            totalQuestions++;
+
+            const questionKey = `${currentQuestion.num1}x${currentQuestion.num2}`; // مفتاح فريد للسؤال
+
+            if (currentInput === currentQuestion.answer) {
+                correctAnswers++;
+                const successMessages = ['أحسنت!', 'استمر في الإبداع.', 'بطل!', 'ممتاز! سرعة ودقة.'];
+                const randomMessage = successMessages[Math.floor(Math.random() * successMessages.length)];
+                document.getElementById('feedbackMessage').textContent = randomMessage;
+                document.getElementById('feedbackMessage').className = 'feedback-message success';
+            } else {
+                wrongAnswers++;
+                // --- تحديث متعقب الأخطاء فقط عند الخطأ ---
+                if (mistakeTracker[questionKey]) {
+                    mistakeTracker[questionKey]++;
+                } else {
+                    mistakeTracker[questionKey] = 1;
+                }
+                const failureMessages = ['لا تستسلم! أعد المحاولة.', 'النجاح يحتاج ألم ومثابرة.', 'استمر! كل خطأ هو فرصة للتعلم.'];
+                const randomMessage = failureMessages[Math.floor(Math.random() * failureMessages.length)];
+                document.getElementById('feedbackMessage').textContent = randomMessage;
+                document.getElementById('feedbackMessage').className = 'feedback-message failure';
+            }
+
+            // --- توليد سؤال جديد مباشرة ---
+            generateQuestion();
+            // --- تحديث الإحصائيات مباشرة ---
+            updateStatsDisplay();
+        }
+
+        // --- التحقق عند الضغط على Enter ---
+        function handleAnswerKeyPress(event) {
+            if (event.key === 'Enter') {
+                checkAnswer(); // نفس وظيفة زر التحقق
+            }
+        }
+
+        // --- تحديث عرض الإحصائيات ---
+        function updateStatsDisplay() {
+            document.getElementById('totalQuestions').textContent = totalQuestions;
+            document.getElementById('correctAnswers').textContent = correctAnswers;
+            document.getElementById('wrongAnswers').textContent = wrongAnswers;
+
+            const successRate = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
+            document.getElementById('progressText').textContent = `${successRate}%`;
+
+            const progressCircle = document.getElementById('progressCircleArc');
+            const circumference = 283;
+            const offset = circumference - (successRate / 100) * circumference;
+            progressCircle.style.strokeDashoffset = offset;
+
+            const messageElement = document.getElementById('motivationalMessage');
+            if (totalQuestions === 0) {
+                messageElement.textContent = 'ابدأ الإختبار لترى تقدمك!';
+            } else if (successRate >= 80) {
+                messageElement.textContent = 'ممتاز! أنت تحقق نتائج رائعة.';
+            } else if (successRate >= 50) {
+                messageElement.textContent = 'جيد، لكن يمكنك التحسن أكثر مع الممارسة.';
+            } else {
+                messageElement.textContent = 'لا تقلق، الاستمرارية ستقودك للنجاح.';
+            }
+
+            // --- تحديث عرض الأخطاء الشائعة ---
+            const mistakesList = document.getElementById('commonMistakesList');
+            mistakesList.innerHTML = ''; // مسح القائمة الحالية
+
+            // تحويل الكائن إلى مصفوفة وفرزها حسب عدد الأخطاء (تنازليًا)
+            const sortedMistakes = Object.entries(mistakeTracker).sort((a, b) => b[1] - a[1]);
+
+            if (sortedMistakes.length > 0) {
+                sortedMistakes.slice(0, 3).forEach(([key, count]) => { // عرض أول 3 أخطاء
+                    const [num1, num2] = key.split('x');
+                    const item = document.createElement('div');
+                    item.className = 'mistake-item';
+                    item.textContent = `${num1} × ${num2} (أخطأت ${count} مرة)`;
+                    mistakesList.appendChild(item);
+                });
+            } else {
+                const item = document.createElement('div');
+                item.className = 'mistake-item';
+                item.textContent = 'لا توجد أخطاء حتى الآن.';
+                mistakesList.appendChild(item);
+            }
+        }
+
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+
+        function createBubbles() {
+            const container = document.getElementById('bubbleContainer');
+            const bubbleCount = 15;
+            for (let i = 0; i < bubbleCount; i++) {
+                const bubble = document.createElement('div');
+                bubble.classList.add('bubble');
+                const size = Math.random() * 100 + 20;
+                bubble.style.width = `${size}px`;
+                bubble.style.height = `${size}px`;
+                bubble.style.left = `${Math.random() * 100}%`;
+                bubble.style.top = `${Math.random() * 100}%`;
+                bubble.style.animationDelay = `${Math.random() * 5}s`;
+                container.appendChild(bubble);
+            }
+        }
+
+        window.onload = function() {
+            createBubbles();
+            createTables();
+        };
+    </script>
+
+</body>
+</html>
