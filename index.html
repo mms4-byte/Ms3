@@ -12,7 +12,7 @@
     <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('service-worker.js') // ✅ بدون / في البداية
+        navigator.serviceWorker.register('sw.js') // ✅ بدون / في البداية
         .then(registration => {
           console.log('✅ Service Worker مسجل بنجاح:', registration.scope);
         })
@@ -27,7 +27,8 @@
     <link rel="manifest" href="manifest.json">
 
     <!-- أيقونة التطبيق -->
-    <link rel="icon" type="image/png" href="https://imgur.com/1l3hICE">
+    <link rel="icon" type="image/png" href="https://i.imgur.com/1l3hICE.png">
+<link rel="apple-touch-icon" href="https://i.imgur.com/1l3hICE.png">
     <!-- --- تهيئة PWA --- -->
     <meta name="theme-color" content="#1a237e"> <!-- لون متوافق مع تدرج الخلفية -->
     <meta name="apple-mobile-web-app-capable" content="yes">
