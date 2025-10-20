@@ -4,23 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Six Pro - منصة نجاحك الدراسي</title>
+
+    <!-- أيقونات وخطوط -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+    <!-- تسجيل Service Worker -->
     <script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/service-worker.js')
-    .then(registration => {
-      console.log('✅ Service Worker مسجل بنجاح:', registration.scope);
-    })
-    .catch(error => {
-      console.log('❌ فشل التسجيل:', error);
-    });
-  });
-}
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js') // ✅ بدون / في البداية
+        .then(registration => {
+          console.log('✅ Service Worker مسجل بنجاح:', registration.scope);
+        })
+        .catch(error => {
+          console.log('❌ فشل التسجيل:', error);
+        });
+      });
+    }
     </script>
-    <!-- --- ربط ملف manifest.json --- -->
+
+    <!-- ملف manifest -->
     <link rel="manifest" href="manifest.json">
-    <!-- --- ربط أيقونة التطبيق --- -->
+
+    <!-- أيقونة التطبيق -->
     <link rel="icon" type="image/png" href="https://imgur.com/1l3hICE">
     <!-- --- تهيئة PWA --- -->
     <meta name="theme-color" content="#1a237e"> <!-- لون متوافق مع تدرج الخلفية -->
