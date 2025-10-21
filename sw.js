@@ -3,9 +3,8 @@ const CACHE_NAME = 'six-pro-cache-v1';
 
 // الملفات التي سيتم تخزينها في الكاش
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/manifest.json',
+  'index.html',
+  'manifest.json',
   'https://imgur.com/1l3hICE.png' // صورة الأيقونة من Imgur
 ];
 
