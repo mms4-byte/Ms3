@@ -47,7 +47,7 @@
             --card-bg-hover: rgba(255, 255, 255, 0.98);
             --text-primary: #2c3e50;
             --text-secondary: #34495e;
-            --text-disabled: #95a5a6;
+            --text-disabled: #95a5a6; /* هذه القيمة لم تعد مستخدمة */
             --border-radius: 18px;
             --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             --shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.15);
@@ -160,7 +160,13 @@
             font-family: var(--font-arabic-bold);
         }
 
-        /* --- تم إزالة .welcome-desc و .motivational-text و .progress-container --- */
+        /* --- نمط "إنجاز اليوم" --- */
+        .daily-goal {
+            font-size: 1rem;
+            color: var(--accent-color);
+            font-weight: 500;
+            margin-top: 10px;
+        }
 
         .features-grid {
             display: grid;
@@ -203,6 +209,7 @@
             margin-bottom: 12px;
             color: var(--primary-color);
             transition: var(--transition-smooth);
+            position: relative; /* لدعم spinner */
         }
 
         .feature-card:hover .feature-icon {
@@ -210,7 +217,7 @@
         }
 
         .feature-card:nth-child(2) .feature-icon { color: var(--secondary-color); }
-        .feature-card:nth-child(3) .feature-icon { color: #27ae60; }
+        .feature-card:nth-child(3) .feature-icon { color: #27ae60; } /* لون الإنجليزي */
         .feature-card:nth-child(4) .feature-icon { color: #8e44ad; }
 
         .feature-name {
@@ -220,26 +227,7 @@
             font-family: var(--font-arabic-bold);
         }
 
-        .feature-card.disabled {
-            cursor: not-allowed;
-            opacity: 0.6;
-            filter: grayscale(50%);
-            box-shadow: var(--shadow);
-        }
-
-        .feature-card.disabled .feature-icon,
-        .feature-card.disabled .feature-name {
-            color: var(--text-disabled);
-        }
-
-        .feature-card.disabled:hover {
-            transform: none;
-            box-shadow: var(--shadow);
-        }
-
-        .feature-card.disabled:hover .feature-icon {
-            transform: none;
-        }
+        /* --- تم حذف .feature-card.disabled --- */
 
         .news-card {
             background: var(--card-bg);
@@ -414,6 +402,26 @@
             cursor: pointer;
             font-weight: 500;
         }
+
+        /* --- Loading Spinner --- */
+        .spinner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(0, 0, 0, 0.1);
+            border-top: 3px solid var(--accent-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            display: none; /* مخفي افتراضيًا */
+        }
+
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
     </style>
 
     <!-- ربط الخطوط العربية -->
@@ -433,31 +441,36 @@
         <main class="main-screen" id="home-screen">
             <section class="welcome-section">
                 <h2 class="welcome-title">أهلاً بك في Six Pro</h2>
-                <!-- --- تم حذف .welcome-desc و .motivational-text و .progress-container --- -->
+                <div class="daily-goal" id="daily-goal-text">...جاري التحميل</div>
             </section>
 
             <div class="features-grid">
                 <div class="feature-card" onclick="smoothNavigate('tasks.html')">
                     <span class="feature-icon material-icons" aria-hidden="true">assignment</span>
                     <div class="feature-name" role="button" tabindex="0" aria-label="المهام اليومية. اضغط للانتقال إلى صفحة المهام.">المهام اليومية</div>
+                    <div class="spinner" id="spinner-tasks"></div> <!-- Spinner -->
                 </div>
                 <div class="feature-card" onclick="smoothNavigate('math.html')">
                     <span class="feature-icon material-icons" aria-hidden="true">calculate</span>
                     <div class="feature-name" role="button" tabindex="0" aria-label="الرياضيات. اضغط للانتقال إلى صفحة الرياضيات.">الرياضيات</div>
+                     <div class="spinner" id="spinner-math"></div> <!-- Spinner -->
                 </div>
-                <div class="feature-card disabled" onclick="handleDisabledCardClick()">
-                    <span class="feature-icon material-icons" aria-hidden="true">lock</span>
-                    <div class="feature-name" role="button" tabindex="0" aria-label="الإنكليزي (قريباً). هذا القسم غير متوفر حالياً." aria-disabled="true">الإنكليزي</div>
+                <!-- --- تم فتح بطاقة الإنجليزي --- -->
+                <div class="feature-card" onclick="smoothNavigate('english.html')">
+                    <span class="feature-icon material-icons" aria-hidden="true">translate</span>
+                    <div class="feature-name" role="button" tabindex="0" aria-label="الإنكليزي. اضغط للانتقال إلى صفحة الإنجليزي.">الإنكليزي</div>
+                     <div class="spinner" id="spinner-english"></div> <!-- Spinner -->
                 </div>
                 <div class="feature-card" onclick="smoothNavigate('schedule.html')">
                     <span class="feature-icon material-icons" aria-hidden="true">calendar_today</span>
                     <div class="feature-name" role="button" tabindex="0" aria-label="الجدول الدراسي. اضغط للانتقال إلى صفحة الجدول.">الجدول الدراسي</div>
+                     <div class="spinner" id="spinner-schedule"></div> <!-- Spinner -->
                 </div>
             </div>
 
             <section class="news-card">
                 <h3 class="news-title">تذكير!</h3>
-                <p class="news-content">لديك امتحان فيزياء في الساعة 4:00 عصراً اليوم. راجع ملاحظات الفصل الثالث.</p>
+                <p class="news-content" id="news-content">...جاري تحميل التذكير</p>
             </section>
 
             <section id="module-content" class="hidden">
@@ -474,12 +487,6 @@
 
         </main>
     </div>
-
-    <!-- --- تم حذف زر الدعم --- -->
-    <!-- <button id="support-button" class="material-icons" title="الدعم" onclick="handleSupportClick()">support_agent</button> -->
-
-    <!-- --- تم حذف الزر العائم (FAB) --- -->
-    <!-- <button id="fab-button" class="material-icons" title="اختبار سريع" onclick="showQuickTestModal()">psychology</button> -->
 
     <nav class="bottom-nav">
         <a href="index.html" class="nav-item active" onclick="handleNavClick(this, 'index.html')" aria-label="الصفحة الرئيسية">
@@ -550,14 +557,57 @@
             }
         }
 
-        // دالة التنقل السلس (نموذجية)
+        // دالة التنقل السلس (نموذجية) مع spinner
         function smoothNavigate(url) {
+            const card = event.currentTarget;
+            const spinnerId = `spinner-${url.split('.')[0]}`; // اشتقاق ID spinner من الرابط
+            const spinner = document.getElementById(spinnerId);
+
+            if (spinner) {
+                spinner.style.display = 'block';
+            }
+
             document.body.style.opacity = 0;
             document.body.style.transition = 'opacity 0.3s ease';
 
             setTimeout(() => {
                 window.location.href = url;
-            }, 150);
+            }, 300);
+        }
+
+        // دالة تحديث تقدم "إنجاز اليوم"
+        function updateProgress() {
+            // محاكاة جلب البيانات من localStorage
+            const tasks = JSON.parse(localStorage.getItem('dailyTasks') || '[]');
+            const totalTasks = tasks.length;
+            const completedTasks = tasks.filter(task => task.completed).length;
+            const remainingTasks = totalTasks - completedTasks;
+
+            const goalElement = document.getElementById('daily-goal-text');
+            if (goalElement) {
+                goalElement.textContent = `متبقي لك ${remainingTasks} مهام لهذا اليوم!`;
+            }
+        }
+
+        // دالة عرض تذكير عشوائي
+        function updateNewsCard() {
+            const newsContentElement = document.getElementById('news-content');
+            if (!newsContentElement) return;
+
+            const newsMessages = [
+                "لديك امتحان فيزياء في الساعة 4:00 عصراً اليوم. راجع ملاحظات الفصل الثالث.",
+                "لقد حان الوقت لمراجعة جدولك الدراسي لهذا الأسبوع.",
+                "لا تنسى إكمال تمارين الرياضيات المخصصة لهذا اليوم.",
+                "تم إضافة محتوى جديد في قسم العلوم. تحقق من القسم المغلق!",
+                "لديك 3 مهام معلقة في قائمة المهام. ابدأ بها الآن!",
+                "تذكير: امتحان الكيمياء بعد غد. راجع الفصل الأول والثاني."
+            ];
+
+            // اختيار رسالة عشوائية
+            const randomIndex = Math.floor(Math.random() * newsMessages.length);
+            const randomMessage = newsMessages[randomIndex];
+
+            newsContentElement.textContent = randomMessage;
         }
 
         // معالجة النقر على بطاقة مفعلة
@@ -567,29 +617,22 @@
             smoothNavigate(url);
         }
 
-        // معالجة النقر على بطاقة غير مفعلة
-        function handleDisabledCardClick() {
-            if (event.currentTarget.classList.contains('disabled')) {
-                 triggerHapticFeedback([10, 5, 10]);
-                 alert('هذا القسم غير متوفر حاليًا.');
-            }
-        }
+        // معالجة النقر على بطاقة غير مفعلة (تم حذفها لأن الإنجليزي لم يعد معطلًا)
 
         // معالجة النقر على شريط التنقل
         function handleNavClick(element, url) {
-            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            document.querySelectorAll('.nav-item a').forEach(item => item.classList.remove('active'));
             element.classList.add('active');
             createRipple(event, element);
             triggerHapticFeedback([10]);
             smoothNavigate(url);
         }
 
-        // تطبيق涟 ripple على البطاقات والملاحة (باستثناء المعطلة)
-        document.querySelectorAll('.feature-card:not(.disabled), .nav-item').forEach(item => {
+        // تطبيق涟 ripple على البطاقات والملاحة
+        document.querySelectorAll('.feature-card, .nav-item').forEach(item => {
             item.addEventListener('click', function(e) {
-                if (!this.classList.contains('disabled')) {
-                    createRipple(e, this);
-                }
+                // جميع البطاقات مفعلة الآن
+                createRipple(e, this);
             });
         });
 
@@ -605,13 +648,10 @@
 
         window.onload = createBubbles;
 
-        // تم حذف handleSupportClick و showQuickTestModal و startQuickTest
-
-        // تم حذف goToDailyTasks لأنها كانت تُستخدم مع النص المحذوف
-
-        // تم حذف تحديث شريط التقدم
+        // تحديث التقدم والتذكير عند تحميل الصفحة
         document.addEventListener('DOMContentLoaded', function() {
-            // لا يوجد تحديث للتقدم بعد الآن
+            updateProgress();
+            updateNewsCard();
         });
     </script>
 
