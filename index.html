@@ -2,658 +2,167 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Six Pro - منصة نجاحك الدراسي</title>
-
-    <!-- أيقونات مادية -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Six Pro - التصميم المعتمد</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-
-    <!-- تسجيل Service Worker -->
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js')
-                    .then(registration => {
-                        console.log('✅ Service Worker مسجل بنجاح:', registration.scope);
-                    })
-                    .catch(error => {
-                        console.log('❌ فشل التسجيل:', error);
-                    });
-            });
-        }
-    </script>
-
-    <!-- ملف manifest -->
-    <link rel="manifest" href="manifest.json">
-
-    <!-- أيقونة التطبيق (مفضلة) -->
-    <link rel="icon" type="image/png" href="https://i.imgur.com/1l3hICE.png">
-    <link rel="apple-touch-icon" href="https://i.imgur.com/1l3hICE.png">
-
-    <!-- تهيئة PWA -->
-    <meta name="theme-color" content="#1a237e">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Six Pro">
-
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
-        /* --- متغيرات CSS --- */
         :root {
-            --primary-gradient: linear-gradient(135deg, #1a237e, #4db6ac);
-            --accent-color: #4caf50;
-            --primary-color: #29b6f6;
-            --secondary-color: #ff7043;
-            --card-bg: rgba(255, 255, 255, 0.92);
-            --card-bg-hover: rgba(255, 255, 255, 0.98);
-            --text-primary: #2c3e50;
-            --text-secondary: #34495e;
-            --text-disabled: #95a5a6; /* هذه القيمة لم تعد مستخدمة */
-            --border-radius: 18px;
-            --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            --shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.15);
-            --glass-blur: blur(12px);
-            --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            --font-arabic: 'Cairo', 'Tahoma', sans-serif;
-            --font-arabic-bold: 'Tajawal', 'Cairo', var(--font-main);
-            --nav-height: 70px;
-            --transition-smooth: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            --transition-fade: opacity 0.3s ease;
+            --royal-navy: #020617; 
+            --royal-gold: #f1c40f;  
+            --glass: rgba(255, 255, 255, 0.05);
+            --border-gold: rgba(241, 196, 15, 0.25);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; user-select: none; }
+        body { background-color: var(--royal-navy); color: #fff; min-height: 100vh; overflow-x: hidden; }
+
+        /* الفقاعات الخلفية */
+        .bubble { position: absolute; border-radius: 50%; background: radial-gradient(circle, rgba(241, 196, 15, 0.07) 0%, transparent 70%); animation: floatUp 15s infinite linear; pointer-events: none; z-index: 0; }
+        @keyframes floatUp { from { transform: translateY(110vh); opacity: 0; } to { transform: translateY(-10vh); opacity: 1; } }
+
+        header { 
+            padding: 20px; text-align: center; background: rgba(2, 6, 23, 0.9); 
+            border-bottom: 2px solid var(--border-gold); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(15px);
         }
 
-        body {
-            font-family: var(--font-arabic), var(--font-main);
-            background: var(--primary-gradient);
-            color: var(--text-primary);
-            padding-bottom: var(--nav-height);
-            min-height: 100vh;
-            overflow-x: hidden;
-            position: relative;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
+        /* كرت الترحيب المحسن */
+        .welcome-card {
+            margin: 20px; padding: 25px; border-radius: 28px;
+            background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
+            border: 1px solid var(--border-gold); position: relative; z-index: 10;
         }
 
-        .bubble-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            z-index: 0;
-        }
+        .welcome-title { font-size: 1.4rem; font-weight: 900; color: #fff; margin-bottom: 5px; }
+        .welcome-sub { font-size: 0.85rem; color: var(--royal-gold); font-weight: 600; letter-spacing: 0.5px; }
 
-        .bubble {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.05);
-            animation: float 15s infinite ease-in-out;
-        }
+        /* شريط التقدم */
+        .progress-container { margin-top: 20px; background: rgba(255,255,255,0.03); height: 8px; border-radius: 10px; overflow: hidden; }
+        .progress-bar { height: 100%; background: var(--royal-gold); box-shadow: 0 0 10px var(--royal-gold); transition: 1s ease-in-out; }
 
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0); }
-            25% { transform: translate(20px, 15px); }
-            50% { transform: translate(-10px, 20px); }
-            75% { transform: translate(15px, -10px); }
-        }
-
-        .content-wrapper {
-            position: relative;
-            z-index: 10;
-            background: rgba(245, 247, 250, 0.9);
-            border-top-left-radius: var(--border-radius);
-            border-top-right-radius: var(--border-radius);
-            padding: 20px;
-            min-height: calc(100vh - var(--nav-height));
-            margin-top: 20px;
-            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.15);
-        }
-
-        .app-header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            text-align: center;
-            padding: 15px 20px;
-            background: var(--primary-gradient);
-            z-index: 1001;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        .app-title {
-            font-size: clamp(1.4rem, 3vw, 1.8rem);
-            font-weight: 700;
-            color: white;
-            letter-spacing: -0.5px;
-            font-family: var(--font-arabic-bold);
-        }
-
-        .main-screen {
-            padding-top: 70px;
-        }
-
-        .welcome-section {
-            text-align: center;
-            margin-bottom: 20px;
-            padding: 25px 20px;
-            background: var(--card-bg);
-            backdrop-filter: var(--glass-blur);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            transition: var(--transition-smooth);
-        }
-
-        .welcome-section:hover {
-             box-shadow: var(--shadow-hover);
-        }
-
-        .welcome-title {
-            font-size: 1.6rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            font-family: var(--font-arabic-bold);
-        }
-
-        /* --- نمط "إنجاز اليوم" --- */
-        .daily-goal {
-            font-size: 1rem;
-            color: var(--accent-color);
-            font-weight: 500;
-            margin-top: 10px;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-            margin-bottom: 15px;
-        }
-
+        /* الأزرار (الشبكة) */
+        .features-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 0 20px 20px; }
         .feature-card {
-            background: var(--card-bg);
-            backdrop-filter: var(--glass-blur);
-            border-radius: var(--border-radius);
-            padding: 28px 15px;
-            text-align: center;
-            box-shadow: var(--shadow);
-            transition: var(--transition-smooth);
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 140px;
-            position: relative;
-            overflow: hidden;
+            background: var(--glass); border: 1px solid var(--border-gold);
+            border-radius: 24px; padding: 25px 15px; text-align: center;
+            transition: 0.3s; cursor: pointer;
         }
+        .feature-card:active { transform: scale(0.95); background: var(--royal-gold); color: #000; }
+        .feature-icon { font-size: 2.2rem; color: var(--royal-gold); margin-bottom: 10px; display: block; }
+        .feature-text { font-size: 0.9rem; font-weight: 700; color: #fff; }
 
-        .feature-card:hover {
-            background: var(--card-bg-hover);
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-hover);
-        }
-
-        /* --- تأثير ضغط بسيط --- */
-        .feature-card:active {
-            transform: scale(0.98);
-        }
-
-        .feature-icon {
-            font-size: 3rem;
-            margin-bottom: 12px;
-            color: var(--primary-color);
-            transition: var(--transition-smooth);
-            position: relative; /* لدعم spinner */
-        }
-
-        .feature-card:hover .feature-icon {
-            transform: scale(1.1);
-        }
-
-        .feature-card:nth-child(2) .feature-icon { color: var(--secondary-color); }
-        .feature-card:nth-child(3) .feature-icon { color: #27ae60; } /* لون الإنجليزي */
-        .feature-card:nth-child(4) .feature-icon { color: #8e44ad; }
-
-        .feature-name {
-            font-size: 1.05rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            font-family: var(--font-arabic-bold);
-        }
-
-        /* --- تم حذف .feature-card.disabled --- */
-
-        .news-card {
-            background: var(--card-bg);
-            backdrop-filter: var(--glass-blur);
-            border-radius: var(--border-radius);
-            padding: 18px;
-            margin-top: 10px;
-            box-shadow: var(--shadow);
-            border-right: 5px solid var(--accent-color);
-            transition: var(--transition-smooth);
-        }
-
-        .news-card:hover {
-            box-shadow: var(--shadow-hover);
-        }
-
-        .news-title {
-            font-size: 1rem;
-            font-weight: 500;
-            color: var(--text-primary);
-        }
-
-        .news-content {
-            font-size: 0.95rem;
-            color: var(--text-secondary);
-            line-height: 1.4;
-        }
-
+        /* الملاحة السفلى */
         .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: var(--nav-height);
-            background: var(--card-bg);
-            backdrop-filter: var(--glass-blur);
-            border-top: 1px solid rgba(0,0,0,0.05);
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.15);
-            z-index: 1000;
+            position: fixed; bottom: 0; left: 0; right: 0; height: 75px;
+            background: rgba(2, 6, 23, 0.98); border-top: 1px solid var(--border-gold);
+            display: flex; justify-content: space-around; align-items: center; z-index: 1000;
         }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            width: 25%;
-            height: 100%;
-            text-decoration: none;
-            color: var(--text-secondary);
-            font-size: 0.8rem;
-            transition: var(--transition-smooth);
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
-        }
-
-        .nav-item.active {
-            color: var(--accent-color);
-        }
-
-        /* --- تأثير ضغط على عناصر الملاحة --- */
-        .nav-item:active {
-            background-color: rgba(0,0,0,0.05);
-        }
-
-        .nav-icon {
-            font-size: 1.6rem;
-            margin-bottom: 4px;
-            transition: var(--transition-smooth);
-        }
-
-        .nav-item:hover .nav-icon,
-        .nav-item.active .nav-icon {
-            transform: scale(1.1);
-        }
-
-        .nav-item.active .nav-icon {
-            background: var(--accent-color);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: 0 0 8px rgba(76, 175, 80, 0.3);
-        }
-
-        .nav-item.active::after {
-            content: '';
-            position: absolute;
-            width: 6px;
-            height: 6px;
-            background: var(--accent-color);
-            border-radius: 50%;
-            bottom: 5px;
-        }
-
-        .section-title {
-            display: flex;
-            align-items: center;
-            margin: 20px 0 10px 0;
-            padding: 0 10px;
-            font-size: 1.4rem;
-            font-weight: 500;
-            color: var(--text-primary);
-            font-family: var(--font-arabic-bold);
-        }
-
-        .section-title::before {
-            content: "• ";
-            margin-right: 8px;
-            color: var(--accent-color);
-            font-size: 1.8rem;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        /* ---涟 ripple effect--- */
-        .ripple {
-            position: absolute;
-            border-radius: 50%;
-            background-color: rgba(0, 0, 0, 0.15);
-            transform: scale(0);
-            animation: ripple-animation 0.6s ease-out;
-            pointer-events: none;
-        }
-
-        @keyframes ripple-animation {
-            to {
-                transform: scale(4);
-                opacity: 0;
-            }
-        }
-
-        /* --- تحسينات الاستجابة --- */
-        @media (max-width: 480px) {
-            .features-grid {
-                grid-template-columns: 1fr;
-            }
-            .app-title {
-                font-size: 1.5rem;
-            }
-        }
-
-        /* --- حالة الفراغ --- */
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--text-secondary);
-        }
-
-        .empty-state i {
-            font-size: 4rem;
-            margin-bottom: 15px;
-            color: #bdc3c7;
-        }
-
-        .empty-state p {
-            font-size: 1.1rem;
-            margin-bottom: 20px;
-        }
-
-        .empty-state-btn {
-            background-color: var(--accent-color);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: 500;
-        }
-
-        /* --- Loading Spinner --- */
-        .spinner {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 24px;
-            height: 24px;
-            border: 3px solid rgba(0, 0, 0, 0.1);
-            border-top: 3px solid var(--accent-color);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            display: none; /* مخفي افتراضيًا */
-        }
-
-        @keyframes spin {
-            0% { transform: translate(-50%, -50%) rotate(0deg); }
-            100% { transform: translate(-50%, -50%) rotate(360deg); }
-        }
+        .nav-item { color: #555; display: flex; flex-direction: column; align-items: center; font-size: 0.7rem; text-decoration: none; }
+        .nav-item.active { color: var(--royal-gold); }
     </style>
-
-    <!-- ربط الخطوط العربية -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <div class="bubble-container" id="bubbleContainer"></div>
+    <div id="bubbles-container"></div>
 
-    <header class="app-header">
-        <h1 class="app-title">Six Pro</h1>
+    <header>
+        <h1 class="text-sm font-black tracking-[5px] text-white uppercase">Six Pro</h1>
     </header>
 
-    <div class="content-wrapper">
-        <main class="main-screen" id="home-screen">
-            <section class="welcome-section">
-                <h2 class="welcome-title">أهلاً بك في Six Pro</h2>
-                <div class="daily-goal" id="daily-goal-text">...جاري التحميل</div>
-            </section>
-
-            <div class="features-grid">
-                <div class="feature-card" onclick="smoothNavigate('tasks.html')">
-                    <span class="feature-icon material-icons" aria-hidden="true">assignment</span>
-                    <div class="feature-name" role="button" tabindex="0" aria-label="المهام اليومية. اضغط للانتقال إلى صفحة المهام.">المهام اليومية</div>
-                    <div class="spinner" id="spinner-tasks"></div> <!-- Spinner -->
+    <main class="pb-24 relative z-10">
+        <div class="welcome-card">
+            <div class="flex justify-between items-start">
+                <div>
+                    <h2 id="greet-text" class="welcome-title">مساء الخير مروة</h2>
+                    <p class="welcome-sub underline decoration-yellow-600/30 underline-offset-4">إنجازك اليوم ممتاز جداً</p>
                 </div>
-                <div class="feature-card" onclick="smoothNavigate('math.html')">
-                    <span class="feature-icon material-icons" aria-hidden="true">calculate</span>
-                    <div class="feature-name" role="button" tabindex="0" aria-label="الرياضيات. اضغط للانتقال إلى صفحة الرياضيات.">الرياضيات</div>
-                     <div class="spinner" id="spinner-math"></div> <!-- Spinner -->
-                </div>
-                <!-- --- تم فتح بطاقة الإنجليزي --- -->
-                <div class="feature-card" onclick="smoothNavigate('english.html')">
-                    <span class="feature-icon material-icons" aria-hidden="true">translate</span>
-                    <div class="feature-name" role="button" tabindex="0" aria-label="الإنكليزي. اضغط للانتقال إلى صفحة الإنجليزي.">الإنكليزي</div>
-                     <div class="spinner" id="spinner-english"></div> <!-- Spinner -->
-                </div>
-                <div class="feature-card" onclick="smoothNavigate('schedule.html')">
-                    <span class="feature-icon material-icons" aria-hidden="true">calendar_today</span>
-                    <div class="feature-name" role="button" tabindex="0" aria-label="الجدول الدراسي. اضغط للانتقال إلى صفحة الجدول.">الجدول الدراسي</div>
-                     <div class="spinner" id="spinner-schedule"></div> <!-- Spinner -->
+                <div class="text-center bg-yellow-500/10 p-2 rounded-xl border border-yellow-500/20">
+                    <span id="studyTime" class="text-lg font-black text-yellow-500">00:00</span>
+                    <p class="text-[8px] text-gray-500 font-bold uppercase">ساعة المذاكرة</p>
                 </div>
             </div>
 
-            <section class="news-card">
-                <h3 class="news-title">تذكير!</h3>
-                <p class="news-content" id="news-content">...جاري تحميل التذكير</p>
-            </section>
-
-            <section id="module-content" class="hidden">
-                <h3 class="section-title" id="module-title">...</h3>
-                <div id="module-body">
-                    <!-- مثال على حالة فراغ -->
-                    <div class="empty-state" id="empty-tasks-example">
-                        <i class="material-icons">assignment_turned_in</i>
-                        <p>لا توجد مهام حاليًا.</p>
-                        <button class="empty-state-btn">أضف مهمة جديدة</button>
-                    </div>
+            <div class="mt-6">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">نسبة إكمال المهام</span>
+                    <span id="percentNum" class="text-xs font-black text-white">0%</span>
                 </div>
-            </section>
+                <div class="progress-container">
+                    <div id="progressBar" class="progress-bar" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
 
-        </main>
-    </div>
+        <div class="features-grid">
+            <div class="feature-card" onclick="location.href='tasks.html'">
+                <span class="material-icons feature-icon">assignment</span>
+                <span class="feature-text">المهام اليومية</span>
+            </div>
+            <div class="feature-card" onclick="location.href='math.html'">
+                <span class="material-icons feature-icon">functions</span>
+                <span class="feature-text">الرياضيات</span>
+            </div>
+            <div class="feature-card" onclick="location.href='english.html'">
+                <span class="material-icons feature-icon">translate</span>
+                <span class="feature-text">الإنجليزي</span>
+            </div>
+            <div class="feature-card" onclick="location.href='schedule.html'">
+                <span class="material-icons feature-icon">event_note</span>
+                <span class="feature-text">الجدول الدراسي</span>
+            </div>
+        </div>
+    </main>
 
     <nav class="bottom-nav">
-        <a href="index.html" class="nav-item active" onclick="handleNavClick(this, 'index.html')" aria-label="الصفحة الرئيسية">
-            <span class="nav-icon material-icons" aria-hidden="true">home</span>
-            <span>الرئيسية</span>
-        </a>
-        <a href="stats.html" class="nav-item" onclick="smoothNavigate('stats.html')" aria-label="الإحصائيات">
-            <span class="nav-icon material-icons" aria-hidden="true">bar_chart</span>
-            <span>الإحصائيات</span>
-        </a>
-        <a href="alerts.html" class="nav-item" onclick="smoothNavigate('alerts.html')" aria-label="التنبيهات">
-            <span class="nav-icon material-icons" aria-hidden="true">notifications</span>
-            <span>التنبيهات</span>
-        </a>
-        <a href="settings.html" class="nav-item" onclick="smoothNavigate('settings.html')" aria-label="الإعدادات">
-            <span class="nav-icon material-icons" aria-hidden="true">settings</span>
-            <span>الإعدادات</span>
-        </a>
+        <a href="index.html" class="nav-item active"><span class="material-icons">home</span><span>الرئيسية</span></a>
+        <a href="stats.html" class="nav-item"><span class="material-icons">bar_chart</span><span>الإحصائيات</span></a>
+        <a href="alerts.html" class="nav-item"><span class="material-icons">notifications</span><span>التنبيهات</span></a>
+        <a href="settings.html" class="nav-item"><span class="material-icons">settings</span><span>الإعدادات</span></a>
     </nav>
 
     <script>
+        function updateMainUI() {
+            // جلب بيانات حقيقية
+            const stats = JSON.parse(localStorage.getItem('study_stats')) || { tasksCompleted: 0, totalTasks: 10 };
+            const time = parseInt(localStorage.getItem('total_time_spent') || 0);
+
+            // تحديث الوقت (دقائق:ثواني)
+            const m = Math.floor(time / 60);
+            const s = time % 60;
+            document.getElementById('studyTime').innerText = `${m}:${s.toString().padStart(2, '0')}`;
+
+            // تحديث شريط التقدم
+            const p = Math.round((stats.tasksCompleted / (stats.totalTasks || 1)) * 100);
+            document.getElementById('progressBar').style.width = p + '%';
+            document.getElementById('percentNum').innerText = p + '%';
+
+            // تحية ذكية
+            const hr = new Date().getHours();
+            document.getElementById('greet-text').innerText = (hr < 12) ? "صباح الخير مروة" : "مساء الخير مروة";
+        }
+
         function createBubbles() {
-            const container = document.getElementById('bubbleContainer');
-            const bubbleCount = 15;
-
-            for (let i = 0; i < bubbleCount; i++) {
-                const bubble = document.createElement('div');
-                bubble.classList.add('bubble');
-
-                const size = Math.random() * 100 + 20;
-                bubble.style.width = `${size}px`;
-                bubble.style.height = `${size}px`;
-
-                bubble.style.left = `${Math.random() * 100}%`;
-                bubble.style.top = `${Math.random() * 100}%`;
-
-                bubble.style.animationDelay = `${Math.random() * 5}s`;
-
-                container.appendChild(bubble);
+            const container = document.getElementById('bubbles-container');
+            for(let i=0; i<15; i++) {
+                const b = document.createElement('div');
+                b.className = 'bubble';
+                const size = Math.random()*60 + 20;
+                b.style.width = b.style.height = size + 'px';
+                b.style.left = Math.random()*100 + '%';
+                b.style.animationDuration = (Math.random()*10 + 10) + 's';
+                container.appendChild(b);
             }
         }
 
-        // دالة涟 ripple محسنة
-        function createRipple(event, element) {
-            const rect = element.getBoundingClientRect();
-            const x = event.clientX - rect.left;
-            const y = event.clientY - rect.top;
+        setInterval(() => {
+            let t = parseInt(localStorage.getItem('total_time_spent') || 0);
+            t++;
+            localStorage.setItem('total_time_spent', t);
+            updateMainUI();
+        }, 1000);
 
-            const ripple = document.createElement('span');
-            ripple.classList.add('ripple');
-            ripple.style.left = `${x}px`;
-            ripple.style.top = `${y}px`;
-
-            const existingRipple = element.querySelector('.ripple');
-            if (existingRipple) existingRipple.remove();
-
-            element.appendChild(ripple);
-
-            setTimeout(() => {
-                if (ripple.parentNode === element) ripple.remove();
-            }, 600);
-        }
-
-        // دالة الاهتزاز (Haptic Feedback) محسنة
-        function triggerHapticFeedback(pattern = 5) {
-            if (navigator.vibrate) {
-                navigator.vibrate(pattern);
-            }
-        }
-
-        // دالة التنقل السلس (نموذجية) مع spinner
-        function smoothNavigate(url) {
-            const card = event.currentTarget;
-            const spinnerId = `spinner-${url.split('.')[0]}`; // اشتقاق ID spinner من الرابط
-            const spinner = document.getElementById(spinnerId);
-
-            if (spinner) {
-                spinner.style.display = 'block';
-            }
-
-            document.body.style.opacity = 0;
-            document.body.style.transition = 'opacity 0.3s ease';
-
-            setTimeout(() => {
-                window.location.href = url;
-            }, 300);
-        }
-
-        // دالة تحديث تقدم "إنجاز اليوم"
-        function updateProgress() {
-            // محاكاة جلب البيانات من localStorage
-            const tasks = JSON.parse(localStorage.getItem('dailyTasks') || '[]');
-            const totalTasks = tasks.length;
-            const completedTasks = tasks.filter(task => task.completed).length;
-            const remainingTasks = totalTasks - completedTasks;
-
-            const goalElement = document.getElementById('daily-goal-text');
-            if (goalElement) {
-                goalElement.textContent = `متبقي لك ${remainingTasks} مهام لهذا اليوم!`;
-            }
-        }
-
-        // دالة عرض تذكير عشوائي
-        function updateNewsCard() {
-            const newsContentElement = document.getElementById('news-content');
-            if (!newsContentElement) return;
-
-            const newsMessages = [
-                "لديك امتحان فيزياء في الساعة 4:00 عصراً اليوم. راجع ملاحظات الفصل الثالث.",
-                "لقد حان الوقت لمراجعة جدولك الدراسي لهذا الأسبوع.",
-                "لا تنسى إكمال تمارين الرياضيات المخصصة لهذا اليوم.",
-                "تم إضافة محتوى جديد في قسم العلوم. تحقق من القسم المغلق!",
-                "لديك 3 مهام معلقة في قائمة المهام. ابدأ بها الآن!",
-                "تذكير: امتحان الكيمياء بعد غد. راجع الفصل الأول والثاني."
-            ];
-
-            // اختيار رسالة عشوائية
-            const randomIndex = Math.floor(Math.random() * newsMessages.length);
-            const randomMessage = newsMessages[randomIndex];
-
-            newsContentElement.textContent = randomMessage;
-        }
-
-        // معالجة النقر على بطاقة مفعلة
-        function handleCardClick(url) {
-            createRipple(event, event.currentTarget);
-            triggerHapticFeedback();
-            smoothNavigate(url);
-        }
-
-        // معالجة النقر على بطاقة غير مفعلة (تم حذفها لأن الإنجليزي لم يعد معطلًا)
-
-        // معالجة النقر على شريط التنقل
-        function handleNavClick(element, url) {
-            document.querySelectorAll('.nav-item a').forEach(item => item.classList.remove('active'));
-            element.classList.add('active');
-            createRipple(event, element);
-            triggerHapticFeedback([10]);
-            smoothNavigate(url);
-        }
-
-        // تطبيق涟 ripple على البطاقات والملاحة
-        document.querySelectorAll('.feature-card, .nav-item').forEach(item => {
-            item.addEventListener('click', function(e) {
-                // جميع البطاقات مفعلة الآن
-                createRipple(e, this);
-            });
-        });
-
-        // تحسين الوصول: السماح بالتفاعل باستخدام لوحة المفاتيح
-        document.querySelectorAll('.feature-card, .nav-item').forEach(item => {
-            item.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    this.click();
-                }
-            });
-        });
-
-        window.onload = createBubbles;
-
-        // تحديث التقدم والتذكير عند تحميل الصفحة
-        document.addEventListener('DOMContentLoaded', function() {
-            updateProgress();
-            updateNewsCard();
-        });
+        window.onload = () => { createBubbles(); updateMainUI(); };
     </script>
-
 </body>
 </html>
