@@ -2,660 +2,249 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المهام اليومية - Six Pro</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Six Pro - المهام الفاخرة</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-gradient: linear-gradient(135deg, #1a237e, #4db6ac);
-            --accent-color: #4caf50;
-            --primary-color: #29b6f6;
-            --secondary-color: #f44336; /* لون الحذف أحمر */
-            --card-bg: rgba(255, 255, 255, 0.92);
-            --card-bg-hover: rgba(255, 255, 255, 0.98);
-            --text-primary: #2c3e50;
-            --text-secondary: #7f8c8d;
-            --border-radius: 18px;
-            --shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-            --shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.25);
-            --glass-blur: blur(12px);
-            --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            --font-arabic: 'Cairo', 'Tahoma', sans-serif;
+            --deep-space: #050a18;
+            --glass: rgba(255, 255, 255, 0.03);
+            --gold: #f1c40f;
+            --neon-cyan: #00d2ff;
+            --text-main: #e0e6ed;
         }
 
+        /* منع النسخ */
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            margin: 0; padding: 0; box-sizing: border-box;
+            -webkit-user-select: none; user-select: none;
+            font-family: 'Cairo', sans-serif;
         }
 
         body {
-            font-family: var(--font-arabic), var(--font-main);
-            background: var(--primary-gradient);
-            color: var(--text-primary);
-            padding-bottom: 80px;
+            background: var(--deep-space);
+            color: var(--text-main);
             min-height: 100vh;
             overflow-x: hidden;
-            position: relative;
         }
 
-        .bubble-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            z-index: 0;
+        /* خلفية الفقاعات */
+        .bubble-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; pointer-events: none;
         }
-
         .bubble {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.05);
-            animation: float 15s infinite ease-in-out;
+            position: absolute; border-radius: 50%;
+            background: linear-gradient(rgba(0, 210, 255, 0.1), rgba(241, 196, 15, 0.05));
+            filter: blur(5px); animation: floatUp 15s infinite linear;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(110vh) scale(0.5); opacity: 0; }
+            50% { opacity: 0.3; }
+            100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
         }
 
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0); }
-            25% { transform: translate(20px, 15px); }
-            50% { transform: translate(-10px, 20px); }
-            75% { transform: translate(15px, -10px); }
+        /* الهيدر العلوي */
+        header {
+            padding: 15px 20px; display: flex; align-items: center; justify-content: space-between;
+            background: rgba(5, 10, 24, 0.85); backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255,255,255,0.05); position: sticky; top: 0; z-index: 100;
+        }
+        .back-btn {
+            width: 40px; height: 40px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1);
+            background: var(--glass); color: var(--gold); display: flex; align-items: center; justify-content: center; cursor: pointer;
         }
 
-        .content-wrapper {
-            position: relative;
-            z-index: 10;
-            background: rgba(245, 247, 250, 0.9);
-            border-top-left-radius: var(--border-radius);
-            border-top-right-radius: var(--border-radius);
-            padding: 20px;
-            min-height: calc(100vh - 80px);
-            margin-top: 20px;
-            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.2);
+        /* مستطيل الإنجاز المطور */
+        .achievement-box {
+            margin: 25px 20px; padding: 20px; border-radius: 20px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
+            border: 1px solid rgba(255,255,255,0.08); position: relative; overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
         }
-
-        .app-header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 15px 20px;
-            background: var(--primary-gradient);
-            z-index: 1001;
+        
+        /* إضاءة نيون خلفية متحركة */
+        .achievement-box::after {
+            content: ''; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px;
+            background: linear-gradient(45deg, transparent, transparent, var(--neon-cyan), transparent, transparent);
+            background-size: 200% 200%; animation: neonBorder 4s linear infinite; z-index: -1; opacity: 0.3;
         }
+        @keyframes neonBorder { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
 
-        .back-button {
-            position: absolute;
-            left: 20px;
-            font-size: 1.8rem;
-            color: white;
-            cursor: pointer;
-            z-index: 1002;
+        .stat-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 15px; }
+        .stat-label { font-size: 0.85rem; color: var(--neon-cyan); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        .stat-value { font-size: 2rem; font-weight: 900; color: #fff; line-height: 1; }
+
+        .progress-track {
+            height: 10px; width: 100%; background: rgba(255,255,255,0.05);
+            border-radius: 20px; overflow: hidden; position: relative;
         }
-
-        .app-title {
-            font-size: 1.6rem;
-            font-weight: 600;
-            color: white;
-            letter-spacing: -0.5px;
-        }
-
-        .placeholder-for-back {
-            width: 40px;
-        }
-
-        .main-screen {
-            padding-top: 70px;
-        }
-
-        .stats-section {
-            text-align: center;
-            margin-bottom: 30px;
-            padding: 25px 20px;
-            background: var(--card-bg);
-            backdrop-filter: var(--glass-blur);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-        }
-
-        .stats-title {
-            font-size: 1.5rem;
-            font-weight: 500;
-            color: var(--text-primary);
-            margin-bottom: 20px;
-        }
-
-        .stats-details {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 15px;
-        }
-
-        .stat-item {
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 2rem;
-            font-weight: bold;
-            color: var(--primary-color);
-        }
-
-        .stat-label {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-        }
-
-        .progress-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-top: 15px;
-        }
-
         .progress-bar {
-            flex-grow: 1;
-            height: 16px;
-            background-color: #e0e0e0;
-            border-radius: 10px;
-            overflow: hidden;
-            margin: 0 10px;
+            height: 100%; width: 0%; 
+            background: linear-gradient(90deg, var(--neon-cyan), var(--gold));
+            box-shadow: 0 0 15px var(--neon-cyan);
+            transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .progress-fill {
-            height: 100%;
-            background: var(--accent-color);
-            border-radius: 10px;
-            width: 67%;
-            transition: width 0.4s ease;
-        }
+        .status-msg { font-size: 0.9rem; margin-top: 15px; color: #8892b0; font-weight: 600; }
 
-        .progress-text {
-            font-size: 0.95rem;
-            color: var(--text-secondary);
-            min-width: 50px;
-            text-align: center;
-            font-weight: 500;
+        /* قائمة المهام */
+        .tasks-list { padding: 0 20px 100px; }
+        .task-card {
+            background: var(--glass); border: 1px solid rgba(255,255,255,0.05);
+            padding: 18px; border-radius: 18px; margin-bottom: 12px;
+            display: flex; align-items: center; gap: 15px; transition: 0.3s;
         }
-
-        .achievement-text {
-            font-size: 1rem;
-            color: var(--accent-color);
-            font-weight: 500;
-            margin-top: 10px;
-            display: none;
+        .task-card.completed { border-color: rgba(0, 210, 255, 0.2); background: rgba(0, 210, 255, 0.02); }
+        
+        .custom-check {
+            width: 24px; height: 24px; border: 2px solid var(--neon-cyan); border-radius: 7px;
+            display: flex; align-items: center; justify-content: center; cursor: pointer;
         }
+        .task-card.completed .custom-check { background: var(--neon-cyan); }
+        .task-card.completed .task-text { text-decoration: line-through; color: #4b5563; }
+        
+        .task-text { flex-grow: 1; font-weight: 600; font-size: 1rem; color: var(--text-main); }
+        .del-icon { color: #ff4b5c; opacity: 0.4; cursor: pointer; transition: 0.2s; }
+        .del-icon:hover { opacity: 1; }
 
-        .achievement-text.completed {
-            display: block;
-        }
-
-        .tasks-section {
-            margin-bottom: 20px;
-        }
-
-        .tasks-title {
-            font-size: 1.3rem;
-            font-weight: 500;
-            color: var(--text-primary);
-            margin-bottom: 15px;
-        }
-
-        .empty-message {
-            text-align: center;
-            color: var(--text-secondary);
-            padding: 40px 20px;
-            font-size: 1rem;
-        }
-
-        .task-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .task-item {
-            display: flex;
-            align-items: center;
-            background: var(--card-bg);
-            backdrop-filter: var(--glass-blur);
-            border-radius: var(--border-radius);
-            padding: 15px;
-            box-shadow: var(--shadow);
-        }
-
-        .task-checkbox {
-            margin-left: 10px;
-            transform: scale(1.3);
-            cursor: pointer;
-        }
-
-        .task-text {
-            flex-grow: 1;
-            font-size: 1rem;
-            color: var(--text-primary);
-        }
-
-        .task-text.completed {
-            text-decoration: line-through;
-            color: var(--text-secondary);
-        }
-
-        .delete-button {
-            color: var(--secondary-color); /* لون الحذف أحمر */
-            background: none;
-            border: none;
-            font-size: 1.4rem;
-            cursor: pointer;
-            padding: 0 5px;
-        }
-
-        /* --- نمط المودال --- */
-        .modal {
-            display: none; /* مخفي افتراضياً */
-            position: fixed;
-            z-index: 2000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5); /* خلفية شفافة */
-        }
-
-        .modal-content {
-            background-color: var(--card-bg);
-            margin: 15% auto; /* يظهر في المنتصف */
-            padding: 20px;
-            border-radius: var(--border-radius);
-            width: 80%;
-            max-width: 400px;
-            box-shadow: var(--shadow-hover);
-            backdrop-filter: var(--glass-blur);
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .modal-title {
-            font-size: 1.3rem;
-            font-weight: 500;
-            color: var(--text-primary);
-        }
-
-        .close-button {
-            color: var(--text-secondary);
-            background: none;
-            border: none;
-            font-size: 1.8rem;
-            cursor: pointer;
-        }
-
-        .modal-body {
-            margin-bottom: 20px;
-        }
-
-        .task-input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: var(--border-radius);
-            font-size: 1rem;
-            font-family: var(--font-arabic), var(--font-main);
-            box-sizing: border-box;
-        }
-
-        .modal-footer {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-        }
-
-        .save-button, .cancel-button {
-            padding: 8px 20px;
-            border: none;
-            border-radius: var(--border-radius);
-            font-size: 1rem;
-            cursor: pointer;
-        }
-
-        .save-button {
-            background-color: var(--accent-color);
-            color: white;
-        }
-
-        .cancel-button {
-            background-color: #e0e0e0;
-            color: var(--text-primary);
-        }
-
+        /* الزر والمودال */
         .fab {
-            position: fixed;
-            bottom: 100px;
-            left: 20px;
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            background: var(--accent-color);
-            color: white;
-            border: none;
-            font-size: 2rem;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
+            position: fixed; bottom: 30px; left: 30px; width: 60px; height: 60px;
+            background: linear-gradient(135deg, var(--gold), #e67e22);
+            border-radius: 18px; border: none; font-size: 1.5rem; cursor: pointer;
+            box-shadow: 0 10px 25px rgba(230, 126, 34, 0.3); z-index: 99;
         }
-
-        .fab:hover {
-            background: #43a047;
-            transform: scale(1.05);
+        
+        .modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(5, 10, 24, 0.98); display: none; align-items: center; justify-content: center; z-index: 1000;
         }
-
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 70px;
-            background: var(--card-bg);
-            backdrop-filter: var(--glass-blur);
-            border-top: 1px solid rgba(0,0,0,0.05);
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
+        .modal-content {
+            width: 85%; max-width: 380px; padding: 30px; background: #0d162d;
+            border-radius: 25px; border: 1px solid var(--neon-cyan); text-align: center;
         }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            width: 25%;
-            height: 100%;
-            text-decoration: none;
-            color: var(--text-secondary);
-            font-size: 0.8rem;
-            transition: color 0.3s ease;
+        .modal-input {
+            width: 100%; background: #050a18; border: 1px solid rgba(255,255,255,0.1);
+            padding: 15px; border-radius: 12px; color: #fff; margin: 20px 0; outline: none; text-align: center;
         }
-
-        .nav-item.active {
-            color: var(--accent-color);
-        }
-
-        .nav-icon {
-            font-size: 1.6rem;
-            margin-bottom: 4px;
-        }
-
-        .nav-item.active .nav-icon {
-            background: var(--accent-color);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: 0 0 8px rgba(76, 175, 80, 0.3);
+        .add-btn {
+            width: 100%; padding: 15px; background: var(--neon-cyan); color: #000;
+            border: none; border-radius: 12px; font-weight: 900; cursor: pointer;
         }
     </style>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body>
+<body oncontextmenu="return false;">
 
-    <div class="bubble-container" id="bubbleContainer"></div>
+    <div class="bubble-bg" id="bubbleBox"></div>
 
-    <header class="app-header">
-        <span class="back-button material-icons" onclick="goBack()">arrow_back</span>
-        <h1 class="app-title">Six Pro</h1>
-        <span class="placeholder-for-back"></span>
+    <header>
+        <div class="back-btn" onclick="goBack()"><i class="fa-solid fa-arrow-right"></i></div>
+        <div style="font-weight: 900; letter-spacing: 1px; font-size: 1.2rem;">SIX PRO</div>
+        <i class="fa-solid fa-crown" style="color: var(--gold);"></i>
     </header>
 
-    <div class="content-wrapper">
-        <main class="main-screen">
-            <section class="stats-section">
-                <h2 class="stats-title">تقدمك اليومي</h2>
-                <div class="stats-details">
-                    <div class="stat-item">
-                        <div class="stat-number" id="completed-count">4</div>
-                        <div class="stat-label">مكتملة</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number">6</div>
-                        <div class="stat-label">المجموع</div>
-                    </div>
-                </div>
-                <div class="progress-container">
-                    <span class="progress-text" id="progress-percent">67%</span>
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="progress-fill"></div>
-                    </div>
-                </div>
-                <p class="achievement-text" id="achievement-text">ممتاز! أكملت كل مهامك اليوم.</p>
-            </section>
-
-            <section class="tasks-section">
-                <h3 class="tasks-title">المهام اليومية</h3>
-                <div id="task-list-container">
-                    <div id="empty-message" class="empty-message">
-                        لا توجد مهام<br>
-                        اضغط على زر "+" لإضافة مهمة جديدة
-                    </div>
-                    <div id="task-list" class="task-list" style="display: none;">
-                        <div class="task-item">
-                            <input type="checkbox" class="task-checkbox" onchange="toggleTask(this)">
-                            <span class="task-text">مراجعة الفصل الثالث فيزياء</span>
-                            <button class="delete-button material-icons" onclick="deleteTask(this)">delete</button>
-                        </div>
-                        <div class="task-item">
-                            <input type="checkbox" class="task-checkbox" onchange="toggleTask(this)" checked>
-                            <span class="task-text completed">حل واجب الرياضيات</span>
-                            <button class="delete-button material-icons" onclick="deleteTask(this)">delete</button>
-                        </div>
-                        <div class="task-item">
-                            <input type="checkbox" class="task-checkbox" onchange="toggleTask(this)">
-                            <span class="task-text">قراءة قصيدة إنجليزية</span>
-                            <button class="delete-button material-icons" onclick="deleteTask(this)">delete</button>
-                        </div>
-                        <div class="task-item">
-                            <input type="checkbox" class="task-checkbox" onchange="toggleTask(this)" checked>
-                            <span class="task-text completed">كتابة تقرير الكيمياء</span>
-                            <button class="delete-button material-icons" onclick="deleteTask(this)">delete</button>
-                        </div>
-                        <div class="task-item">
-                            <input type="checkbox" class="task-checkbox" onchange="toggleTask(this)">
-                            <span class="task-text">مراجعة امتحان الأحياء</span>
-                            <button class="delete-button material-icons" onclick="deleteTask(this)">delete</button>
-                        </div>
-                        <div class="task-item">
-                            <input type="checkbox" class="task-checkbox" onchange="toggleTask(this)">
-                            <span class="task-text">حفظ جدول الضرب 7</span>
-                            <button class="delete-button material-icons" onclick="deleteTask(this)">delete</button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </main>
+    <div class="achievement-box">
+        <div class="stat-header">
+            <div class="stat-label">DAILY PROGRESS</div>
+            <div class="stat-value" id="percentTxt">0%</div>
+        </div>
+        <div class="progress-track">
+            <div class="progress-bar" id="progBar"></div>
+        </div>
+        <div class="status-msg" id="statusMsg">مستعد لإنجاز أول مهمة؟ 🔥</div>
     </div>
 
-    <!-- --- زر الإضافة العائم --- -->
-    <button class="fab material-icons" onclick="openAddTaskModal()">add</button>
+    <div class="tasks-list">
+        <div style="margin-bottom: 15px; font-weight: 700; opacity: 0.6; font-size: 0.8rem;">TASKS LIST</div>
+        <div id="taskList"></div>
+    </div>
 
-    <!-- --- مودال إضافة مهمة --- -->
-    <div id="addTaskModal" class="modal">
+    <button class="fab" onclick="showModal(true)"><i class="fa-solid fa-plus"></i></button>
+
+    <div class="modal" id="taskModal">
         <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">إضافة مهمة جديدة</h2>
-                <button class="close-button" onclick="closeAddTaskModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <input type="text" id="newTaskInput" class="task-input" placeholder="اكتب اسم المهمة..." onkeypress="handleEnterKeyPress(event)">
-            </div>
-            <div class="modal-footer">
-                <button class="cancel-button" onclick="closeAddTaskModal()">إلغاء</button>
-                <button class="save-button" onclick="addTaskFromModal()">حفظ</button>
-            </div>
+            <h3 style="color: var(--gold);">مهمة جديدة</h3>
+            <input type="text" id="taskInput" class="modal-input" placeholder="ما هو مخططك القادم؟">
+            <button class="add-btn" onclick="saveTask()">إضافة للمخطط</button>
+            <p style="margin-top: 15px; opacity: 0.5; font-size: 0.8rem;" onclick="showModal(false)">إلغاء</p>
         </div>
     </div>
 
-    <nav class="bottom-nav">
-        <a href="index.html" class="nav-item active">
-            <span class="nav-icon material-icons">home</span>
-            <span>الرئيسية</span>
-        </a>
-        <a href="stats.html" class="nav-item">
-            <span class="nav-icon material-icons">bar_chart</span>
-            <span>الإحصائيات</span>
-        </a>
-        <a href="alerts.html" class="nav-item">
-            <span class="nav-icon material-icons">notifications</span>
-            <span>التنبيهات</span>
-        </a>
-        <a href="settings.html" class="nav-item">
-            <span class="nav-icon material-icons">settings</span>
-            <span>الإعدادات</span>
-        </a>
-    </nav>
-
     <script>
-        function createBubbles() {
-            const container = document.getElementById('bubbleContainer');
-            const bubbleCount = 15;
-            for (let i = 0; i < bubbleCount; i++) {
-                const bubble = document.createElement('div');
-                bubble.classList.add('bubble');
-                const size = Math.random() * 100 + 20;
-                bubble.style.width = `${size}px`;
-                bubble.style.height = `${size}px`;
-                bubble.style.left = `${Math.random() * 100}%`;
-                bubble.style.top = `${Math.random() * 100}%`;
-                bubble.style.animationDelay = `${Math.random() * 5}s`;
-                container.appendChild(bubble);
-            }
+        let tasks = [];
+
+        function showModal(show) {
+            document.getElementById('taskModal').style.display = show ? 'flex' : 'none';
+            if(show) document.getElementById('taskInput').focus();
         }
 
-        function goBack() {
-            window.location.href = 'index.html';
+        function saveTask() {
+            const input = document.getElementById('taskInput');
+            if(!input.value.trim()) return;
+            tasks.push({ id: Date.now(), text: input.value, done: false });
+            input.value = '';
+            showModal(false);
+            render();
         }
 
-        function deleteTask(button) {
-            const taskItem = button.parentElement;
-            taskItem.remove();
-            updateStats();
+        function toggleTask(id) {
+            tasks = tasks.map(t => t.id === id ? {...t, done: !t.done} : t);
+            render();
         }
 
-        function toggleTask(checkbox) {
-            const taskText = checkbox.nextElementSibling;
-            if (checkbox.checked) {
-                taskText.classList.add('completed');
-            } else {
-                taskText.classList.remove('completed');
-            }
-            updateStats();
+        function deleteTask(id) {
+            tasks = tasks.filter(t => t.id !== id);
+            render();
         }
 
-        function updateStats() {
-            const allTasks = document.querySelectorAll('#task-list .task-item');
-            const completedTasks = document.querySelectorAll('#task-list .task-item .task-checkbox:checked');
-
-            const completedCount = completedTasks.length;
-            const totalCount = allTasks.length;
-
-            document.getElementById('completed-count').textContent = completedCount;
-
-            if (totalCount > 0) {
-                const percent = Math.round((completedCount / totalCount) * 100);
-                document.getElementById('progress-percent').textContent = `${percent}%`;
-                document.getElementById('progress-fill').style.width = `${percent}%`;
-
-                const achievementText = document.getElementById('achievement-text');
-                if (percent === 100 && completedCount > 0) {
-                    achievementText.classList.add('completed');
-                } else {
-                    achievementText.classList.remove('completed');
-                }
-
-                const emptyMessage = document.getElementById('empty-message');
-                const taskList = document.getElementById('task-list');
-                if (totalCount === 0) {
-                    emptyMessage.style.display = 'block';
-                    taskList.style.display = 'none';
-                } else {
-                    emptyMessage.style.display = 'none';
-                    taskList.style.display = 'flex';
-                }
-            } else {
-                document.getElementById('progress-percent').textContent = '0%';
-                document.getElementById('progress-fill').style.width = '0%';
-                document.getElementById('achievement-text').classList.remove('completed');
-                document.getElementById('empty-message').style.display = 'block';
-                document.getElementById('task-list').style.display = 'none';
-            }
-        }
-
-        // --- وظائف المودال ---
-        function openAddTaskModal() {
-            document.getElementById('addTaskModal').style.display = 'block';
-            document.getElementById('newTaskInput').value = ''; // مسح الحقل عند الفتح
-            document.getElementById('newTaskInput').focus(); // تحديد الحقل
-        }
-
-        function closeAddTaskModal() {
-            document.getElementById('addTaskModal').style.display = 'none';
-        }
-
-        function addTaskFromModal() {
-            const input = document.getElementById('newTaskInput');
-            const taskName = input.value.trim();
-
-            if (taskName) { // تأكد من أن الاسم ليس فارغًا
-                const taskList = document.getElementById('task-list');
-                const emptyMessage = document.getElementById('empty-message');
-
-                if (taskList.style.display === 'none') {
-                    taskList.style.display = 'flex';
-                    emptyMessage.style.display = 'none';
-                }
-
-                const newTaskItem = document.createElement('div');
-                newTaskItem.className = 'task-item';
-                newTaskItem.innerHTML = `
-                    <input type="checkbox" class="task-checkbox" onchange="toggleTask(this)">
-                    <span class="task-text">${taskName}</span>
-                    <button class="delete-button material-icons" onclick="deleteTask(this)">delete</button>
+        function render() {
+            const list = document.getElementById('taskList');
+            list.innerHTML = '';
+            tasks.forEach(t => {
+                list.innerHTML += `
+                    <div class="task-card ${t.done ? 'completed' : ''}">
+                        <div class="custom-check" onclick="toggleTask(${t.id})">
+                            ${t.done ? '<i class="fa-solid fa-check" style="font-size: 0.8rem; color: #000;"></i>' : ''}
+                        </div>
+                        <div class="task-text" onclick="toggleTask(${t.id})">${t.text}</div>
+                        <i class="fa-solid fa-trash-can del-icon" onclick="deleteTask(${t.id})"></i>
+                    </div>
                 `;
-                taskList.appendChild(newTaskItem);
+            });
+            updateProgress();
+        }
 
-                updateStats(); // تحديث الإحصائيات
-                closeAddTaskModal(); // إغلاق المودال
-            } else {
-                // يمكن إضافة تنبيه للمستخدم إذا أراد
-                alert("الرجاء إدخال اسم المهمة.");
+        function updateProgress() {
+            const done = tasks.filter(t => t.done).length;
+            const percent = tasks.length === 0 ? 0 : Math.round((done / tasks.length) * 100);
+            
+            document.getElementById('percentTxt').innerText = percent + "%";
+            document.getElementById('progBar').style.width = percent + "%";
+            
+            const msgs = ["ابدأ رحلة الإنجاز! 🔥", "خطوات واثقة للنجاح.. ✨", "أداء ملكي بامتياز! 🏆"];
+            let m = msgs[0];
+            if(percent > 40) m = msgs[1];
+            if(percent === 100) m = msgs[2];
+            document.getElementById('statusMsg').innerText = m;
+        }
+
+        function createBubbles() {
+            const box = document.getElementById('bubbleBox');
+            for(let i=0; i<15; i++) {
+                const b = document.createElement('div');
+                b.className = 'bubble';
+                const s = Math.random() * 80 + 20;
+                b.style.width = b.style.height = s + 'px';
+                b.style.left = Math.random() * 100 + '%';
+                b.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                box.appendChild(b);
             }
         }
 
-        // دالة للتعامل مع زر Enter
-        function handleEnterKeyPress(event) {
-            if (event.key === 'Enter') {
-                addTaskFromModal();
-            }
-        }
-
-        // --- تهيئة عند تحميل الصفحة ---
-        window.onload = function() {
-            createBubbles();
-            updateStats();
-        };
+        function goBack() { window.history.back(); }
+        window.onload = () => { createBubbles(); render(); };
     </script>
-
 </body>
 </html>
