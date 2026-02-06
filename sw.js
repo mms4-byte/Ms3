@@ -5,7 +5,7 @@ const CACHE_NAME = 'six-pro-cache-v1';
 const urlsToCache = [
   'index.html',
   'manifest.json',
-  'https://imgur.com/1l3hICE.png' // صورة الأيقونة من Imgur
+  'https://iili.io/fbckoRn.md.jpg' // صورة الأيقونة من Imgur
 ];
 
 // عند التثبيت: نحفظ الملفات في الكاش
