@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Six Pro - التصميم المعتمد</title>
+    <title>Six Pro - Majestic Edition</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
@@ -18,30 +18,32 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; user-select: none; }
         body { background-color: var(--royal-navy); color: #fff; min-height: 100vh; overflow-x: hidden; }
 
-        /* الفقاعات الخلفية */
         .bubble { position: absolute; border-radius: 50%; background: radial-gradient(circle, rgba(241, 196, 15, 0.07) 0%, transparent 70%); animation: floatUp 15s infinite linear; pointer-events: none; z-index: 0; }
         @keyframes floatUp { from { transform: translateY(110vh); opacity: 0; } to { transform: translateY(-10vh); opacity: 1; } }
 
+        /* تحسين العنوان ملكي */
         header { 
-            padding: 20px; text-align: center; background: rgba(2, 6, 23, 0.9); 
+            padding: 25px; text-align: center; background: rgba(2, 6, 23, 0.95); 
             border-bottom: 2px solid var(--border-gold); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(15px);
         }
-
-        /* كرت الترحيب المحسن */
-        .welcome-card {
-            margin: 20px; padding: 25px; border-radius: 28px;
-            background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
-            border: 1px solid var(--border-gold); position: relative; z-index: 10;
+        .royal-title {
+            font-size: 1.2rem; font-weight: 900; letter-spacing: 6px;
+            background: linear-gradient(to right, #bf953f, #fcf6ba, #b38728);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            text-transform: uppercase; display: inline-block;
         }
 
-        .welcome-title { font-size: 1.4rem; font-weight: 900; color: #fff; margin-bottom: 5px; }
-        .welcome-sub { font-size: 0.85rem; color: var(--royal-gold); font-weight: 600; letter-spacing: 0.5px; }
+        /* كرت الترحيب المعدل */
+        .welcome-card {
+            margin: 20px; padding: 35px 25px; border-radius: 32px;
+            background: linear-gradient(145deg, rgba(255,255,255,0.06), rgba(255,255,255,0.01));
+            border: 1px solid var(--border-gold); position: relative; z-index: 10;
+            text-align: center; /* توسيط لجمالية الخط العريض */
+        }
 
-        /* شريط التقدم */
-        .progress-container { margin-top: 20px; background: rgba(255,255,255,0.03); height: 8px; border-radius: 10px; overflow: hidden; }
-        .progress-bar { height: 100%; background: var(--royal-gold); box-shadow: 0 0 10px var(--royal-gold); transition: 1s ease-in-out; }
+        .welcome-title { font-size: 1.8rem; font-weight: 900; color: #fff; margin-bottom: 10px; }
+        .salawat { font-size: 1.2rem; color: var(--royal-gold); font-weight: 900; margin-top: 5px; display: block; }
 
-        /* الأزرار (الشبكة) */
         .features-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 0 20px 20px; }
         .feature-card {
             background: var(--glass); border: 1px solid var(--border-gold);
@@ -52,7 +54,6 @@
         .feature-icon { font-size: 2.2rem; color: var(--royal-gold); margin-bottom: 10px; display: block; }
         .feature-text { font-size: 0.9rem; font-weight: 700; color: #fff; }
 
-        /* الملاحة السفلى */
         .bottom-nav {
             position: fixed; bottom: 0; left: 0; right: 0; height: 75px;
             background: rgba(2, 6, 23, 0.98); border-top: 1px solid var(--border-gold);
@@ -67,31 +68,13 @@
     <div id="bubbles-container"></div>
 
     <header>
-        <h1 class="text-sm font-black tracking-[5px] text-white uppercase">Six Pro</h1>
+        <h1 class="royal-title">Six Pro</h1>
     </header>
 
     <main class="pb-24 relative z-10">
         <div class="welcome-card">
-            <div class="flex justify-between items-start">
-                <div>
-                    <h2 id="greet-text" class="welcome-title">مساء الخير مروة</h2>
-                    <p class="welcome-sub underline decoration-yellow-600/30 underline-offset-4">إنجازك اليوم ممتاز جداً</p>
-                </div>
-                <div class="text-center bg-yellow-500/10 p-2 rounded-xl border border-yellow-500/20">
-                    <span id="studyTime" class="text-lg font-black text-yellow-500">00:00</span>
-                    <p class="text-[8px] text-gray-500 font-bold uppercase">ساعة المذاكرة</p>
-                </div>
-            </div>
-
-            <div class="mt-6">
-                <div class="flex justify-between items-center mb-2">
-                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">نسبة إكمال المهام</span>
-                    <span id="percentNum" class="text-xs font-black text-white">0%</span>
-                </div>
-                <div class="progress-container">
-                    <div id="progressBar" class="progress-bar" style="width: 0%"></div>
-                </div>
-            </div>
+            <h2 id="greet-text" class="welcome-title">مساء الخير</h2>
+            <span class="salawat">اللهم صلِ على محمد وآل محمد</span>
         </div>
 
         <div class="features-grid">
@@ -123,23 +106,8 @@
 
     <script>
         function updateMainUI() {
-            // جلب بيانات حقيقية
-            const stats = JSON.parse(localStorage.getItem('study_stats')) || { tasksCompleted: 0, totalTasks: 10 };
-            const time = parseInt(localStorage.getItem('total_time_spent') || 0);
-
-            // تحديث الوقت (دقائق:ثواني)
-            const m = Math.floor(time / 60);
-            const s = time % 60;
-            document.getElementById('studyTime').innerText = `${m}:${s.toString().padStart(2, '0')}`;
-
-            // تحديث شريط التقدم
-            const p = Math.round((stats.tasksCompleted / (stats.totalTasks || 1)) * 100);
-            document.getElementById('progressBar').style.width = p + '%';
-            document.getElementById('percentNum').innerText = p + '%';
-
-            // تحية ذكية
             const hr = new Date().getHours();
-            document.getElementById('greet-text').innerText = (hr < 12) ? "صباح الخير مروة" : "مساء الخير مروة";
+            document.getElementById('greet-text').innerText = (hr < 12) ? "صباح الخير" : "مساء الخير";
         }
 
         function createBubbles() {
@@ -154,13 +122,6 @@
                 container.appendChild(b);
             }
         }
-
-        setInterval(() => {
-            let t = parseInt(localStorage.getItem('total_time_spent') || 0);
-            t++;
-            localStorage.setItem('total_time_spent', t);
-            updateMainUI();
-        }, 1000);
 
         window.onload = () => { createBubbles(); updateMainUI(); };
     </script>
