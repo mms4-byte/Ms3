@@ -2,825 +2,211 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>الإنكليزي - Six Pro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Six Pro English - Complete Library</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-gradient: linear-gradient(135deg, #1a237e, #4db6ac);
-            --accent-color: #4caf50;
-            --primary-color: #29b6f6;
-            --secondary-color: #f44336;
-            --card-bg: rgba(255, 255, 255, 0.92);
-            --card-bg-hover: rgba(255, 255, 255, 0.98);
-            --text-primary: #2c3e50;
-            --text-secondary: #7f8c8d;
-            --border-radius: 18px;
-            --shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-            --shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.25);
-            --glass-blur: blur(12px);
-            --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            --font-arabic: 'Cairo', 'Tahoma', sans-serif;
+            --royal-navy: #010409; 
+            --royal-gold: #f1c40f;  
+            --glass: rgba(255, 255, 255, 0.02);
+            --border-gold: rgba(241, 196, 15, 0.2);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        * { 
+            margin: 0; padding: 0; box-sizing: border-box; 
+            font-family: 'Cairo', sans-serif; 
+            user-select: none; -webkit-user-select: none;
+        }
+        
+        body { background-color: var(--royal-navy); color: #fff; min-height: 100vh; overflow-x: hidden; }
+
+        .bubble-bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+        .bubble { position: absolute; border-radius: 50%; background: radial-gradient(circle, rgba(241, 196, 15, 0.07) 0%, transparent 70%); animation: floatUp 15s infinite linear; }
+        @keyframes floatUp { from { transform: translateY(110vh) scale(0.5); } to { transform: translateY(-10vh) scale(1.2); } }
+
+        header { 
+            padding: 20px; display: flex; align-items: center; justify-content: space-between; 
+            background: rgba(1, 4, 9, 0.96); backdrop-filter: blur(20px); 
+            border-bottom: 2px solid var(--border-gold); position: sticky; top: 0; z-index: 100;
         }
 
-        body {
-            font-family: var(--font-arabic), var(--font-main);
-            background: var(--primary-gradient);
-            color: var(--text-primary);
-            padding-bottom: 80px;
-            min-height: 100vh;
-            overflow-x: hidden;
-            position: relative;
+        .tab-bar {
+            display: flex; background: var(--glass); border: 1px solid var(--border-gold);
+            margin: 15px; border-radius: 18px; padding: 4px; position: sticky; top: 85px; z-index: 90; backdrop-filter: blur(10px);
+        }
+        .tab-btn { flex: 1; padding: 12px; border-radius: 14px; font-weight: 900; color: #777; transition: 0.3s; font-size: 0.9rem; }
+        .tab-btn.active { background: var(--royal-gold); color: #000; box-shadow: 0 0 15px rgba(241, 196, 15, 0.3); }
+
+        .content { padding: 10px 15px 100px 15px; position: relative; z-index: 10; }
+
+        .data-card {
+            background: linear-gradient(145deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+            border: 1px solid var(--border-gold); border-radius: 22px; padding: 18px; margin-bottom: 12px;
+            backdrop-filter: blur(10px);
         }
 
-        .bubble-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            z-index: 0;
-        }
+        .item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .ar-txt { color: var(--royal-gold); font-weight: 900; font-size: 1.1rem; }
+        
+        .verb-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; text-align: center; }
+        .v-label { font-size: 0.6rem; color: #666; font-weight: 900; margin-bottom: 2px; }
+        .v-box { background: rgba(0,0,0,0.5); padding: 8px 4px; border-radius: 10px; font-size: 0.8rem; font-weight: 700; border: 1px solid rgba(255,255,255,0.05); }
 
-        .bubble {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.05);
-            animation: float 15s infinite ease-in-out;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0); }
-            25% { transform: translate(20px, 15px); }
-            50% { transform: translate(-10px, 20px); }
-            75% { transform: translate(15px, -10px); }
-        }
-
-        .content-wrapper {
-            position: relative;
-            z-index: 10;
-            background: rgba(245, 247, 250, 0.9);
-            border-top-left-radius: var(--border-radius);
-            border-top-right-radius: var(--border-radius);
-            padding: 20px;
-            min-height: calc(100vh - 80px);
-            margin-top: 20px;
-            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.2);
-        }
-
-        .app-header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 15px 20px;
-            background: var(--primary-gradient);
-            z-index: 1001;
-        }
-
-        .back-button {
-            position: absolute;
-            left: 20px;
-            font-size: 1.8rem;
-            color: white;
+        .sound-btn { 
+            background: var(--royal-gold); color: #000; width: 36px; height: 36px; 
+            border-radius: 12px; display: flex; align-items: center; justify-content: center; 
             cursor: pointer;
-            z-index: 1002;
         }
 
-        .app-title {
-            font-size: 1.6rem;
-            font-weight: 600;
-            color: white;
-            letter-spacing: -0.5px;
-        }
-
-        .placeholder-for-back {
-            width: 40px;
-        }
-
-        .main-screen {
-            padding-top: 70px;
-        }
-
-        .page-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .tab-buttons {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 20px;
-            background: var(--card-bg);
-            backdrop-filter: var(--glass-blur);
-            border-radius: var(--border-radius);
-            padding: 5px;
-            box-shadow: var(--shadow);
-        }
-
-        .tab-btn {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            background: none;
-            color: var(--text-secondary);
-            font-size: 1rem;
-            cursor: pointer;
-            border-radius: var(--border-radius);
-            transition: color 0.3s ease;
-        }
-
-        .tab-btn.active {
-            color: var(--accent-color);
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        /* --- محتوى التبويب "الأفعال الشاذة" --- */
-        .verbs-search-container, .vocab-search-container {
-            margin-bottom: 15px;
-        }
-
-        .search-bar {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: var(--border-radius);
-            font-size: 1rem;
-            font-family: var(--font-arabic), var(--font-main);
-            box-sizing: border-box;
-        }
-
-        .filter-bar {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 15px;
-        }
-
-        .filter-button {
-            padding: 8px 15px;
-            background: #e0e0e0;
-            border: none;
-            border-radius: var(--border-radius);
-            font-size: 0.9rem;
-            cursor: pointer;
-            color: var(--text-primary);
-        }
-
-        .verbs-table-container {
-            overflow-x: auto;
-        }
-
-        .verbs-table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 600px; /* لضمان العرض على الشاشات الصغيرة */
-        }
-
-        .verbs-table th, .verbs-table td {
-            padding: 12px;
-            text-align: center;
-            border-bottom: 1px solid #eee;
-        }
-
-        .verbs-table th {
-            background-color: #f5f5f5;
-            color: var(--text-primary);
-            font-weight: 500;
-        }
-
-        .verbs-table tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        .verbs-table tr.highlighted {
-            background-color: rgba(76, 175, 80, 0.1); /* لون خفيف للكلمات المهمة */
-        }
-
-        /* --- محتوى التبويب "المفردات" --- */
-        .filter-buttons {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-            flex-wrap: wrap; /* للسماح بالانتقال للسطر التالي */
-        }
-
-        .filter-btn {
-            padding: 6px 12px;
-            background: #e0e0e0;
-            border: none;
-            border-radius: var(--border-radius);
-            font-size: 0.85rem;
-            cursor: pointer;
-            color: var(--text-primary);
-        }
-
-        .filter-btn.active {
-            background: var(--accent-color);
-            color: white;
-        }
-
-        .vocab-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .vocab-card {
-            background: var(--card-bg);
-            backdrop-filter: var(--glass-blur);
-            border-radius: var(--border-radius);
-            padding: 15px;
-            box-shadow: var(--shadow);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .vocab-text {
-            flex-grow: 1;
-        }
-
-        .vocab-word {
-            font-size: 1.1rem;
-            font-weight: bold;
-            color: var(--text-primary);
-            margin-bottom: 5px;
-        }
-
-        .vocab-meaning {
-            font-size: 0.95rem;
-            color: var(--text-secondary);
-        }
-
-        .sound-button {
-            background: none;
-            border: none;
-            color: var(--primary-color);
-            font-size: 1.4rem;
-            cursor: pointer;
-            margin-left: 10px;
-        }
-
-        /* --- محتوى التبويب "اختبار" --- */
-        .quiz-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 300px;
-        }
-
-        .quiz-card {
-            background: var(--card-bg);
-            backdrop-filter: var(--glass-blur);
-            border-radius: var(--border-radius);
-            padding: 30px 40px;
-            text-align: center;
-            box-shadow: var(--shadow);
-            margin-bottom: 20px;
-            width: 100%;
-            max-width: 400px;
-        }
-
-        .quiz-question {
-            font-size: 1.4rem;
-            font-weight: 500;
-            color: var(--text-primary);
-            margin-bottom: 20px;
-        }
-
-        .quiz-input {
-            width: 100%;
-            padding: 15px;
-            font-size: 1.2rem;
-            text-align: center;
-            border: 2px solid var(--accent-color);
-            border-radius: var(--border-radius);
-            font-family: var(--font-arabic), var(--font-main);
-            box-sizing: border-box;
-        }
-
-        .quiz-check-button {
-            margin-top: 15px;
-            padding: 12px 30px;
-            background: var(--accent-color);
-            color: white;
-            border: none;
-            border-radius: var(--border-radius);
-            font-size: 1.1rem;
-            cursor: pointer;
-            box-shadow: var(--shadow);
-        }
-
-        .quiz-check-button:hover {
-            background: #43a047;
-        }
-
-        .quiz-feedback {
-            margin-top: 15px;
-            font-size: 1.1rem;
-            font-weight: 500;
-            min-height: 1.5em;
-            text-align: center;
-        }
-
-        .quiz-feedback.success {
-            color: #4caf50;
-        }
-
-        .quiz-feedback.failure {
-            color: var(--secondary-color);
-        }
-
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 70px;
-            background: var(--card-bg);
-            backdrop-filter: var(--glass-blur);
-            border-top: 1px solid rgba(0,0,0,0.05);
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
-        }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            width: 25%;
-            height: 100%;
-            text-decoration: none;
-            color: var(--text-secondary);
-            font-size: 0.8rem;
-            transition: color 0.3s ease;
-        }
-
-        .nav-item.active {
-            color: var(--accent-color);
-        }
-
-        .nav-icon {
-            font-size: 1.6rem;
-            margin-bottom: 4px;
-        }
-
-        .nav-item.active .nav-icon {
-            background: var(--accent-color);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: 0 0 8px rgba(76, 175, 80, 0.3);
-        }
+        .unit-nav { display: flex; overflow-x: auto; gap: 8px; margin-bottom: 15px; padding-bottom: 5px; }
+        .unit-btn { padding: 6px 15px; border-radius: 10px; border: 1px solid var(--border-gold); background: var(--glass); color: var(--royal-gold); font-size: 0.75rem; font-weight: 900; white-space: nowrap; }
+        .unit-btn.active { background: var(--royal-gold); color: #000; }
     </style>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body>
+<body oncontextmenu="return false;">
 
-    <div class="bubble-container" id="bubbleContainer"></div>
+    <div class="bubble-bg" id="bubbles"></div>
 
-    <header class="app-header">
-        <span class="back-button material-icons" onclick="goBack()">arrow_back</span>
-        <h1 class="app-title">Six Pro</h1>
-        <span class="placeholder-for-back"></span>
+    <header>
+        <span class="material-icons text-royal-gold" onclick="window.history.back()">arrow_forward</span>
+        <h1 class="text-sm font-black tracking-widest">SIX PRO ENGLISH</h1>
+        <div class="w-6"></div>
     </header>
 
-    <div class="content-wrapper">
-        <main class="main-screen">
-            <h2 class="page-title">الإنكليزي</h2>
-
-            <div class="tab-buttons">
-                <button class="tab-btn active" onclick="switchTab('verbs')">الأفعال الشاذة</button>
-                <button class="tab-btn" onclick="switchTab('vocab')">المفردات</button>
-                <button class="tab-btn" onclick="switchTab('quiz')">اختبار سريع</button>
-            </div>
-
-            <!-- --- محتوى التبويب "الأفعال الشاذة" --- -->
-            <div id="verbs-content" class="tab-content active">
-                <h3 class="verbs-title">أهم 100 فعل شاذ</h3>
-                <div class="verbs-search-container">
-                    <input type="text" class="search-bar" id="verbsSearch" placeholder="ابحث عن فعل..." oninput="searchVerbs()">
-                </div>
-                <div class="filter-bar">
-                    <button class="filter-button" onclick="sortVerbs('common')">الأكثر شيوعاً</button>
-                    <button class="filter-button" onclick="sortVerbs('alphabetical')">أبجدي</button>
-                </div>
-                <div class="verbs-table-container">
-                    <table class="verbs-table" id="verbsTable">
-                        <thead>
-                            <tr>
-                                <th>المصدر</th>
-                                <th>الماضي البسيط</th>
-                                <th>التصريف الثالث</th>
-                            </tr>
-                        </thead>
-                        <tbody id="verbsTableBody">
-                            <!-- --- سيتم ملء الجدول ديناميكيًا --- -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- --- محتوى التبويب "المفردات" --- -->
-            <div id="vocab-content" class="tab-content">
-                <h3 class="vocab-title">المفردات الأساسية 📖</h3>
-                <div class="vocab-search-container">
-                    <input type="text" class="search-bar" id="vocabSearch" placeholder="ابحث عن كلمة..." oninput="searchVocab()">
-                </div>
-                <div class="filter-buttons">
-                    <button class="filter-btn active" onclick="filterVocab('all')">الكل</button>
-                    <button class="filter-btn" onclick="filterVocab('unit1')">Unit 1</button>
-                    <button class="filter-btn" onclick="filterVocab('unit2')">Unit 2</button>
-                    <button class="filter-btn" onclick="filterVocab('saved')">المحفوظة</button>
-                </div>
-                <div class="vocab-list" id="vocabList">
-                    <!-- --- سيتم ملء القائمة ديناميكيًا --- -->
-                </div>
-            </div>
-
-            <!-- --- محتوى التبويب "اختبار" --- -->
-            <div id="quiz-content" class="tab-content">
-                <div class="quiz-container">
-                    <div class="quiz-card">
-                        <div class="quiz-question" id="quizQuestion">؟</div>
-                        <input type="text" class="quiz-input" id="quizAnswerInput" placeholder="الإجابة..." onkeypress="handleQuizKeyPress(event)">
-                        <button class="quiz-check-button" onclick="checkQuizAnswer()">تحقق</button>
-                    </div>
-                    <div class="quiz-feedback" id="quizFeedback"></div>
-                </div>
-            </div>
-        </main>
+    <div class="tab-bar">
+        <button class="tab-btn active" onclick="toggleTab('verbs', this)">الأفعال الشاذة</button>
+        <button class="tab-btn" onclick="toggleTab('vocab', this)">المفردات</button>
     </div>
 
-    <nav class="bottom-nav">
-        <a href="index.html" class="nav-item active">
-            <span class="nav-icon material-icons">home</span>
-            <span>الرئيسية</span>
-        </a>
-        <a href="stats.html" class="nav-item">
-            <span class="nav-icon material-icons">bar_chart</span>
-            <span>الإحصائيات</span>
-        </a>
-        <a href="alerts.html" class="nav-item">
-            <span class="nav-icon material-icons">notifications</span>
-            <span>التنبيهات</span>
-        </a>
-        <a href="settings.html" class="nav-item">
-            <span class="nav-icon material-icons">settings</span>
-            <span>الإعدادات</span>
-        </a>
-    </nav>
+    <div class="content">
+        <div id="verbs-sec">
+            <div id="verbs-container"></div>
+        </div>
+
+        <div id="vocab-sec" class="hidden">
+            <div class="unit-nav" id="unit-nav"></div>
+            <div id="vocab-container"></div>
+        </div>
+    </div>
 
     <script>
-        // --- بيانات الأفعال الشاذة (نموذجية) ---
-        const irregularVerbs = [
-            { base: "be", past: "was/were", participle: "been", common: true },
-            { base: "beat", past: "beat", participle: "beaten", common: true },
-            { base: "become", past: "became", participle: "become", common: true },
-            { base: "begin", past: "began", participle: "begun", common: true },
-            { base: "break", past: "broke", participle: "broken", common: true },
-            { base: "bring", past: "brought", participle: "brought", common: true },
-            { base: "build", past: "built", participle: "built", common: true },
-            { base: "buy", past: "bought", participle: "bought", common: true },
-            { base: "catch", past: "caught", participle: "caught", common: true },
-            { base: "choose", past: "chose", participle: "chosen", common: true },
-            { base: "come", past: "came", participle: "come", common: true },
-            { base: "cost", past: "cost", participle: "cost", common: true },
-            { base: "cut", past: "cut", participle: "cut", common: true },
-            { base: "do", past: "did", participle: "done", common: true },
-            { base: "draw", past: "drew", participle: "drawn", common: true },
-            { base: "dream", past: "dreamt", participle: "dreamt", common: false },
-            { base: "drink", past: "drank", participle: "drunk", common: true },
-            { base: "drive", past: "drove", participle: "driven", common: true },
-            { base: "eat", past: "ate", participle: "eaten", common: true },
-            { base: "fall", past: "fell", participle: "fallen", common: true },
-            { base: "feel", past: "felt", participle: "felt", common: true },
-            { base: "fight", past: "fought", participle: "fought", common: true },
-            { base: "find", past: "found", participle: "found", common: true },
-            { base: "fly", past: "flew", participle: "flown", common: true },
-            { base: "forget", past: "forgot", participle: "forgotten", common: true },
-            { base: "get", past: "got", participle: "got", common: true },
-            { base: "give", past: "gave", participle: "given", common: true },
-            { base: "go", past: "went", participle: "gone", common: true },
-            { base: "grow", past: "grew", participle: "grown", common: true },
-            { base: "have", past: "had", participle: "had", common: true },
-            { base: "hear", past: "heard", participle: "heard", common: true },
-            { base: "hold", past: "held", participle: "held", common: true },
-            { base: "keep", past: "kept", participle: "kept", common: true },
-            { base: "know", past: "knew", participle: "known", common: true },
-            { base: "leave", past: "left", participle: "left", common: true },
-            { base: "lend", past: "lent", participle: "lent", common: true },
-            { base: "let", past: "let", participle: "let", common: true },
-            { base: "lie", past: "lay", participle: "lain", common: false },
-            { base: "lose", past: "lost", participle: "lost", common: true },
-            { base: "make", past: "made", participle: "made", common: true },
-            { base: "mean", past: "meant", participle: "meant", common: true },
-            { base: "meet", past: "met", participle: "met", common: true },
-            { base: "pay", past: "paid", participle: "paid", common: true },
-            { base: "put", past: "put", participle: "put", common: true },
-            { base: "read", past: "read", participle: "read", common: true },
-            { base: "ride", past: "rode", participle: "ridden", common: true },
-            { base: "ring", past: "rang", participle: "rung", common: true },
-            { base: "rise", past: "rose", participle: "risen", common: true },
-            { base: "run", past: "ran", participle: "run", common: true },
-            { base: "say", past: "said", participle: "said", common: true },
-            { base: "see", past: "saw", participle: "seen", common: true },
-            { base: "sell", past: "sold", participle: "sold", common: true },
-            { base: "send", past: "sent", participle: "sent", common: true },
-            { base: "set", past: "set", participle: "set", common: true },
-            { base: "shake", past: "shook", participle: "shaken", common: true },
-            { base: "sing", past: "sang", participle: "sung", common: true },
-            { base: "sit", past: "sat", participle: "sat", common: true },
-            { base: "sleep", past: "slept", participle: "slept", common: true },
-            { base: "speak", past: "spoke", participle: "spoken", common: true },
-            { base: "spend", past: "spent", participle: "spent", common: true },
-            { base: "stand", past: "stood", participle: "stood", common: true },
-            { base: "steal", past: "stole", participle: "stolen", common: true },
-            { base: "swim", past: "swam", participle: "swum", common: true },
-            { base: "take", past: "took", participle: "taken", common: true },
-            { base: "teach", past: "taught", participle: "taught", common: true },
-            { base: "tell", past: "told", participle: "told", common: true },
-            { base: "think", past: "thought", participle: "thought", common: true },
-            { base: "throw", past: "threw", participle: "thrown", common: true },
-            { base: "understand", past: "understood", participle: "understood", common: true },
-            { base: "wake", past: "woke", participle: "woken", common: true },
-            { base: "wear", past: "wore", participle: "worn", common: true },
-            { base: "win", past: "won", participle: "won", common: true },
-            { base: "write", past: "wrote", participle: "written", common: true }
+        // أفعال إضافية (مزيد)
+        const verbsDB = [
+            {v1: "be", v2: "was/were", v3: "been", ar: "يكون"},
+            {v1: "become", v2: "became", v3: "become", ar: "يصبح"},
+            {v1: "begin", v2: "began", v3: "begun", ar: "يبدأ"},
+            {v1: "break", v2: "broke", v3: "broken", ar: "يكسر"},
+            {v1: "bring", v2: "brought", v3: "brought", ar: "يجلب"},
+            {v1: "buy", v2: "bought", v3: "bought", ar: "يشتري"},
+            {v1: "choose", v2: "chose", v3: "chosen", ar: "يختار"},
+            {v1: "come", v2: "came", v3: "come", ar: "يأتي"},
+            {v1: "do", v2: "did", v3: "done", ar: "يفعل"},
+            {v1: "drink", v2: "drank", v3: "drunk", ar: "يشرب"},
+            {v1: "drive", v2: "drove", v3: "driven", ar: "يقود"},
+            {v1: "eat", v2: "ate", v3: "eaten", ar: "يأكل"},
+            {v1: "fall", v2: "fell", v3: "fallen", ar: "يسقط"},
+            {v1: "feel", v2: "felt", v3: "felt", ar: "يشعر"},
+            {v1: "find", v2: "found", v3: "found", ar: "يجد"},
+            {v1: "get", v2: "got", v3: "got", ar: "يحصل"},
+            {v1: "give", v2: "gave", v3: "given", ar: "يعطي"},
+            {v1: "go", v2: "went", v3: "gone", ar: "يذهب"},
+            {v1: "know", v2: "knew", v3: "known", ar: "يعرف"},
+            {v1: "leave", v2: "left", v3: "left", ar: "يغادر"},
+            {v1: "make", v2: "made", v3: "made", ar: "يصنع"},
+            {v1: "see", v2: "saw", v3: "seen", ar: "يرى"},
+            {v1: "speak", v2: "spoke", v3: "spoken", ar: "يتحدث"},
+            {v1: "take", v2: "took", v3: "taken", ar: "يأخذ"},
+            {v1: "write", v2: "wrote", v3: "written", ar: "يكتب"}
         ];
 
-        // --- بيانات المفردات (نموذجية) ---
-        const vocabulary = [
-            { word: "book", meaning: "كتاب", unit: "unit1", saved: false },
-            { word: "pen", meaning: "قلم", unit: "unit1", saved: false },
-            { word: "school", meaning: "مدرسة", unit: "unit1", saved: true },
-            { word: "teacher", meaning: "معلم", unit: "unit1", saved: false },
-            { word: "student", meaning: "طالب", unit: "unit1", saved: false },
-            { word: "classroom", meaning: "فصل", unit: "unit1", saved: false },
-            { word: "desk", meaning: "مكتب", unit: "unit1", saved: false },
-            { word: "chair", meaning: "كرسي", unit: "unit1", saved: false },
-            { word: "window", meaning: "نافذة", unit: "unit1", saved: false },
-            { word: "door", meaning: "باب", unit: "unit1", saved: false },
-            { word: "house", meaning: "منزل", unit: "unit2", saved: false },
-            { word: "car", meaning: "سيارة", unit: "unit2", saved: false },
-            { word: "tree", meaning: "شجرة", unit: "unit2", saved: false },
-            { word: "flower", meaning: "زهرة", unit: "unit2", saved: false },
-            { word: "cat", meaning: "قطة", unit: "unit2", saved: false },
-            { word: "dog", meaning: "كلب", unit: "unit2", saved: false },
-            { word: "water", meaning: "ماء", unit: "unit2", saved: false },
-            { word: "food", meaning: "طعام", unit: "unit2", saved: false },
-            { word: "friend", meaning: "صديق", unit: "unit2", saved: false },
-            { word: "family", meaning: "عائلة", unit: "unit2", saved: false }
+        // مفردات إضافية (مزيد)
+        const vocabDB = [
+            {en: "Ankle", ar: "كاحل", unit: 1}, {en: "Bandage", ar: "لفاف", unit: 1}, {en: "Dizzy", ar: "دوار", unit: 1},
+            {en: "Wrist", ar: "رسغ", unit: 1}, {en: "Sneezed", ar: "عطس", unit: 1}, {en: "Shoulder", ar: "كتف", unit: 1},
+            {en: "Investigation", ar: "تحقيق", unit: 2}, {en: "Witness", ar: "شاهد", unit: 2}, {en: "Evidence", ar: "دليل", unit: 2},
+            {en: "Criminal", ar: "مجرم", unit: 2}, {en: "Pickpocket", ar: "نشال", unit: 2}, {en: "Fines", ar: "غرامات", unit: 2},
+            {en: "Architecture", ar: "هندسة معمارية", unit: 3}, {en: "Canteen", ar: "كافيتيريا", unit: 3}, {en: "Freelance", ar: "عمل حر", unit: 3},
+            {en: "Ambition", ar: "طموح", unit: 3}, {en: "Interpreter", ar: "مترجم فوري", unit: 3},
+            {en: "Luxury", ar: "فخامة", unit: 5}, {en: "Sightseeing", ar: "معالم سياحية", unit: 5}, {en: "Seaside", ar: "ساحل البحر", unit: 5},
+            {en: "Installment", ar: "قسط", unit: 6}, {en: "Withdraw", ar: "يسحب مال", unit: 6}, {en: "Statement", ar: "كشف حساب", unit: 6}
         ];
 
-        // --- متغيرات الاختبار ---
-        let currentQuizQuestion = { type: '', text: '', answer: '' };
-        let quizFeedbackTimeout = null; // لمعرفة متى ينتهي مؤقت الملاحظة
-
-        // --- دالة تبديل التبويبات ---
-        function switchTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(`${tabName}-content`).classList.add('active');
-            event.target.classList.add('active');
-
-            if (tabName === 'verbs') {
-                renderVerbsTable();
-            }
-            if (tabName === 'vocab') {
-                renderVocabList();
-            }
-            if (tabName === 'quiz') {
-                generateQuizQuestion();
-            }
+        function speak(en, ar) {
+            window.speechSynthesis.cancel();
+            const msgEn = new SpeechSynthesisUtterance(en);
+            msgEn.lang = 'en-US';
+            msgEn.rate = 0.8;
+            msgEn.onend = () => {
+                const msgAr = new SpeechSynthesisUtterance(ar);
+                msgAr.lang = 'ar-SA';
+                window.speechSynthesis.speak(msgAr);
+            };
+            window.speechSynthesis.speak(msgEn);
         }
 
-        // --- دالة عرض جدول الأفعال ---
-        function renderVerbsTable(verbs = irregularVerbs) {
-            const tbody = document.getElementById('verbsTableBody');
-            tbody.innerHTML = '';
-            verbs.forEach(verb => {
-                const row = document.createElement('tr');
-                if (verb.common) {
-                    row.classList.add('highlighted'); // تلوين الأفعال الشائعة
-                }
-                row.innerHTML = `
-                    <td>${verb.base}</td>
-                    <td>${verb.past}</td>
-                    <td>${verb.participle}</td>
-                `;
-                tbody.appendChild(row);
-            });
+        function toggleTab(tab, btn) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('verbs-sec').classList.toggle('hidden', tab !== 'verbs');
+            document.getElementById('vocab-sec').classList.toggle('hidden', tab !== 'vocab');
+            if(tab === 'vocab') renderVocab(1);
         }
 
-        // --- دالة بحث الأفعال ---
-        function searchVerbs() {
-            const searchTerm = document.getElementById('verbsSearch').value.toLowerCase();
-            const filtered = irregularVerbs.filter(verb =>
-                verb.base.toLowerCase().includes(searchTerm) ||
-                verb.past.toLowerCase().includes(searchTerm) ||
-                verb.participle.toLowerCase().includes(searchTerm)
-            );
-            renderVerbsTable(filtered);
-        }
-
-        // --- دالة ترتيب الأفعال ---
-        function sortVerbs(type) {
-            let sorted = [...irregularVerbs]; // نسخة للتعديل
-            if (type === 'common') {
-                sorted.sort((a, b) => b.common - a.common); // الأفعال الشائعة أولاً
-            } else if (type === 'alphabetical') {
-                sorted.sort((a, b) => a.base.localeCompare(b.base)); // ترتيب أبجدي
-            }
-            renderVerbsTable(sorted);
-        }
-
-        // --- دالة عرض قائمة المفردات ---
-        function renderVocabList(vocab = vocabulary) {
-            const list = document.getElementById('vocabList');
-            list.innerHTML = '';
-            vocab.forEach(item => {
-                const card = document.createElement('div');
-                card.className = 'vocab-card';
-                card.innerHTML = `
-                    <div class="vocab-text">
-                        <div class="vocab-word">${item.word}</div>
-                        <div class="vocab-meaning">${item.meaning}</div>
+        function renderVerbs() {
+            const container = document.getElementById('verbs-container');
+            container.innerHTML = verbsDB.map(v => `
+                <div class="data-card">
+                    <div class="item-header">
+                        <span class="ar-txt">${v.ar}</span>
+                        <div class="sound-btn" onclick="speak('${v.v1}, ${v.v2}, ${v.v3}', '${v.ar}')">
+                            <span class="material-icons" style="font-size: 18px;">volume_up</span>
+                        </div>
                     </div>
-                    <button class="sound-button material-icons" onclick="playSound('${item.word}')">volume_up</button>
-                `;
-                list.appendChild(card);
-            });
+                    <div class="verb-grid">
+                        <div><div class="v-label">V1</div><div class="v-box">${v.v1}</div></div>
+                        <div><div class="v-label">V2</div><div class="v-box">${v.v2}</div></div>
+                        <div><div class="v-label">V3</div><div class="v-box">${v.v3}</div></div>
+                    </div>
+                </div>
+            `).join('');
         }
 
-        // --- دالة بحث المفردات ---
-        function searchVocab() {
-            const searchTerm = document.getElementById('vocabSearch').value.toLowerCase();
-            const filtered = vocabulary.filter(item =>
-                item.word.toLowerCase().includes(searchTerm) ||
-                item.meaning.toLowerCase().includes(searchTerm)
-            );
-            renderVocabList(filtered);
+        function renderVocab(unit) {
+            const nav = document.getElementById('unit-nav');
+            const units = [1, 2, 3, 5, 6, 7];
+            nav.innerHTML = units.map(u => `<button onclick="renderVocab(${u})" class="unit-btn ${u === unit ? 'active' : ''}">Unit ${u}</button>`).join('');
+
+            const container = document.getElementById('vocab-container');
+            const filtered = vocabDB.filter(v => v.unit === unit);
+            container.innerHTML = filtered.map(v => `
+                <div class="data-card flex justify-between items-center">
+                    <div>
+                        <div class="text-lg font-black text-royal-gold">${v.en}</div>
+                        <div class="text-sm opacity-50">${v.ar}</div>
+                    </div>
+                    <div class="sound-btn" onclick="speak('${v.en}', '${v.ar}')">
+                        <span class="material-icons" style="font-size: 18px;">volume_up</span>
+                    </div>
+                </div>
+            `).join('');
         }
 
-        // --- دالة تصفية المفردات ---
-        function filterVocab(filterType) {
-            // تحديث أزرار التصفية
-            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-
-            let filtered = vocabulary;
-            if (filterType === 'unit1') {
-                filtered = vocabulary.filter(item => item.unit === 'unit1');
-            } else if (filterType === 'unit2') {
-                filtered = vocabulary.filter(item => item.unit === 'unit2');
-            } else if (filterType === 'saved') {
-                filtered = vocabulary.filter(item => item.saved);
-            } // 'all' يعرض الكل
-            renderVocabList(filtered);
+        // فقاعات
+        const bContainer = document.getElementById('bubbles');
+        for(let i=0; i<15; i++) {
+            const b = document.createElement('div');
+            b.className = 'bubble';
+            const size = Math.random()*80 + 30;
+            b.style.width = b.style.height = size + 'px';
+            b.style.left = Math.random()*100 + '%';
+            b.style.animationDuration = (Math.random()*10 + 10) + 's';
+            bContainer.appendChild(b);
         }
 
-        // --- دالة تشغيل النطق ---
-        function playSound(word) {
-            // في التطبيق الكامل، سيتم ربط هذه الوظيفة بخدمة نطق (مثل Web Speech API أو ملفات صوتية)
-            alert(`[تمثيل] جاري تشغيل نطق الكلمة: ${word}`);
-        }
-
-        // --- دالة إنشاء سؤال اختبار ---
-        function generateQuizQuestion() {
-            // مسح الملاحظة القديمة إذا لم تكن قد انتهت بعد
-            if (quizFeedbackTimeout) {
-                clearTimeout(quizFeedbackTimeout);
-            }
-            document.getElementById('quizFeedback').textContent = '';
-
-            const types = ['verb', 'vocab'];
-            const type = types[Math.floor(Math.random() * types.length)];
-
-            if (type === 'verb') {
-                const verb = irregularVerbs[Math.floor(Math.random() * irregularVerbs.length)];
-                const forms = ['past', 'participle'];
-                const form = forms[Math.floor(Math.random() * forms.length)];
-                currentQuizQuestion = {
-                    type: 'verb',
-                    text: `ما هو ${form === 'past' ? 'الماضي البسيط' : 'التصريف الثالث'} للفعل "${verb.base}"؟`,
-                    answer: verb[form]
-                };
-            } else { // vocab
-                const vocabItem = vocabulary[Math.floor(Math.random() * vocabulary.length)];
-                const directions = ['meaning', 'word'];
-                const direction = directions[Math.floor(Math.random() * directions.length)];
-                if (direction === 'meaning') {
-                    currentQuizQuestion = {
-                        type: 'vocab',
-                        text: `ما معنى الكلمة "${vocabItem.word}"؟`,
-                        answer: vocabItem.meaning
-                    };
-                } else {
-                    currentQuizQuestion = {
-                        type: 'vocab',
-                        text: `"${vocabItem.meaning}" بالإنكليزية هي؟`,
-                        answer: vocabItem.word
-                    };
-                }
-            }
-            document.getElementById('quizQuestion').textContent = currentQuizQuestion.text;
-            document.getElementById('quizAnswerInput').value = '';
-            document.getElementById('quizAnswerInput').focus();
-        }
-
-        // --- دالة التحقق من إجابة الاختبار ---
-        function checkQuizAnswer() {
-            const inputElement = document.getElementById('quizAnswerInput');
-            const userInput = inputElement.value.trim();
-
-            if (userInput === '') {
-                document.getElementById('quizFeedback').textContent = 'الرجاء إدخال إجابة.';
-                document.getElementById('quizFeedback').className = 'quiz-feedback failure';
-                // توليد سؤال جديد بعد ثانية
-                quizFeedbackTimeout = setTimeout(() => {
-                    generateQuizQuestion();
-                }, 1000);
-                return;
-            }
-
-            if (userInput.toLowerCase() === currentQuizQuestion.answer.toLowerCase()) {
-                const successMessages = ['أحسنت!', 'استمر في الإبداع.', 'بطل!', 'ممتاز!'];
-                const randomMessage = successMessages[Math.floor(Math.random() * successMessages.length)];
-                document.getElementById('quizFeedback').textContent = randomMessage;
-                document.getElementById('quizFeedback').className = 'quiz-feedback success';
-            } else {
-                const failureMessages = ['حاول مرة أخرى.', 'استمر! كل خطأ فرصة للتعلم.', 'لا تستسلم!'];
-                const randomMessage = failureMessages[Math.floor(Math.random() * failureMessages.length)];
-                document.getElementById('quizFeedback').textContent = randomMessage;
-                document.getElementById('quizFeedback').className = 'quiz-feedback failure';
-            }
-
-            // توليد سؤال جديد بعد ثانية
-            quizFeedbackTimeout = setTimeout(() => {
-                generateQuizQuestion();
-            }, 1000);
-        }
-
-        // --- دالة Enter للاختبار ---
-        function handleQuizKeyPress(event) {
-            if (event.key === 'Enter') {
-                checkQuizAnswer();
-            }
-        }
-
-        function goBack() {
-            window.location.href = 'index.html';
-        }
-
-        function createBubbles() {
-            const container = document.getElementById('bubbleContainer');
-            const bubbleCount = 15;
-            for (let i = 0; i < bubbleCount; i++) {
-                const bubble = document.createElement('div');
-                bubble.classList.add('bubble');
-                const size = Math.random() * 100 + 20;
-                bubble.style.width = `${size}px`;
-                bubble.style.height = `${size}px`;
-                bubble.style.left = `${Math.random() * 100}%`;
-                bubble.style.top = `${Math.random() * 100}%`;
-                bubble.style.animationDelay = `${Math.random() * 5}s`;
-                container.appendChild(bubble);
-            }
-        }
-
-        window.onload = function() {
-            createBubbles();
-            // لا حاجة لاستدعاء renderVerbsTable أو renderVocabList هنا لأن switchTab('verbs') يفعل ذلك
-        };
+        window.onload = () => renderVerbs();
     </script>
-
 </body>
 </html>
