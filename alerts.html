@@ -3,75 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Six Pro - Marwa Intelligence</title>
+    <title>Marwa Elite - Royal Edition</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --royal-navy: #020617; --royal-gold: #f1c40f;  
-            --neon-green: #00ff88; --glass: rgba(255, 255, 255, 0.03);
-            --border-gold: rgba(241, 196, 15, 0.2);
-        }
+        :root { --navy: #020617; --gold: #f1c40f; --glass: rgba(255, 255, 255, 0.03); --border: rgba(241, 196, 15, 0.2); }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; user-select: none; }
-        body { background-color: var(--royal-navy); color: #fff; min-height: 100vh; overflow-x: hidden; }
+        body { background: var(--navy); color: #fff; min-height: 100vh; overflow-x: hidden; }
+        
+        header { padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; background: rgba(2, 6, 23, 0.95); backdrop-filter: blur(15px); border-bottom: 2px solid var(--border); position: sticky; top: 0; z-index: 100; }
+        .back-btn { width: 40px; height: 40px; border-radius: 12px; background: var(--glass); border: 1px solid var(--border); color: var(--gold); display: flex; align-items: center; justify-content: center; }
+        
+        .tab-bar { display: flex; background: var(--glass); border: 1px solid var(--border); margin: 15px; border-radius: 20px; padding: 5px; gap: 4px; }
+        .tab-btn { flex: 1; padding: 10px; border-radius: 15px; font-weight: 900; color: #555; font-size: 0.75rem; transition: 0.3s; }
+        .tab-btn.active { background: var(--gold); color: #000; box-shadow: 0 0 15px rgba(241, 196, 15, 0.3); }
 
-        /* الهيدر مع زر الرجوع */
-        header { 
-            padding: 15px 20px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: space-between;
-            background: rgba(2, 6, 23, 0.95); 
-            backdrop-filter: blur(20px); 
-            border-bottom: 2px solid var(--border-gold); 
-            position: sticky; top: 0; z-index: 100; 
-        }
+        .alert-card { background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border); border-radius: 22px; padding: 18px; margin-bottom: 15px; position: relative; animation: slideIn 0.4s ease; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .back-btn {
-            display: flex; align-items: center; justify-content: center;
-            width: 40px; height: 40px; border-radius: 12px;
-            background: var(--glass); border: 1px solid var(--border-gold);
-            color: var(--royal-gold); transition: 0.3s;
-        }
-        .back-btn:active { transform: scale(0.9); background: var(--royal-gold); color: #000; }
+        .react-btn { font-size: 1.5rem; cursor: pointer; transition: transform 0.2s; display: inline-block; }
+        .react-btn:active { transform: scale(1.4); }
 
-        /* تأثير النيون للرسالة */
-        .marwa-card {
-            position: relative; border-radius: 22px; padding: 2px;
-            background: linear-gradient(90deg, #00ff88, #00bd65, #00ff88);
-            background-size: 200% 100%; animation: neonFlow 3s linear infinite;
-            margin-bottom: 15px; box-shadow: 0 0 15px rgba(0, 255, 136, 0.15);
-        }
-        @keyframes neonFlow { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
-        .marwa-content { background: var(--royal-navy); border-radius: 20px; padding: 15px; display: flex; gap: 12px; align-items: center; }
-
-        .tab-bar { display: flex; background: var(--glass); border: 1px solid var(--border-gold); margin: 15px; border-radius: 20px; padding: 5px; }
-        .tab-btn { flex: 1; padding: 10px; border-radius: 15px; font-weight: 900; color: #555; font-size: 0.8rem; }
-        .tab-btn.active { background: var(--royal-gold); color: #000; }
-
-        .alert-card {
-            background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-gold);
-            border-radius: 22px; padding: 18px; margin-bottom: 12px; backdrop-filter: blur(10px);
-        }
-
-        .react-btn { font-size: 1.4rem; transition: 0.3s; cursor: pointer; filter: grayscale(1); }
-        .react-btn.active { filter: grayscale(0); transform: scale(1.2); }
-
-        .bubble { position: absolute; border-radius: 50%; background: radial-gradient(circle, rgba(241, 196, 15, 0.05) 0%, transparent 70%); animation: floatUp 15s infinite linear; pointer-events: none; }
-        @keyframes floatUp { from { transform: translateY(110vh); opacity: 0; } to { transform: translateY(-10vh); opacity: 1; } }
+        /* تنسيق المطورة الملكي */
+        .marwa-card { border-radius: 22px; padding: 2px; background: linear-gradient(90deg, #f1c40f, #d4af37, #f1c40f); background-size: 200% 100%; animation: goldFlow 3s linear infinite; margin-bottom: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+        @keyframes goldFlow { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
+        .marwa-content { background: var(--navy); border-radius: 20px; padding: 18px; position: relative; overflow: hidden; }
+        .marwa-label { font-size: 10px; color: var(--gold); font-weight: 900; letter-spacing: 1px; display: flex; align-items: center; gap: 5px; margin-bottom: 8px; }
+        
+        /* تأثير الفقاعات */
+        .bubble { position: fixed; pointer-events: none; animation: floatUp 2s ease-out forwards; z-index: 1000; }
+        @keyframes floatUp { 0% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(-150px) scale(1.5); opacity: 0; } }
     </style>
 </head>
-<body oncontextmenu="return false;">
+<body>
 
-    <div id="bubbles-container"></div>
-    
     <header>
-        <button class="back-btn" onclick="history.back()">
-            <span class="material-icons">arrow_forward</span>
-        </button>
-        <h1 class="text-xs font-black tracking-[3px]">MARWA ELITE</h1>
-        <div class="w-10"></div> </header>
+        <button class="back-btn" onclick="history.back()"><span class="material-icons">arrow_forward</span></button>
+        <h1 class="text-[10px] font-black tracking-[4px] text-gray-400">MARWA ELITE</h1>
+        <div class="w-10"></div>
+    </header>
 
     <div class="p-4 pb-24">
         <div class="tab-bar">
@@ -79,7 +50,6 @@
             <button class="tab-btn" onclick="switchTab('fun', this)">نكت 😂</button>
             <button class="tab-btn" onclick="switchTab('bot', this)">المطورة 👑</button>
         </div>
-
         <div id="main-content"></div>
     </div>
 
@@ -87,12 +57,65 @@
         const BOT_TOKEN = '7960837053:AAHGx2hRxCDRtcsEvGb7s5uIFomaodUMjGA';
         const USER_ID = '8113494321';
 
-        // بنك البيانات
-        const tipsBank = Array.from({length: 200}, (_, i) => `نصيحة ${i+1}: مروة، تذكري أن تعبك اليوم هو فخرك غداً. مالج شغل باليسختون.`);
-        const funBank = Array.from({length: 200}, (_, i) => `نكتة ${i+1}: طالب سادس شاف كتابه يبجي، كاله شبيك؟ كاله من كثر ما جاي تبصم بية وجهي صار خريطة.`);
-
+        let db = {
+            tips: JSON.parse(localStorage.getItem('m_tips_v3')) || [],
+            fun: JSON.parse(localStorage.getItem('m_fun_v3')) || [],
+            botMsgs: []
+        };
+        let lastId = 0;
         let activeTab = 'tips';
-        let deletedMessages = new Set();
+        let pendingCmd = null;
+
+        async function fetchUpdates() {
+            try {
+                const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getUpdates?offset=${lastId + 1}`);
+                const data = await res.json();
+                if (!data.ok || data.result.length === 0) return;
+
+                data.result.forEach(u => {
+                    lastId = u.update_id;
+                    if (u.message && String(u.message.from.id) === USER_ID) {
+                        const txt = u.message.text.trim();
+                        const time = new Date(u.message.date * 1000).toLocaleTimeString('ar-IQ', {hour: '2-digit', minute:'2-digit'});
+
+                        if (txt === "حذف" && u.message.reply_to_message) {
+                            const targetId = u.message.reply_to_message.message_id;
+                            db.botMsgs = db.botMsgs.filter(m => m.id !== targetId);
+                            render(); return;
+                        }
+
+                        if (txt === "نصيحة") { pendingCmd = 'tips'; return; }
+                        if (txt === "نكتة") { pendingCmd = 'fun'; return; }
+
+                        if (pendingCmd) {
+                            let list = /\d+\./.test(txt) ? txt.split(/\d+\./).map(s => s.trim()).filter(s => s.length > 2) : [txt];
+                            if (pendingCmd === 'tips') db.tips = [...new Set([...db.tips, ...list])];
+                            else db.fun = [...new Set([...db.fun, ...list])];
+                            localStorage.setItem(`m_${pendingCmd}_v3`, JSON.stringify(db[pendingCmd]));
+                            pendingCmd = null;
+                        } else {
+                            if (!db.botMsgs.some(m => m.id === u.message.message_id)) {
+                                db.botMsgs.unshift({ id: u.message.message_id, text: txt, time: time });
+                            }
+                        }
+                    }
+                });
+                render();
+            } catch (e) {}
+        }
+
+        function createBubbles(emoji, x, y) {
+            for (let i = 0; i < 6; i++) {
+                const b = document.createElement('div');
+                b.className = 'bubble';
+                b.innerText = emoji;
+                b.style.left = (x + (Math.random() * 40 - 20)) + 'px';
+                b.style.top = y + 'px';
+                b.style.fontSize = (Math.random() * 10 + 20) + 'px';
+                document.body.appendChild(b);
+                setTimeout(() => b.remove(), 2000);
+            }
+        }
 
         function switchTab(tab, btn) {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -101,79 +124,45 @@
             render();
         }
 
-        async function fetchBotMessages() {
-            const container = document.getElementById('main-content');
-            try {
-                const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getUpdates`);
-                const data = await res.json();
-                if(!data.ok) return;
-
-                data.result.forEach(u => {
-                    if (u.message && u.message.reply_to_message) {
-                        const targetId = u.message.reply_to_message.message_id;
-                        const text = u.message.text.trim();
-                        if (text === 'حذف') deletedMessages.add(targetId);
-                        if (text === 'فك حذف') deletedMessages.delete(targetId);
-                    }
-                });
-
-                if(activeTab !== 'bot') return;
-                container.innerHTML = '';
-                
-                data.result.filter(u => u.message && String(u.message.from.id) === USER_ID && !u.message.reply_to_message)
-                    .reverse().forEach(u => {
-                        if (deletedMessages.has(u.message.message_id)) return;
-
-                        container.innerHTML += `
-                            <div class="marwa-card">
-                                <div class="marwa-content">
-                                    <div class="text-green-400"><span class="material-icons">verified</span></div>
-                                    <div>
-                                        <div class="text-[10px] text-green-400 font-bold uppercase tracking-widest">رسالة من المطورة مروة</div>
-                                        <div class="text-sm font-bold text-white mt-1">${u.message.text}</div>
-                                        <div class="text-[9px] opacity-30 mt-1">${new Date(u.message.date * 1000).toLocaleTimeString('ar-SA')}</div>
-                                    </div>
-                                </div>
-                            </div>`;
-                    });
-            } catch(e) {}
-        }
-
         function render() {
             const container = document.getElementById('main-content');
             container.innerHTML = '';
-            if(activeTab === 'bot') { fetchBotMessages(); return; }
 
-            const bank = activeTab === 'tips' ? tipsBank : funBank;
-            const hourIndex = new Date().getHours() % 20;
-            const displayList = bank.slice(hourIndex * 10, (hourIndex * 10) + 10);
+            if (activeTab === 'bot') {
+                db.botMsgs.forEach(m => {
+                    container.innerHTML += `
+                        <div class="marwa-card">
+                            <div class="marwa-content">
+                                <div class="marwa-label">
+                                    <span class="material-icons text-[14px]">verified</span>
+                                    <span>رسالة من المطورة مروة 👑</span>
+                                </div>
+                                <p class="text-[15px] font-bold text-white mb-3 leading-relaxed">${m.text}</p>
+                                <div class="text-[9px] opacity-40 font-bold border-t border-white/5 pt-2">الوقت: ${m.time}</div>
+                            </div>
+                        </div>`;
+                });
+            } else {
+                const bank = activeTab === 'tips' ? db.tips : db.fun;
+                const emoji = activeTab === 'tips' ? '🤍' : '😹';
+                
+                // اختيار 10 عشوائيات
+                const seed = Math.floor(Date.now() / 1800000);
+                const display = [...bank].sort((a,b) => (bank.indexOf(a) * seed % 7) - 3).slice(0, 10);
 
-            displayList.forEach((text, i) => {
-                container.innerHTML += `
-                    <div class="alert-card">
-                        <div class="flex justify-between items-start">
-                            <p class="text-sm text-gray-200 leading-relaxed w-4/5">${text}</p>
-                            <span class="react-btn" onclick="this.classList.toggle('active'); this.innerText=this.classList.contains('active')?'${activeTab==='tips'?'❤️':'😂'}':'${activeTab==='tips'?'🤍':'😂'}'">
-                                ${activeTab==='tips'?'🤍':'😂'}
-                            </span>
-                        </div>
-                    </div>`;
-            });
+                display.forEach(text => {
+                    container.innerHTML += `
+                        <div class="alert-card">
+                            <div class="flex justify-between items-start gap-4">
+                                <p class="text-sm font-bold text-gray-200 leading-relaxed">${text}</p>
+                                <span class="react-btn" onclick="createBubbles('${emoji}', event.clientX, event.clientY)">${emoji}</span>
+                            </div>
+                        </div>`;
+                });
+            }
         }
 
-        setInterval(fetchBotMessages, 4000);
-        setInterval(render, 3600000);
-
-        const bCont = document.getElementById('bubbles-container');
-        for(let i=0; i<15; i++) {
-            const b = document.createElement('div');
-            b.className = 'bubble';
-            b.style.width = b.style.height = (Math.random()*50+20)+'px';
-            b.style.left = Math.random()*100+'%';
-            b.style.animationDuration = (Math.random()*10+10)+'s';
-            bCont.appendChild(b);
-        }
-
+        setInterval(fetchUpdates, 2000);
         window.onload = render;
     </script>
 </body>
