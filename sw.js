@@ -1,31 +1,37 @@
-// اسم الكاش
-const CACHE_NAME = 'six-pro-cache-v1';
+// اسم الكاش المحدث
+const CACHE_NAME = 'six-pro-royal-v2';
 
-// الملفات التي سيتم تخزينها في الكاش
+// الملفات الأساسية للتشغيل أوفلاين
 const urlsToCache = [
+  './',
   'index.html',
   'manifest.json',
-  'https://iili.io/fbckoRn.md.jpg' // صورة الأيقونة من Imgur
+  'https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap',
+  'https://fonts.googleapis.com/icon?family=Material+Icons',
+  'https://cdn.tailwindcss.com',
+  'https://iili.io/fbckoRn.md.jpg' 
 ];
 
-// عند التثبيت: نحفظ الملفات في الكاش
+// عند التثبيت
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
+      console.log('تم فتح الكاش الملكي');
       return cache.addAll(urlsToCache);
     })
   );
   self.skipWaiting();
 });
 
-// عند التفعيل: نحذف أي كاش قديم
+// عند التفعيل (حذف الكاش القديم فوراً)
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
-        cacheNames.map((name) => {
-          if (name !== CACHE_NAME) {
-            return caches.delete(name);
+        cacheNames.map((cache) => {
+          if (cache !== CACHE_NAME) {
+            console.log('تم حذف الكاش القديم');
+            return caches.delete(cache);
           }
         })
       );
@@ -34,11 +40,23 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// عند أي طلب: نرجع الملف من الكاش أولاً ثم من الإنترنت إذا لم يكن موجوداً
+// استراتيجية (الإنترنت أولاً) لضمان ظهور التحديثات التصميمية فوراً
 self.addEventListener('fetch', (event) => {
   event.respondWith(
-    caches.match(event.request).then((response) => {
-      return response || fetch(event.request);
-    })
+    fetch(event.request)
+      .then((response) => {
+        // إذا نجح الطلب، نحفظ نسخة منه في الكاش ونرجعه
+        if (event.request.method === 'GET') {
+          const resClone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, resClone);
+          });
+        }
+        return response;
+      })
+      .catch(() => {
+        // في حال انقطاع الإنترنت، نستخدم الكاش
+        return caches.match(event.request);
+      })
   );
 });
