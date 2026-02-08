@@ -5,10 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Six Pro Elite</title>
     
+    <link rel="manifest" href="manifest.json">
+
+    <meta name="theme-color" content="#020617">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="mobile-web-app-capable" content="yes">
-    <link rel="manifest" href="manifest.json">
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -18,8 +19,8 @@
         :root {
             --royal-navy: #020617; 
             --royal-gold: #f1c40f;  
-            --border-gold: rgba(241, 196, 15, 0.25);
-            --glass: rgba(255, 255, 255, 0.05);
+            --border-gold: rgba(241, 196, 15, 0.2);
+            --glass: rgba(255, 255, 255, 0.03);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; user-select: none; }
@@ -27,21 +28,27 @@
         body { 
             background-color: var(--royal-navy); 
             color: #fff; 
-            min-height: 100vh; 
-            overflow: hidden; /* منع التمرير الزائد للحفاظ على مظهر التطبيق */
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
+            overflow: hidden;
             display: flex;
             flex-direction: column;
-            padding-top: env(safe-area-inset-top); /* حماية منطقة النوتش */
         }
 
-        .bubble { position: absolute; border-radius: 50%; background: radial-gradient(circle, rgba(241, 196, 15, 0.07) 0%, transparent 70%); animation: floatUp 15s infinite linear; pointer-events: none; z-index: 0; }
+        /* فقاعات خلفية */
+        .bubble { position: absolute; border-radius: 50%; background: radial-gradient(circle, rgba(241, 196, 15, 0.05) 0%, transparent 70%); animation: floatUp 15s infinite linear; pointer-events: none; z-index: 0; }
         @keyframes floatUp { from { transform: translateY(110vh); opacity: 0; } to { transform: translateY(-10vh); opacity: 1; } }
 
-        /* العنوان الملكي المحدث */
         header { 
-            padding: 20px 0; text-align: center; background: rgba(2, 6, 23, 0.95); 
-            border-bottom: 1px solid var(--border-gold); z-index: 100; backdrop-filter: blur(15px);
+            padding-top: calc(20px + env(safe-area-inset-top)); /* دفع المحتوى لأسفل الساعة */
+            padding-bottom: 20px;
+            text-align: center; 
+            background: rgba(2, 6, 23, 0.95); 
+            border-bottom: 1px solid var(--border-gold); 
+            z-index: 100; 
+            backdrop-filter: blur(15px);
         }
+
         .royal-title {
             font-size: 1.1rem; font-weight: 900; letter-spacing: 8px;
             background: linear-gradient(to right, #bf953f, #fcf6ba, #b38728);
@@ -49,48 +56,51 @@
             text-transform: uppercase;
         }
 
-        /* كرت الترحيب بدون مروة وبدون عدادات */
         .welcome-card {
-            margin: 20px; padding: 40px 25px; border-radius: 30px;
-            background: linear-gradient(145deg, rgba(255,255,255,0.06), rgba(255,255,255,0.01));
+            margin: 25px 20px; padding: 45px 25px; border-radius: 35px;
+            background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
             border: 1px solid var(--border-gold); position: relative; z-index: 10;
-            text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.4);
         }
-        .welcome-title { font-size: 1.8rem; font-weight: 900; color: #fff; margin-bottom: 8px; }
-        .salawat { font-size: 1.3rem; color: var(--royal-gold); font-weight: 900; display: block; text-shadow: 0 0 10px rgba(241,196,15,0.3); }
 
-        /* شبكة الأزرار */
-        .features-grid { 
-            display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; 
-            padding: 0 20px; flex-grow: 1; align-content: start;
+        .welcome-title { font-size: 2rem; font-weight: 900; color: #fff; margin-bottom: 12px; }
+        .salawat { 
+            font-size: 1.4rem; color: var(--royal-gold); font-weight: 900; 
+            display: block; text-shadow: 0 0 15px rgba(241, 196, 15, 0.4); 
         }
+
+        .features-grid { 
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; 
+            padding: 0 20px; flex-grow: 1; align-content: start; z-index: 10;
+        }
+
         .feature-card {
             background: var(--glass); border: 1px solid var(--border-gold);
-            border-radius: 24px; padding: 30px 15px; text-align: center;
+            border-radius: 28px; padding: 30px 15px; text-align: center;
             transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer;
         }
-        .feature-card:active { transform: scale(0.92); background: var(--royal-gold); }
-        .feature-card:active .feature-text, .feature-card:active .feature-icon { color: #000; }
-        .feature-icon { font-size: 2.5rem; color: var(--royal-gold); margin-bottom: 12px; display: block; }
-        .feature-text { font-size: 0.95rem; font-weight: 700; color: #fff; }
+        .feature-card:active { transform: scale(0.9); background: var(--royal-gold); }
+        .feature-card:active .feature-text, .feature-card:active .material-icons { color: #000; }
+        .feature-icon { font-size: 2.6rem; color: var(--royal-gold); margin-bottom: 12px; display: block; }
+        .feature-text { font-size: 1rem; font-weight: 800; color: #fff; }
 
-        /* شريط التثبيت */
-        #installBanner {
-            display: none; margin: 0 20px 15px; padding: 15px;
-            background: rgba(241, 196, 15, 0.1); border: 1px dashed var(--royal-gold);
-            border-radius: 20px; text-align: center; z-index: 50;
-        }
-
-        /* الملاحة السفلى مع حماية الحواف */
         .bottom-nav {
-            height: 85px; background: rgba(2, 6, 23, 0.98); 
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            height: calc(80px + env(safe-area-inset-bottom));
+            background: rgba(2, 6, 23, 0.98); 
             border-top: 1px solid var(--border-gold);
-            display: flex; justify-content: space-around; align-items: center;
-            padding-bottom: env(safe-area-inset-bottom); /* حل مشكلة الحافة السفلية */
+            display: flex; justify-content: space-around; 
+            align-items: flex-start; 
+            padding-top: 15px;
+            padding-bottom: env(safe-area-inset-bottom);
+            z-index: 1000;
+            backdrop-filter: blur(20px);
         }
-        .nav-item { color: #4b5563; display: flex; flex-direction: column; align-items: center; text-decoration: none; transition: 0.3s; }
-        .nav-item span { font-size: 0.65rem; font-weight: 700; margin-top: 4px; }
-        .nav-item.active { color: var(--royal-gold); }
+
+        .nav-item { color: #4b5563; display: flex; flex-direction: column; align-items: center; text-decoration: none; }
+        .nav-item span { font-size: 0.7rem; font-weight: 700; margin-top: 5px; }
+        .nav-item.active { color: var(--royal-gold); filter: drop-shadow(0 0 5px var(--royal-gold)); }
     </style>
 </head>
 <body>
@@ -102,11 +112,6 @@
     </header>
 
     <main class="flex-grow overflow-y-auto">
-        <div id="installBanner">
-            <p class="text-[10px] font-bold text-gray-400 mb-2 uppercase">جاهز للتثبيت كـتطبيق</p>
-            <button id="installBtn" class="bg-yellow-500 text-black px-8 py-2 rounded-full font-black text-xs uppercase shadow-lg shadow-yellow-500/20">تثبيت الآن</button>
-        </div>
-
         <div class="welcome-card">
             <h2 id="greet-text" class="welcome-title">مساء الخير</h2>
             <span class="salawat">اللهم صلِ على محمد وآل محمد</span>
@@ -140,45 +145,25 @@
     </nav>
 
     <script>
-        // تسجيل الخدمة (Service Worker)
+        // تسجيل الـ Service Worker
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js').then(() => console.log("Majestic SW Loaded"));
+            navigator.serviceWorker.register('sw.js');
         }
 
-        // منطق التثبيت
-        let deferredPrompt;
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            document.getElementById('installBanner').style.display = 'block';
-        });
-
-        document.getElementById('installBtn').addEventListener('click', () => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then(() => {
-                    document.getElementById('installBanner').style.display = 'none';
-                    deferredPrompt = null;
-                });
-            }
-        });
-
-        // تحديث الوقت والتحية
         function updateUI() {
             const hr = new Date().getHours();
             document.getElementById('greet-text').innerText = (hr >= 5 && hr < 12) ? "صباح الخير" : "مساء الخير";
         }
 
-        // فقاعات فخمة
         function createBubbles() {
             const container = document.getElementById('bubbles-container');
-            for(let i=0; i<10; i++) {
+            for(let i=0; i<12; i++) {
                 const b = document.createElement('div');
                 b.className = 'bubble';
                 const size = Math.random()*50 + 20;
                 b.style.width = b.style.height = size + 'px';
                 b.style.left = Math.random()*100 + '%';
-                b.style.animationDuration = (Math.random()*8 + 10) + 's';
+                b.style.animationDuration = (Math.random()*8 + 12) + 's';
                 container.appendChild(b);
             }
         }
