@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Six Pro - Majestic Edition</title>
+    <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
@@ -21,7 +22,6 @@
         .bubble { position: absolute; border-radius: 50%; background: radial-gradient(circle, rgba(241, 196, 15, 0.07) 0%, transparent 70%); animation: floatUp 15s infinite linear; pointer-events: none; z-index: 0; }
         @keyframes floatUp { from { transform: translateY(110vh); opacity: 0; } to { transform: translateY(-10vh); opacity: 1; } }
 
-        /* تحسين العنوان ملكي */
         header { 
             padding: 25px; text-align: center; background: rgba(2, 6, 23, 0.95); 
             border-bottom: 2px solid var(--border-gold); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(15px);
@@ -33,16 +33,23 @@
             text-transform: uppercase; display: inline-block;
         }
 
-        /* كرت الترحيب المعدل */
         .welcome-card {
             margin: 20px; padding: 35px 25px; border-radius: 32px;
             background: linear-gradient(145deg, rgba(255,255,255,0.06), rgba(255,255,255,0.01));
             border: 1px solid var(--border-gold); position: relative; z-index: 10;
-            text-align: center; /* توسيط لجمالية الخط العريض */
+            text-align: center;
         }
 
         .welcome-title { font-size: 1.8rem; font-weight: 900; color: #fff; margin-bottom: 10px; }
         .salawat { font-size: 1.2rem; color: var(--royal-gold); font-weight: 900; margin-top: 5px; display: block; }
+
+        /* زر تثبيت التطبيق */
+        #installBanner {
+            display: none; margin: 0 20px 20px; padding: 15px;
+            background: rgba(241, 196, 15, 0.1); border: 1px dashed var(--royal-gold);
+            border-radius: 20px; text-align: center; animation: slideIn 0.5s ease;
+        }
+        @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
         .features-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 0 20px 20px; }
         .feature-card {
@@ -72,6 +79,11 @@
     </header>
 
     <main class="pb-24 relative z-10">
+        <div id="installBanner">
+            <p class="text-xs font-bold text-gray-300 mb-2">ثبتي تطبيق Six Pro على هاتفك</p>
+            <button id="installBtn" class="bg-yellow-500 text-black px-6 py-2 rounded-full font-black text-sm uppercase">تثبيت الآن</button>
+        </div>
+
         <div class="welcome-card">
             <h2 id="greet-text" class="welcome-title">مساء الخير</h2>
             <span class="salawat">اللهم صلِ على محمد وآل محمد</span>
@@ -105,6 +117,37 @@
     </nav>
 
     <script>
+        // 1. تسجيل الـ Service Worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js')
+            .then(() => console.log("SW Registered"))
+            .catch(err => console.log("SW Failed", err));
+        }
+
+        // 2. معالجة التثبيت
+        let deferredPrompt;
+        const installBanner = document.getElementById('installBanner');
+        const installBtn = document.getElementById('installBtn');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installBanner.style.display = 'block'; // إظهار الزر
+        });
+
+        installBtn.addEventListener('click', () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        installBanner.style.display = 'none';
+                    }
+                    deferredPrompt = null;
+                });
+            }
+        });
+
+        // 3. تحديث الواجهة والفقاعات
         function updateMainUI() {
             const hr = new Date().getHours();
             document.getElementById('greet-text').innerText = (hr < 12) ? "صباح الخير" : "مساء الخير";
