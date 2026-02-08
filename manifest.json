@@ -5,9 +5,9 @@
   "lang": "ar",
   "dir": "rtl",
   "start_url": "index.html",
-  "display": "standalone",
-  "background_color": "#02040a",
-  "theme_color": "#02040a",
+  "display": "fullscreen",
+  "background_color": "#020617",
+  "theme_color": "#020617",
   "orientation": "portrait",
   "icons": [
     {
