@@ -3,188 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Wateen OS - Smart Mouse</title>
+    <title>Wateen OS - Ultra Fast Mouse</title>
     <script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --bg-color: #050505;
-            --glass-bg: rgba(25, 25, 25, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --primary-color: #0A84FF; /* لون آبل الأزرق */
+            --glass-bg: rgba(25, 25, 25, 0.85);
+            --primary-color: #0A84FF;
             --text-main: #ffffff;
-            --text-muted: #8e8e93;
         }
 
         * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            -webkit-user-select: none;
-            user-select: none;
+            box-sizing: border-box; margin: 0; padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-user-select: none; user-select: none;
         }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            background-image: radial-gradient(circle at 50% 0%, #1a1a2e 0%, #050505 70%);
+            background-color: var(--bg-color); color: var(--text-main);
+            height: 100vh; display: flex; justify-content: center; align-items: center;
+            overflow: hidden; touch-action: none;
         }
 
-        .screen {
-            display: none;
-            width: 100%;
-            height: 100%;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .screen.active {
-            display: flex;
-        }
+        .screen { display: none; width: 100%; height: 100%; padding: 20px; flex-direction: column; justify-content: center; align-items: center; }
+        .screen.active { display: flex; }
 
         .glass-panel {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 40px;
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-        }
-
-        h1 {
-            font-size: 24px;
-            margin-bottom: 10px;
-            font-weight: 600;
-        }
-
-        p {
-            color: var(--text-muted);
-            font-size: 14px;
-            margin-bottom: 30px;
-            line-height: 1.5;
+            background: var(--glass-bg); backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 24px;
+            padding: 30px; width: 100%; max-width: 400px; text-align: center;
         }
 
         .btn {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            color: var(--text-main);
-            padding: 15px 20px;
-            border-radius: 16px;
-            font-size: 16px;
-            cursor: pointer;
-            width: 100%;
-            margin-bottom: 15px;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+            background: rgba(40,40,40,0.8); border: 1px solid rgba(255,255,255,0.1);
+            color: white; padding: 15px; border-radius: 16px; font-size: 16px;
+            cursor: pointer; width: 100%; margin-bottom: 12px; transition: 0.2s;
         }
+        .btn:active { transform: scale(0.95); }
+        .btn-primary { background: var(--primary-color); border: none; font-weight: bold; }
 
-        .btn:hover, .btn:active {
-            background: rgba(40, 40, 40, 0.8);
-            transform: scale(0.98);
-        }
-
-        .btn-primary {
-            background: var(--primary-color);
-            border: none;
-            font-weight: 600;
-        }
-
-        .btn-primary:hover, .btn-primary:active {
-            background: #0071e3;
-        }
-
-        .code-display {
-            font-size: 48px;
-            font-weight: bold;
-            letter-spacing: 10px;
-            margin: 20px 0;
-            color: var(--primary-color);
-            text-shadow: 0 0 20px rgba(10, 132, 255, 0.4);
-        }
-
+        .code-display { font-size: 48px; font-weight: bold; letter-spacing: 8px; color: var(--primary-color); margin: 20px 0; }
         .pin-input {
-            width: 100%;
-            background: rgba(0,0,0,0.3);
-            border: 1px solid var(--glass-border);
-            color: white;
-            padding: 15px;
-            border-radius: 16px;
-            font-size: 24px;
-            text-align: center;
-            letter-spacing: 10px;
-            margin-bottom: 20px;
-            outline: none;
-            transition: border 0.3s;
+            width: 100%; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2);
+            color: white; padding: 15px; border-radius: 16px; font-size: 24px;
+            text-align: center; letter-spacing: 10px; margin-bottom: 20px; outline: none;
         }
 
-        .pin-input:focus {
-            border-color: var(--primary-color);
-        }
-
-        /* Trackpad Area (Sender) */
+        /* Trackpad السريع جداً */
         #trackpad-area {
-            width: 100%;
-            height: 70vh;
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            margin-top: 20px;
-            position: relative;
-            touch-action: none; /* منع التمرير الافتراضي للصفحة */
-        }
-        
-        .trackpad-hint {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: var(--text-muted);
-            opacity: 0.5;
-            pointer-events: none;
+            width: 100%; height: 75vh; background: var(--glass-bg);
+            border-radius: 24px; margin-top: 15px; position: relative;
+            border: 1px solid rgba(255,255,255,0.05);
         }
 
-        /* Custom Cursor (Receiver) */
+        /* المؤشر باستخدام Hardware Acceleration */
         #custom-cursor {
-            display: none;
-            position: absolute;
-            width: 20px;
-            height: 20px;
+            display: none; position: absolute; top: 0; left: 0;
+            width: 20px; height: 20px;
             background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="%23ffffff" d="M302.189 329.126H196.105l55.831 135.993c3.889 9.428-.555 19.999-9.444 23.999l-49.165 21.427c-9.165 4-19.443-.571-23.332-9.714l-53.053-129.136-86.664 89.138C22.279 469.715 0 463.153 0 452.873V55.856C0 42.427 15.556 34.714 26.11 43.856l284.444 257.986c10.833 9.714 3.889 27.284-8.365 27.284z"/></svg>');
-            background-size: contain;
-            background-repeat: no-repeat;
-            pointer-events: none;
-            z-index: 9999;
-            filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.5));
-            transition: top 0.05s linear, left 0.05s linear; /* حركة سلسة */
+            background-size: contain; background-repeat: no-repeat;
+            pointer-events: none; z-index: 9999;
+            filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.6));
+            will-change: transform; /* إخبار المعالج بالاستعداد لحركة سريعة */
         }
-
-        .loader {
-            border: 3px solid rgba(255,255,255,0.1);
-            border-top: 3px solid var(--primary-color);
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            animation: spin 1s linear infinite;
-            display: none;
-            margin: 10px auto;
-        }
-
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
@@ -193,220 +75,152 @@
 
     <div id="screen-home" class="screen active">
         <div class="glass-panel">
-            <h1>Wateen OS</h1>
-            <p>اختر دور هذا الجهاز في عملية الاتصال</p>
-            
-            <button class="btn" onclick="initReceiver()">
-                <i class="fa-solid fa-tablet-screen-button"></i>
-                مستلم (الآيباد - عرض الماوس)
-            </button>
-            <button class="btn btn-primary" onclick="showSenderLogin()">
-                <i class="fa-solid fa-mobile-screen"></i>
-                مرسل (الهاتف - تحريك الماوس)
-            </button>
+            <h1 style="margin-bottom: 20px;">Wateen OS</h1>
+            <button class="btn" onclick="initReceiver()">مستلم (الآيباد)</button>
+            <button class="btn btn-primary" onclick="switchScreen('screen-sender-login')">مرسل (الهاتف)</button>
         </div>
     </div>
 
     <div id="screen-receiver" class="screen">
         <div class="glass-panel" id="receiver-waiting">
-            <h1>رمز الاتصال</h1>
-            <p>أدخل هذا الرمز في هاتفك لربط الجهازين</p>
+            <h2>رمز الاتصال</h2>
             <div class="code-display" id="display-code">----</div>
-            <div class="loader" id="receiver-loader" style="display: block;"></div>
-            <p id="receiver-status">جاري إنشاء الرمز...</p>
+            <p style="color: #888;">أدخله في هاتفك</p>
         </div>
     </div>
 
     <div id="screen-sender-login" class="screen">
         <div class="glass-panel">
-            <h1>ربط الجهاز</h1>
-            <p>أدخل رمز الاتصال الظاهر على شاشة الآيباد</p>
-            <input type="tel" id="input-code" class="pin-input" maxlength="4" placeholder="0000" autocomplete="off">
-            <button class="btn btn-primary" onclick="connectSender()">
-                <i class="fa-solid fa-link"></i> ربط الآن
-            </button>
-            <button class="btn" onclick="switchScreen('screen-home')">إلغاء</button>
-            <div class="loader" id="sender-loader"></div>
-            <p id="sender-status" style="color: #ff453a; display: none; margin-top: 10px;"></p>
+            <h2>أدخل الرمز</h2>
+            <input type="tel" id="input-code" class="pin-input" maxlength="4">
+            <button class="btn btn-primary" onclick="connectSender()">اتصال فائق السرعة</button>
+            <button class="btn" onclick="switchScreen('screen-home')">رجوع</button>
         </div>
     </div>
 
     <div id="screen-trackpad" class="screen">
         <div style="width: 100%; max-width: 500px;">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h3><i class="fa-solid fa-circle" style="color: #32d74b; font-size: 12px;"></i> متصل بالآيباد</h3>
-                <button class="btn" style="width: auto; padding: 5px 15px; margin: 0; border-radius: 8px;" onclick="location.reload()">إنهاء</button>
+            <div style="display: flex; justify-content: space-between;">
+                <span style="color: #32d74b; font-weight: bold;">متصل ⚡</span>
+                <button onclick="requestWakeLock()" style="background:none; border:none; color:#0A84FF; font-size:14px;">إبقاء الشاشة مضاءة</button>
             </div>
-            <div id="trackpad-area">
-                <div class="trackpad-hint">
-                    <i class="fa-solid fa-hand-pointer" style="font-size: 30px; margin-bottom: 10px;"></i>
-                    <br>حرك إصبعك هنا
-                </div>
-            </div>
+            <div id="trackpad-area"></div>
         </div>
     </div>
 
     <script>
-        const PREFIX = "wateen-mouse-os-"; // بادئة مخفية لمنع تداخل الأكواد عالمياً
-        let peer = null;
-        let connection = null;
-
-        // إحداثيات الماوس الوهمي للآيباد
-        let cursorX = window.innerWidth / 2;
-        let cursorY = window.innerHeight / 2;
+        const PREFIX = "wos-ultra-";
+        let peer, connection;
+        let cursorX = window.innerWidth / 2, cursorY = window.innerHeight / 2;
         const cursorEl = document.getElementById('custom-cursor');
+        let wakeLock = null;
 
-        function switchScreen(screenId) {
+        function switchScreen(id) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(screenId).classList.add('active');
+            document.getElementById(id).classList.add('active');
         }
 
-        // ==========================================
-        // 1. نظام المستلم (الآيباد)
-        // ==========================================
+        // --- نظام الآيباد (المستلم) ---
         function initReceiver() {
             switchScreen('screen-receiver');
-            const randomCode = Math.floor(1000 + Math.random() * 9000).toString(); // كود من 4 أرقام
-            
-            peer = new Peer(PREFIX + randomCode);
+            const code = Math.floor(1000 + Math.random() * 9000).toString();
+            peer = new Peer(PREFIX + code);
 
-            peer.on('open', (id) => {
-                document.getElementById('display-code').innerText = randomCode;
-                document.getElementById('receiver-status').innerText = "بانتظار اتصال الهاتف...";
-            });
+            peer.on('open', () => document.getElementById('display-code').innerText = code);
 
             peer.on('connection', (conn) => {
-                connection = conn;
                 document.getElementById('receiver-waiting').style.display = 'none';
                 cursorEl.style.display = 'block';
-                updateCursorPosition();
+                updateCursorGPU(); // التحديث السريع الأول
 
-                // استقبال حركات الماوس من الهاتف
                 conn.on('data', (data) => {
-                    if (data.type === 'move') {
-                        // حساسية الماوس (مضروبة في 1.5 لسرعة استجابة أعلى)
-                        cursorX += data.dx * 1.5;
-                        cursorY += data.dy * 1.5;
-
-                        // منع الماوس من الخروج خارج الشاشة
+                    if (data.type === 'm') {
+                        // حساسية الحركة 2.0 لاستجابة أسرع
+                        cursorX += data.x * 2.0;
+                        cursorY += data.y * 2.0;
+                        
+                        // الحدود
                         cursorX = Math.max(0, Math.min(window.innerWidth, cursorX));
                         cursorY = Math.max(0, Math.min(window.innerHeight, cursorY));
-
-                        updateCursorPosition();
-                    } else if (data.type === 'click') {
-                        // محاكاة الضغطة في مكان المؤشر
+                        
+                        // طلب تحديث الشاشة فوراً عبر كرت الشاشة
+                        requestAnimationFrame(updateCursorGPU);
+                    } else if (data.type === 'c') {
                         simulateClick(cursorX, cursorY);
                     }
                 });
             });
-
-            peer.on('error', (err) => {
-                document.getElementById('receiver-status').innerText = "حدث خطأ في الشبكة.";
-            });
         }
 
-        function updateCursorPosition() {
-            cursorEl.style.left = cursorX + 'px';
-            cursorEl.style.top = cursorY + 'px';
+        function updateCursorGPU() {
+            // استخدام translate3d يضمن استخدام الـ GPU لسرعة فائقة بدون تقطيع
+            cursorEl.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0)`;
         }
 
         function simulateClick(x, y) {
-            // إخفاء المؤشر مؤقتاً لمعرفة العنصر الذي تحته
             cursorEl.style.display = 'none';
-            let element = document.elementFromPoint(x, y);
-            if (element) {
-                element.click();
-            }
+            let el = document.elementFromPoint(x, y);
+            if (el) el.click();
             cursorEl.style.display = 'block';
-            
-            // تأثير بصري بسيط عند النقر
-            cursorEl.style.transform = 'scale(0.8)';
-            setTimeout(() => cursorEl.style.transform = 'scale(1)', 100);
+            cursorEl.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0) scale(0.8)`;
+            setTimeout(() => updateCursorGPU(), 100);
         }
 
-        // ==========================================
-        // 2. نظام المرسل (الهاتف)
-        // ==========================================
-        function showSenderLogin() {
-            switchScreen('screen-sender-login');
-        }
-
+        // --- نظام الهاتف (المرسل) ---
         function connectSender() {
             const code = document.getElementById('input-code').value;
-            const statusText = document.getElementById('sender-status');
-            
-            if(code.length !== 4) {
-                statusText.innerText = "يرجى إدخال 4 أرقام";
-                statusText.style.display = 'block';
-                return;
-            }
-
-            document.getElementById('sender-loader').style.display = 'block';
-            statusText.style.display = 'none';
-
             peer = new Peer();
             peer.on('open', () => {
-                connection = peer.connect(PREFIX + code, { reliable: true });
-
+                // reliable: false تسرع نقل البيانات (مثل ألعاب الأونلاين)
+                connection = peer.connect(PREFIX + code, { reliable: false });
                 connection.on('open', () => {
                     switchScreen('screen-trackpad');
                     initTrackpad();
-                });
-
-                connection.on('error', () => {
-                    showError("فشل الاتصال، تأكد من الرمز.");
+                    requestWakeLock(); // محاولة منع قفل الشاشة تلقائياً
                 });
             });
-
-            peer.on('error', (err) => {
-                showError("تعذر العثور على الآيباد.");
-            });
-        }
-
-        function showError(msg) {
-            document.getElementById('sender-loader').style.display = 'none';
-            const statusText = document.getElementById('sender-status');
-            statusText.innerText = msg;
-            statusText.style.display = 'block';
         }
 
         function initTrackpad() {
             const trackpad = document.getElementById('trackpad-area');
-            let lastX = 0;
-            let lastY = 0;
-            let isMoving = false;
+            let lastX = 0, lastY = 0, isMoving = false;
 
-            // عند وضع الإصبع
             trackpad.addEventListener('touchstart', (e) => {
-                const touch = e.touches[0];
-                lastX = touch.clientX;
-                lastY = touch.clientY;
+                lastX = e.touches[0].clientX;
+                lastY = e.touches[0].clientY;
                 isMoving = false;
             }, {passive: false});
 
-            // عند سحب الإصبع (تحريك الماوس)
             trackpad.addEventListener('touchmove', (e) => {
-                e.preventDefault(); // منع تمرير الصفحة
+                e.preventDefault();
                 isMoving = true;
                 const touch = e.touches[0];
-                
-                const deltaX = touch.clientX - lastX;
-                const deltaY = touch.clientY - lastY;
+                const dx = touch.clientX - lastX;
+                const dy = touch.clientY - lastY;
 
+                // إرسال البيانات المدمجة فوراً
                 if (connection && connection.open) {
-                    connection.send({ type: 'move', dx: deltaX, dy: deltaY });
+                    connection.send({ type: 'm', x: dx, y: dy });
                 }
-
                 lastX = touch.clientX;
                 lastY = touch.clientY;
             }, {passive: false});
 
-            // عند رفع الإصبع (إذا لم تكن هناك حركة، تُحسب كضغطة)
-            trackpad.addEventListener('touchend', (e) => {
-                if (!isMoving && connection && connection.open) {
-                    connection.send({ type: 'click' });
-                }
+            trackpad.addEventListener('touchend', () => {
+                if (!isMoving && connection && connection.open) connection.send({ type: 'c' });
             });
+        }
+
+        // ميزة إبقاء الشاشة مضاءة للهاتف (Wake Lock API)
+        async function requestWakeLock() {
+            try {
+                if ('wakeLock' in navigator) {
+                    wakeLock = await navigator.wakeLock.request('screen');
+                    console.log('الشاشة ستبقى مضاءة');
+                }
+            } catch (err) {
+                console.log('ميزة بقاء الشاشة غير مدعومة في هذا المتصفح');
+            }
         }
     </script>
 </body>
