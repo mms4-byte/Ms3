@@ -1,361 +1,413 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl" class="light">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Six Pro - منصة نجاحك الدراسي</title>
-
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/png" href="https://i.imgur.com/1l3hICE.png">
-    <link rel="apple-touch-icon" href="https://i.imgur.com/1l3hICE.png">
-
-    <meta name="theme-color" content="#3b82f6">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
-
+    <title>Wateen OS - Smart Mouse</title>
+    <script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --bg-gradient: linear-gradient(135deg, #60a5fa, #a78bfa, #f472b6, #fbbf24);
-            --card-bg: rgba(255, 255, 255, 0.82);
-            --card-blur: blur(24px);
-            --card-border: rgba(255, 255, 255, 0.45);
-            --text-primary: #0f172a;
-            --text-secondary: #475569;
-            --accent: #10b981;
-            --accent-glow: rgba(16, 185, 129, 0.5);
-            --radius: 36px;
-            --shadow: 0 16px 60px rgba(0,0,0,0.18);
-            --transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+            --bg-color: #050505;
+            --glass-bg: rgba(25, 25, 25, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --primary-color: #0A84FF; /* لون آبل الأزرق */
+            --text-main: #ffffff;
+            --text-muted: #8e8e93;
         }
 
-        .dark {
-            --bg-gradient: linear-gradient(135deg, #0f172a, #1e293b, #334155, #475569);
-            --card-bg: rgba(30, 41, 59, 0.78);
-            --card-border: rgba(148, 163, 184, 0.28);
-            --text-primary: #f1f5f9;
-            --text-secondary: #cbd5e1;
-            --shadow: 0 16px 60px rgba(0,0,0,0.5);
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-user-select: none;
+            user-select: none;
         }
-
-        * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 
         body {
-            font-family: 'Tajawal', system-ui, sans-serif;
-            background: var(--bg-gradient);
-            background-size: 300% 300%;
-            animation: gradientFlow 22s ease infinite;
-            color: var(--text-primary);
-            min-height: 100vh;
-            padding-bottom: 110px;
-            overflow-x: hidden;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            background-image: radial-gradient(circle at 50% 0%, #1a1a2e 0%, #050505 70%);
+        }
+
+        .screen {
+            display: none;
+            width: 100%;
+            height: 100%;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        p {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .btn {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            padding: 15px 20px;
+            border-radius: 16px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn:hover, .btn:active {
+            background: rgba(40, 40, 40, 0.8);
+            transform: scale(0.98);
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            border: none;
+            font-weight: 600;
+        }
+
+        .btn-primary:hover, .btn-primary:active {
+            background: #0071e3;
+        }
+
+        .code-display {
+            font-size: 48px;
+            font-weight: bold;
+            letter-spacing: 10px;
+            margin: 20px 0;
+            color: var(--primary-color);
+            text-shadow: 0 0 20px rgba(10, 132, 255, 0.4);
+        }
+
+        .pin-input {
+            width: 100%;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--glass-border);
+            color: white;
+            padding: 15px;
+            border-radius: 16px;
+            font-size: 24px;
+            text-align: center;
+            letter-spacing: 10px;
+            margin-bottom: 20px;
+            outline: none;
+            transition: border 0.3s;
+        }
+
+        .pin-input:focus {
+            border-color: var(--primary-color);
+        }
+
+        /* Trackpad Area (Sender) */
+        #trackpad-area {
+            width: 100%;
+            height: 70vh;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            margin-top: 20px;
             position: relative;
-            transition: background 1s ease;
+            touch-action: none; /* منع التمرير الافتراضي للصفحة */
+        }
+        
+        .trackpad-hint {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--text-muted);
+            opacity: 0.5;
+            pointer-events: none;
         }
 
-        @keyframes gradientFlow {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        /* Custom Cursor (Receiver) */
+        #custom-cursor {
+            display: none;
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="%23ffffff" d="M302.189 329.126H196.105l55.831 135.993c3.889 9.428-.555 19.999-9.444 23.999l-49.165 21.427c-9.165 4-19.443-.571-23.332-9.714l-53.053-129.136-86.664 89.138C22.279 469.715 0 463.153 0 452.873V55.856C0 42.427 15.556 34.714 26.11 43.856l284.444 257.986c10.833 9.714 3.889 27.284-8.365 27.284z"/></svg>');
+            background-size: contain;
+            background-repeat: no-repeat;
+            pointer-events: none;
+            z-index: 9999;
+            filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.5));
+            transition: top 0.05s linear, left 0.05s linear; /* حركة سلسة */
         }
 
-        @media (prefers-reduced-motion: reduce) {
-            body { animation: none; background: #60a5fa !important; }
-            .dark body { background: #0f172a !important; }
+        .loader {
+            border: 3px solid rgba(255,255,255,0.1);
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            display: none;
+            margin: 10px auto;
         }
 
-        .bubble-container { position:fixed; inset:0; pointer-events:none; z-index:0; }
-
-        .bubble {
-            position:absolute; border-radius:50%;
-            background:rgba(255,255,255,0.12);
-            backdrop-filter:blur(4px);
-            animation:float 32s infinite ease-in-out;
-        }
-
-        .dark .bubble { background:rgba(200,220,255,0.06); }
-
-        @keyframes float {
-            0%,100% { transform:translate(0,0) scale(1); }
-            50% { transform:translate(50px, -60px) scale(1.15); }
-        }
-
-        header.app-header {
-            position:fixed; top:0; left:0; right:0;
-            padding:60px 28px 24px;
-            z-index:100; text-align:center;
-        }
-
-        .logo-container {
-            display:inline-flex; align-items:center; gap:18px;
-        }
-
-        .app-logo-svg {
-            width:68px; height:68px;
-            filter:drop-shadow(0 6px 20px rgba(0,0,0,0.4));
-        }
-
-        .app-title-text {
-            font-size:2.8rem;
-            font-weight:900;
-            background:linear-gradient(90deg, #ffffff, #e0f2fe, #dbeafe, #ffffff);
-            -webkit-background-clip:text;
-            -webkit-text-fill-color:transparent;
-            background-clip:text;
-            text-shadow:0 3px 16px rgba(0,0,0,0.45);
-            letter-spacing:-1.2px;
-        }
-
-        .content-wrapper {
-            position:relative; z-index:10;
-            padding:140px 24px 40px;
-        }
-
-        .welcome-card, .news-card {
-            background:var(--card-bg);
-            backdrop-filter:var(--card-blur);
-            border:1px solid var(--card-border);
-            border-radius:var(--radius);
-            padding:38px 30px;
-            box-shadow:var(--shadow);
-            margin-bottom:44px;
-            transition:var(--transition);
-        }
-
-        .welcome-card:hover, .news-card:hover {
-            transform:translateY(-10px);
-            box-shadow:0 32px 80px rgba(0,0,0,0.28);
-        }
-
-        .welcome-title {
-            font-size:2.2rem;
-            font-weight:900;
-            margin-bottom:16px;
-            color:var(--text-primary);
-        }
-
-        .daily-goal {
-            font-size:1.35rem;
-            font-weight:800;
-            color:var(--accent);
-            text-shadow:0 2px 10px var(--accent-glow);
-        }
-
-        .features-grid {
-            display:grid;
-            grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));
-            gap:28px;
-            margin-bottom:48px;
-        }
-
-        .feature-card {
-            background:var(--card-bg);
-            backdrop-filter:var(--card-blur);
-            border:1px solid var(--card-border);
-            border-radius:var(--radius);
-            padding:42px 26px;
-            text-align:center;
-            box-shadow:var(--shadow);
-            transition:var(--transition);
-            cursor:pointer;
-        }
-
-        .feature-card:hover {
-            transform:translateY(-14px) scale(1.05);
-            box-shadow:0 36px 90px rgba(0,0,0,0.3);
-        }
-
-        .feature-card:active { transform:scale(0.94); }
-
-        .feature-icon {
-            font-size:4.8rem;
-            margin-bottom:20px;
-            color:var(--accent);
-            transition:var(--transition);
-        }
-
-        .feature-name {
-            font-size:1.45rem;
-            font-weight:900;
-            color:var(--text-primary);
-        }
-
-        .bottom-nav {
-            position:fixed; bottom:20px; left:20px; right:20px;
-            height:88px;
-            background:var(--card-bg);
-            backdrop-filter:var(--card-blur);
-            border:1px solid var(--card-border);
-            border-radius:44px;
-            box-shadow:0 16px 64px rgba(0,0,0,0.3);
-            display:flex;
-            justify-content:space-around;
-            align-items:center;
-            z-index:100;
-        }
-
-        .nav-item {
-            display:flex; flex-direction:column; align-items:center;
-            color:var(--text-secondary);
-            font-size:0.85rem; font-weight:900;
-            transition:var(--transition);
-            padding:12px 20px;
-            border-radius:28px;
-        }
-
-        .nav-item.active, .nav-item:active {
-            color:var(--accent);
-            background:rgba(16,185,129,0.18);
-            transform:scale(1.1);
-        }
-
-        .nav-icon { font-size:2.6rem; margin-bottom:8px; }
-
-        .theme-toggle {
-            position:absolute; top:62px; right:32px;
-            background:rgba(255,255,255,0.22);
-            backdrop-filter:blur(14px);
-            border:1px solid rgba(255,255,255,0.35);
-            color:white;
-            border-radius:50%;
-            width:52px; height:52px;
-            display:flex; align-items:center; justify-content:center;
-            font-size:1.7rem; cursor:pointer;
-            transition:var(--transition);
-        }
-
-        .theme-toggle:hover { transform:scale(1.25) rotate(20deg); }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
-    <div class="bubble-container" id="bubbles"></div>
+    <div id="custom-cursor"></div>
 
-    <header class="app-header">
-        <div class="logo-container">
-            <svg class="app-logo-svg" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <radialGradient id="gradLogo" cx="50%" cy="50%" r="70%">
-                        <stop offset="0%" stop-color="#ffffff"/>
-                        <stop offset="40%" stop-color="#e0f2fe"/>
-                        <stop offset="100%" stop-color="#dbeafe"/>
-                    </radialGradient>
-                    <filter id="glowPremium" x="-60%" y="-60%" width="220%" height="220%">
-                        <feGaussianBlur stdDeviation="5" result="blur"/>
-                        <feMerge>
-                            <feMergeNode in="blur"/>
-                            <feMergeNode in="SourceGraphic"/>
-                        </feMerge>
-                    </filter>
-                </defs>
-                <circle cx="60" cy="60" r="52" fill="url(#gradLogo)" filter="url(#glowPremium)"/>
-                <text x="60" y="78" font-family="Tajawal" font-weight="900" font-size="62" text-anchor="middle" fill="#0f172a">6</text>
-                <text x="60" y="105" font-family="Tajawal" font-weight="900" font-size="28" text-anchor="middle" fill="#ffffff" opacity="0.9">Pro</text>
-            </svg>
-            <span class="app-title-text">Six Pro</span>
-        </div>
-
-        <button class="theme-toggle material-icons" id="themeToggle" aria-label="تبديل الوضع">brightness_6</button>
-    </header>
-
-    <div class="content-wrapper">
-        <div class="welcome-card">
-            <h2 class="welcome-title">أهلاً بالنجم الصاعد!</h2>
-            <div class="daily-goal" id="dailyGoal">جاري حساب إنجازاتك اليوم...</div>
-        </div>
-
-        <div class="features-grid">
-            <div class="feature-card" onclick="navigateWithFeedback('tasks.html')">
-                <span class="feature-icon material-icons">assignment</span>
-                <div class="feature-name">المهام اليومية</div>
-            </div>
-            <div class="feature-card" onclick="navigateWithFeedback('math.html')">
-                <span class="feature-icon material-icons">calculate</span>
-                <div class="feature-name">الرياضيات</div>
-            </div>
-            <div class="feature-card" onclick="navigateWithFeedback('english.html')">
-                <span class="feature-icon material-icons">translate</span>
-                <div class="feature-name">الإنكليزي</div>
-            </div>
-            <div class="feature-card" onclick="navigateWithFeedback('schedule.html')">
-                <span class="feature-icon material-icons">calendar_today</span>
-                <div class="feature-name">الجدول الدراسي</div>
-            </div>
-        </div>
-
-        <div class="news-card">
-            <h3 style="font-weight:900; font-size:1.5rem; margin-bottom:16px;">تذكير يومي مميز</h3>
-            <p id="reminderText" style="font-size:1.15rem; line-height:1.8; font-weight:600;">جاري تحميل رسالتك التحفيزية...</p>
+    <div id="screen-home" class="screen active">
+        <div class="glass-panel">
+            <h1>Wateen OS</h1>
+            <p>اختر دور هذا الجهاز في عملية الاتصال</p>
+            
+            <button class="btn" onclick="initReceiver()">
+                <i class="fa-solid fa-tablet-screen-button"></i>
+                مستلم (الآيباد - عرض الماوس)
+            </button>
+            <button class="btn btn-primary" onclick="showSenderLogin()">
+                <i class="fa-solid fa-mobile-screen"></i>
+                مرسل (الهاتف - تحريك الماوس)
+            </button>
         </div>
     </div>
 
-    <nav class="bottom-nav">
-        <div class="nav-item active"><span class="nav-icon material-icons">home</span>الرئيسية</div>
-        <div class="nav-item" onclick="navigateWithFeedback('stats.html')"><span class="nav-icon material-icons">bar_chart</span>الإحصائيات</div>
-        <div class="nav-item" onclick="navigateWithFeedback('alerts.html')"><span class="nav-icon material-icons">notifications</span>التنبيهات</div>
-        <div class="nav-item" onclick="navigateWithFeedback('settings.html')"><span class="nav-icon material-icons">settings</span>الإعدادات</div>
-    </nav>
+    <div id="screen-receiver" class="screen">
+        <div class="glass-panel" id="receiver-waiting">
+            <h1>رمز الاتصال</h1>
+            <p>أدخل هذا الرمز في هاتفك لربط الجهازين</p>
+            <div class="code-display" id="display-code">----</div>
+            <div class="loader" id="receiver-loader" style="display: block;"></div>
+            <p id="receiver-status">جاري إنشاء الرمز...</p>
+        </div>
+    </div>
+
+    <div id="screen-sender-login" class="screen">
+        <div class="glass-panel">
+            <h1>ربط الجهاز</h1>
+            <p>أدخل رمز الاتصال الظاهر على شاشة الآيباد</p>
+            <input type="tel" id="input-code" class="pin-input" maxlength="4" placeholder="0000" autocomplete="off">
+            <button class="btn btn-primary" onclick="connectSender()">
+                <i class="fa-solid fa-link"></i> ربط الآن
+            </button>
+            <button class="btn" onclick="switchScreen('screen-home')">إلغاء</button>
+            <div class="loader" id="sender-loader"></div>
+            <p id="sender-status" style="color: #ff453a; display: none; margin-top: 10px;"></p>
+        </div>
+    </div>
+
+    <div id="screen-trackpad" class="screen">
+        <div style="width: 100%; max-width: 500px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3><i class="fa-solid fa-circle" style="color: #32d74b; font-size: 12px;"></i> متصل بالآيباد</h3>
+                <button class="btn" style="width: auto; padding: 5px 15px; margin: 0; border-radius: 8px;" onclick="location.reload()">إنهاء</button>
+            </div>
+            <div id="trackpad-area">
+                <div class="trackpad-hint">
+                    <i class="fa-solid fa-hand-pointer" style="font-size: 30px; margin-bottom: 10px;"></i>
+                    <br>حرك إصبعك هنا
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
-        // Theme Toggle
-        const html = document.documentElement;
-        const toggle = document.getElementById('themeToggle');
+        const PREFIX = "wateen-mouse-os-"; // بادئة مخفية لمنع تداخل الأكواد عالمياً
+        let peer = null;
+        let connection = null;
 
-        function setTheme(dark) {
-            html.classList.toggle('dark', dark);
-            localStorage.setItem('theme', dark ? 'dark' : 'light');
+        // إحداثيات الماوس الوهمي للآيباد
+        let cursorX = window.innerWidth / 2;
+        let cursorY = window.innerHeight / 2;
+        const cursorEl = document.getElementById('custom-cursor');
+
+        function switchScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
         }
 
-        if (localStorage.getItem('theme') === 'dark' || 
-            (!localStorage.getItem('theme') && matchMedia('(prefers-color-scheme: dark)').matches)) {
-            setTheme(true);
+        // ==========================================
+        // 1. نظام المستلم (الآيباد)
+        // ==========================================
+        function initReceiver() {
+            switchScreen('screen-receiver');
+            const randomCode = Math.floor(1000 + Math.random() * 9000).toString(); // كود من 4 أرقام
+            
+            peer = new Peer(PREFIX + randomCode);
+
+            peer.on('open', (id) => {
+                document.getElementById('display-code').innerText = randomCode;
+                document.getElementById('receiver-status').innerText = "بانتظار اتصال الهاتف...";
+            });
+
+            peer.on('connection', (conn) => {
+                connection = conn;
+                document.getElementById('receiver-waiting').style.display = 'none';
+                cursorEl.style.display = 'block';
+                updateCursorPosition();
+
+                // استقبال حركات الماوس من الهاتف
+                conn.on('data', (data) => {
+                    if (data.type === 'move') {
+                        // حساسية الماوس (مضروبة في 1.5 لسرعة استجابة أعلى)
+                        cursorX += data.dx * 1.5;
+                        cursorY += data.dy * 1.5;
+
+                        // منع الماوس من الخروج خارج الشاشة
+                        cursorX = Math.max(0, Math.min(window.innerWidth, cursorX));
+                        cursorY = Math.max(0, Math.min(window.innerHeight, cursorY));
+
+                        updateCursorPosition();
+                    } else if (data.type === 'click') {
+                        // محاكاة الضغطة في مكان المؤشر
+                        simulateClick(cursorX, cursorY);
+                    }
+                });
+            });
+
+            peer.on('error', (err) => {
+                document.getElementById('receiver-status').innerText = "حدث خطأ في الشبكة.";
+            });
         }
 
-        toggle.onclick = () => setTheme(!html.classList.contains('dark'));
-
-        // Bubbles (أقل وأجمل)
-        const container = document.getElementById('bubbles');
-        for (let i = 0; i < 5; i++) {
-            let b = document.createElement('div');
-            b.className = 'bubble';
-            b.style.width = b.style.height = (50 + Math.random()*160) + 'px';
-            b.style.left = Math.random()*100 + '%';
-            b.style.top = Math.random()*100 + '%';
-            b.style.animationDelay = (Math.random()*15) + 's';
-            container.appendChild(b);
+        function updateCursorPosition() {
+            cursorEl.style.left = cursorX + 'px';
+            cursorEl.style.top = cursorY + 'px';
         }
 
-        // Ripple + Haptic + Navigate
-        function createRipple(e, el) {
-            let r = document.createElement('span');
-            r.className = 'ripple';
-            let d = Math.max(el.offsetWidth, el.offsetHeight) * 2.5;
-            r.style.width = r.style.height = d + 'px';
-            r.style.left = (e.clientX - el.getBoundingClientRect().left - d/2) + 'px';
-            r.style.top = (e.clientY - el.getBoundingClientRect().top - d/2) + 'px';
-            el.appendChild(r);
-            setTimeout(() => r.remove(), 800);
+        function simulateClick(x, y) {
+            // إخفاء المؤشر مؤقتاً لمعرفة العنصر الذي تحته
+            cursorEl.style.display = 'none';
+            let element = document.elementFromPoint(x, y);
+            if (element) {
+                element.click();
+            }
+            cursorEl.style.display = 'block';
+            
+            // تأثير بصري بسيط عند النقر
+            cursorEl.style.transform = 'scale(0.8)';
+            setTimeout(() => cursorEl.style.transform = 'scale(1)', 100);
         }
 
-        function navigateWithFeedback(url) {
-            const el = event.currentTarget;
-            createRipple(event, el);
-            if (navigator.vibrate) navigator.vibrate([10, 6, 10]);
-            el.style.transform = 'scale(0.92)';
-            setTimeout(() => location.href = url, 280);
+        // ==========================================
+        // 2. نظام المرسل (الهاتف)
+        // ==========================================
+        function showSenderLogin() {
+            switchScreen('screen-sender-login');
         }
 
-        // Dynamic content simulation
-        document.addEventListener('DOMContentLoaded', () => {
-            setTimeout(() => {
-                document.getElementById('dailyGoal').textContent = 'تقدم مذهل: ١١/١٥ مهمة اليوم • استمر يا بطل!';
-                document.getElementById('reminderText').textContent = 'امتحان الفيزياء قريب • راجع الوحدة الرابعة + حل ٢٠ تمرين إضافي اليوم!';
-            }, 1800);
-        });
+        function connectSender() {
+            const code = document.getElementById('input-code').value;
+            const statusText = document.getElementById('sender-status');
+            
+            if(code.length !== 4) {
+                statusText.innerText = "يرجى إدخال 4 أرقام";
+                statusText.style.display = 'block';
+                return;
+            }
+
+            document.getElementById('sender-loader').style.display = 'block';
+            statusText.style.display = 'none';
+
+            peer = new Peer();
+            peer.on('open', () => {
+                connection = peer.connect(PREFIX + code, { reliable: true });
+
+                connection.on('open', () => {
+                    switchScreen('screen-trackpad');
+                    initTrackpad();
+                });
+
+                connection.on('error', () => {
+                    showError("فشل الاتصال، تأكد من الرمز.");
+                });
+            });
+
+            peer.on('error', (err) => {
+                showError("تعذر العثور على الآيباد.");
+            });
+        }
+
+        function showError(msg) {
+            document.getElementById('sender-loader').style.display = 'none';
+            const statusText = document.getElementById('sender-status');
+            statusText.innerText = msg;
+            statusText.style.display = 'block';
+        }
+
+        function initTrackpad() {
+            const trackpad = document.getElementById('trackpad-area');
+            let lastX = 0;
+            let lastY = 0;
+            let isMoving = false;
+
+            // عند وضع الإصبع
+            trackpad.addEventListener('touchstart', (e) => {
+                const touch = e.touches[0];
+                lastX = touch.clientX;
+                lastY = touch.clientY;
+                isMoving = false;
+            }, {passive: false});
+
+            // عند سحب الإصبع (تحريك الماوس)
+            trackpad.addEventListener('touchmove', (e) => {
+                e.preventDefault(); // منع تمرير الصفحة
+                isMoving = true;
+                const touch = e.touches[0];
+                
+                const deltaX = touch.clientX - lastX;
+                const deltaY = touch.clientY - lastY;
+
+                if (connection && connection.open) {
+                    connection.send({ type: 'move', dx: deltaX, dy: deltaY });
+                }
+
+                lastX = touch.clientX;
+                lastY = touch.clientY;
+            }, {passive: false});
+
+            // عند رفع الإصبع (إذا لم تكن هناك حركة، تُحسب كضغطة)
+            trackpad.addEventListener('touchend', (e) => {
+                if (!isMoving && connection && connection.open) {
+                    connection.send({ type: 'click' });
+                }
+            });
+        }
     </script>
 </body>
 </html>
