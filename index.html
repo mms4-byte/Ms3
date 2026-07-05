@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>تشفير خفي</title>
+<title>قارئ الأكواد</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap');
 
@@ -104,29 +104,23 @@
     75% { transform: translate(50px, 30px) scale(1.1); }
   }
 
-  /* === التطبيق يملأ الشاشة كاملة === */
-  .app {
+  /* === الشاشة الرئيسية === */
+  .main-screen {
     position: relative;
     z-index: 1;
     width: 100%;
-    padding: 0 16px 80px;
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
   }
 
   .header {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    padding: 12px 0 8px;
-    background: linear-gradient(to bottom, var(--bg) 70%, transparent);
-    backdrop-filter: blur(25px);
-    -webkit-backdrop-filter: blur(25px);
-  }
-
-  .header-top {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 8px 0 12px;
+    padding: 8px 0 20px;
   }
 
   .app-title {
@@ -184,397 +178,135 @@
     height: 22px;
   }
 
-  /* === الزرين الكبار === */
-  .mode-buttons {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin: 14px 0 20px;
+  /* === الشاشة المربعة === */
+  .screen-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 0;
+    position: relative;
   }
 
-  .mode-btn {
-    padding: 20px 12px;
-    border-radius: var(--radius);
-    font-family: inherit;
-    font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
+  .square-screen {
+    width: 100%;
+    max-width: 500px;
+    aspect-ratio: 1;
+    background: var(--card);
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    border: 1px solid var(--card-border);
+    border-radius: 40px;
+    box-shadow: var(--shadow-lg);
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 8px;
-    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-    background: var(--card);
-    backdrop-filter: blur(40px);
-    -webkit-backdrop-filter: blur(40px);
-    border: 1px solid var(--card-border);
-    color: var(--text2);
-    box-shadow: var(--shadow);
+    justify-content: center;
+    gap: 20px;
     position: relative;
     overflow: hidden;
+    animation: screenIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  .mode-btn::before {
-    content: '';
+  @keyframes screenIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  /* === زر + في الزاوية === */
+  .plus-btn {
     position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, transparent, rgba(255,255,255,0.1));
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-
-  .mode-btn:hover::before { opacity: 1; }
-
-  .mode-btn svg {
-    width: 32px;
-    height: 32px;
-    transition: transform 0.3s;
-  }
-
-  .mode-btn .mode-label { font-size: 15px; }
-
-  .mode-btn.active-enc {
-    background: linear-gradient(135deg, var(--blue), #5856D6);
+    top: 16px;
+    right: 16px;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: none;
+    background: linear-gradient(135deg, var(--blue), var(--purple));
     color: white;
-    border-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
     box-shadow: 0 8px 24px rgba(0,122,255,0.4);
-    transform: translateY(-3px);
-  }
-
-  .mode-btn.active-enc svg {
-    transform: scale(1.1);
-  }
-
-  .mode-btn.active-dec {
-    background: linear-gradient(135deg, var(--green), #30D158);
-    color: white;
-    border-color: transparent;
-    box-shadow: 0 8px 24px rgba(52,199,89,0.4);
-    transform: translateY(-3px);
-  }
-
-  .mode-btn.active-dec svg {
-    transform: scale(1.1);
-  }
-
-  .mode-btn:active { transform: scale(0.96); }
-
-  /* === البطاقات === */
-  .card {
-    background: var(--card);
-    backdrop-filter: blur(40px);
-    -webkit-backdrop-filter: blur(40px);
-    border: 1px solid var(--card-border);
-    border-radius: var(--radius);
-    padding: 20px;
-    margin-bottom: 14px;
-    box-shadow: var(--shadow);
-    animation: cardIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) backwards;
-    width: 100%;
-  }
-
-  .card:nth-child(2) { animation-delay: 0.05s; }
-  .card:nth-child(3) { animation-delay: 0.1s; }
-
-  @keyframes cardIn {
-    from { opacity: 0; transform: translateY(25px) scale(0.96); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
-  }
-
-  .card-label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--text2);
-    margin-bottom: 12px;
-  }
-
-  .card-label svg {
-    width: 20px;
-    height: 20px;
-    flex-shrink: 0;
-  }
-
-  textarea {
-    width: 100%;
-    border: none;
-    background: var(--divider);
-    border-radius: var(--radius-sm);
-    padding: 16px;
-    font-family: inherit;
-    font-size: 16px;
-    color: var(--text);
-    outline: none;
-    line-height: 1.7;
-    transition: all 0.3s;
-    min-height: 120px;
-    resize: none;
-  }
-
-  textarea:focus {
-    background: var(--blue-bg);
-    box-shadow: 0 0 0 3px rgba(0,122,255,0.25);
-  }
-
-  textarea::placeholder { color: var(--text2); font-size: 15px; }
-
-  .textarea-wrap { position: relative; width: 100%; }
-
-  .char-count {
-    position: absolute;
-    bottom: 10px;
-    left: 12px;
-    font-size: 12px;
-    color: var(--text2);
-    font-weight: 600;
-    background: var(--card);
-    padding: 3px 10px;
-    border-radius: 10px;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-  }
-
-  /* === زر اللصق === */
-  .paste-btn {
-    position: absolute;
-    top: 12px;
-    left: 12px;
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
-    border: none;
-    background: var(--blue);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 2px 12px rgba(0,122,255,0.3);
-    z-index: 10;
-  }
-
-  .paste-btn:active {
-    transform: scale(0.9);
-    box-shadow: 0 1px 6px rgba(0,122,255,0.2);
-  }
-
-  .paste-btn svg {
-    width: 18px;
-    height: 18px;
-  }
-
-  .btn-primary {
-    width: 100%;
-    padding: 17px;
-    border: none;
-    border-radius: var(--radius-sm);
-    font-family: inherit;
-    font-size: 17px;
-    font-weight: 700;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    color: white;
-    position: relative;
-    overflow: hidden;
+    z-index: 10;
+    animation: plusPulse 2.5s ease-in-out infinite;
   }
 
-  .btn-primary::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(255,255,255,0.25), transparent);
-    opacity: 0;
-    transition: opacity 0.3s;
+  @keyframes plusPulse {
+    0%, 100% { 
+      transform: scale(1);
+      box-shadow: 0 8px 24px rgba(0,122,255,0.4);
+    }
+    50% { 
+      transform: scale(1.08);
+      box-shadow: 0 12px 32px rgba(0,122,255,0.5);
+    }
   }
 
-  .btn-primary:hover::before { opacity: 1; }
-  .btn-primary:active { transform: scale(0.97); }
-
-  .btn-primary svg {
-    width: 22px;
-    height: 22px;
+  .plus-btn:active {
+    transform: scale(0.9) !important;
   }
 
-  .btn-encrypt {
-    background: linear-gradient(135deg, var(--blue), #5856D6);
-    box-shadow: 0 6px 24px rgba(0,122,255,0.35);
+  .plus-btn svg {
+    width: 28px;
+    height: 28px;
   }
 
-  .btn-decrypt {
-    background: linear-gradient(135deg, var(--green), #30D158);
-    box-shadow: 0 6px 24px rgba(52,199,89,0.35);
-  }
-
-  .result-area {
-    background: var(--divider);
-    border-radius: var(--radius-sm);
-    padding: 16px;
-    min-height: 80px;
-    word-break: break-word;
-    line-height: 1.8;
-    font-size: 16px;
-    user-select: all;
-    -webkit-user-select: all;
-    white-space: pre-wrap;
-    transition: all 0.3s;
-    width: 100%;
-  }
-
-  .result-area.error {
-    color: var(--red);
-    background: var(--red-bg);
-  }
-
-  .action-row {
-    display: flex;
-    gap: 10px;
-    margin-top: 14px;
-    width: 100%;
-  }
-
-  .action-btn {
-    flex: 1;
-    padding: 13px;
-    border: none;
-    border-radius: var(--radius-sm);
-    font-family: inherit;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
+  .screen-icon {
+    width: 90px;
+    height: 90px;
+    background: linear-gradient(135deg, var(--blue), var(--purple));
+    border-radius: 28px;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 12px 40px rgba(0,122,255,0.35);
   }
 
-  .action-btn:active { transform: scale(0.95); }
-
-  .action-btn svg {
-    width: 18px;
-    height: 18px;
+  .screen-icon svg {
+    width: 52px;
+    height: 52px;
+    color: white;
   }
 
-  .btn-copy { background: var(--blue-bg); color: var(--blue); }
-  .btn-share { background: var(--purple-bg); color: var(--purple); }
-  .btn-clear { background: var(--red-bg); color: var(--red); }
-
-  .toast {
-    position: fixed;
-    bottom: 40px;
-    left: 50%;
-    transform: translateX(-50%) translateY(120px);
-    background: var(--text);
-    color: var(--bg);
-    padding: 15px 30px;
-    border-radius: 50px;
-    font-size: 15px;
-    font-weight: 600;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
-    z-index: 9999;
-    opacity: 0;
-    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    white-space: nowrap;
-    max-width: 90%;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-  }
-
-  .toast.show {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
-
-  .toast svg {
-    width: 20px;
-    height: 20px;
-    flex-shrink: 0;
-  }
-
-  .info-tip {
-    background: var(--orange-bg);
-    border-radius: var(--radius-sm);
-    padding: 14px 16px;
-    margin-bottom: 14px;
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    font-size: 13px;
-    color: var(--orange);
-    font-weight: 500;
-    line-height: 1.6;
-    border: 1px solid rgba(255,149,0,0.2);
-    width: 100%;
-  }
-
-  .info-tip svg {
-    width: 20px;
-    height: 20px;
-    flex-shrink: 0;
-    margin-top: 1px;
-  }
-
-  .success-box {
-    background: var(--green-bg);
-    border-radius: var(--radius-sm);
-    padding: 13px 15px;
-    margin-top: 12px;
-    font-size: 13px;
-    color: var(--green);
-    font-weight: 600;
-    line-height: 1.5;
-    border: 1px solid rgba(52,199,89,0.25);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    width: 100%;
-  }
-
-  .success-box svg {
-    width: 18px;
-    height: 18px;
-    flex-shrink: 0;
-  }
-
-  .preset-row {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    margin-top: 12px;
-    width: 100%;
-  }
-
-  .preset-btn {
-    padding: 9px 16px;
-    border: 1px solid var(--divider);
-    background: var(--card);
-    border-radius: 20px;
-    font-family: inherit;
-    font-size: 13px;
-    font-weight: 600;
+  .screen-title {
+    font-size: 26px;
+    font-weight: 800;
     color: var(--text);
-    cursor: pointer;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    text-align: center;
   }
 
-  .preset-btn:active {
-    transform: scale(0.95);
+  .screen-desc {
+    font-size: 15px;
+    color: var(--text2);
+    text-align: center;
+    max-width: 280px;
+    line-height: 1.6;
+    padding: 0 20px;
+  }
+
+  .screen-hint {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
     background: var(--blue-bg);
+    border-radius: 50px;
     color: var(--blue);
-    border-color: var(--blue);
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 8px;
   }
 
-  /* === Modal الإعدادات === */
+  .screen-hint svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+
+  /* === Modal اللصق === */
   .modal-overlay {
     position: fixed;
     inset: 0;
@@ -602,7 +334,7 @@
     z-index: 1001;
     transform: translateY(100%);
     transition: transform 0.45s cubic-bezier(0.32, 0.72, 0, 1);
-    max-height: 90vh;
+    max-height: 55vh;
     overflow-y: auto;
     box-shadow: 0 -12px 48px rgba(0,0,0,0.3);
   }
@@ -663,6 +395,249 @@
   }
 
   .modal-body {
+    padding: 20px;
+  }
+
+  .action-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+
+  .action-card {
+    padding: 24px 16px;
+    border-radius: var(--radius);
+    border: none;
+    font-family: inherit;
+    font-size: 17px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    color: white;
+  }
+
+  .action-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent, rgba(255,255,255,0.15));
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .action-card:hover::before { opacity: 1; }
+
+  .action-card svg {
+    width: 36px;
+    height: 36px;
+  }
+
+  .paste-card {
+    background: linear-gradient(135deg, var(--blue), #5856D6);
+    box-shadow: 0 8px 28px rgba(0,122,255,0.4);
+  }
+
+  .delete-card {
+    background: linear-gradient(135deg, var(--red), #FF2D55);
+    box-shadow: 0 8px 28px rgba(255,59,48,0.4);
+  }
+
+  .action-card:active {
+    transform: scale(0.95);
+  }
+
+  .info-box {
+    background: var(--orange-bg);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--orange);
+    font-weight: 500;
+    line-height: 1.6;
+    border: 1px solid rgba(255,149,0,0.2);
+  }
+
+  .info-box svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* === شاشة العرض === */
+  .viewer-screen {
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    z-index: 2000;
+    display: none;
+    flex-direction: column;
+    animation: fadeIn 0.4s ease;
+  }
+
+  .viewer-screen.show {
+    display: flex;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .viewer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: var(--card);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--divider);
+    box-shadow: var(--shadow);
+  }
+
+  .viewer-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .viewer-title svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .viewer-actions {
+    display: flex;
+    gap: 8px;
+  }
+
+  .viewer-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: none;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+
+  .viewer-btn:active {
+    transform: scale(0.9);
+  }
+
+  .viewer-btn svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .viewer-btn.back {
+    background: linear-gradient(135deg, var(--blue), var(--purple));
+    box-shadow: 0 4px 16px rgba(0,122,255,0.3);
+  }
+
+  .viewer-btn.reload {
+    background: linear-gradient(135deg, var(--green), #30D158);
+    box-shadow: 0 4px 16px rgba(52,199,89,0.3);
+  }
+
+  .iframe-container {
+    flex: 1;
+    position: relative;
+    background: white;
+  }
+
+  .code-iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: white;
+  }
+
+  /* === Toast === */
+  .toast {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%) translateY(120px);
+    background: var(--text);
+    color: var(--bg);
+    padding: 15px 30px;
+    border-radius: 50px;
+    font-size: 15px;
+    font-weight: 600;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+    z-index: 9999;
+    opacity: 0;
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
+    max-width: 90%;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* === Modal الإعدادات === */
+  .settings-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+  }
+
+  .settings-modal-overlay.show {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .settings-modal-sheet {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--modal-bg);
+    border-radius: 28px 28px 0 0;
+    z-index: 1001;
+    transform: translateY(100%);
+    transition: transform 0.45s cubic-bezier(0.32, 0.72, 0, 1);
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 -12px 48px rgba(0,0,0,0.3);
+  }
+
+  .settings-modal-sheet.show {
+    transform: translateY(0);
+  }
+
+  .settings-body {
     padding: 20px 20px 40px;
   }
 
@@ -725,7 +700,6 @@
   .settings-icon.purple { background: var(--purple); }
   .settings-icon.orange { background: var(--orange); }
   .settings-icon.green { background: var(--green); }
-  .settings-icon.red { background: var(--red); }
 
   .settings-content {
     flex: 1;
@@ -750,7 +724,6 @@
     font-weight: 500;
   }
 
-  /* Toggle Switch */
   .toggle {
     position: relative;
     width: 51px;
@@ -783,7 +756,6 @@
     transform: translateX(-20px);
   }
 
-  /* About Card */
   .about-card {
     background: linear-gradient(135deg, var(--blue), var(--purple));
     border-radius: var(--radius);
@@ -882,26 +854,11 @@
     color: var(--blue);
   }
 
-  @keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-10px); }
-    50% { transform: translateX(10px); }
-    75% { transform: translateX(-5px); }
-  }
-  .shake { animation: shake 0.5s ease; }
-
-  @keyframes pulse {
-    0% { box-shadow: 0 0 0 0 rgba(52,199,89,0.5); }
-    100% { box-shadow: 0 0 0 20px rgba(52,199,89,0); }
-  }
-  .pulse { animation: pulse 0.7s ease; }
-
   ::-webkit-scrollbar { width: 0; }
 
   @supports (padding-top: env(safe-area-inset-top)) {
-    .header { padding-top: calc(env(safe-area-inset-top) + 8px); }
+    .viewer-header { padding-top: calc(env(safe-area-inset-top) + 12px); }
     .toast { bottom: calc(env(safe-area-inset-bottom) + 30px); }
-    .modal-sheet { padding-bottom: env(safe-area-inset-bottom); }
   }
 </style>
 </head>
@@ -913,192 +870,136 @@
   <div class="orb"></div>
 </div>
 
-<div class="app">
+<!-- الشاشة الرئيسية -->
+<div class="main-screen" id="mainScreen">
   <div class="header">
-    <div class="header-top">
-      <h1 class="app-title">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 2L3 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z"/>
-          <path d="M9 12l2 2 4-4"/>
-        </svg>
-        تشفير خفي
-      </h1>
-      <div class="header-actions">
-        <button class="icon-btn" onclick="openSettings()" aria-label="الإعدادات">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="3"/>
-            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-          </svg>
-        </button>
-      </div>
-    </div>
-
-    <div class="mode-buttons">
-      <button class="mode-btn active-enc" id="btnEnc" onclick="switchMode('encrypt')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-        </svg>
-        <span class="mode-label">تشفير</span>
-      </button>
-      <button class="mode-btn" id="btnDec" onclick="switchMode('decrypt')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-          <path d="M7 11V7a5 5 0 0 1 9.9-1"/>
-        </svg>
-        <span class="mode-label">فك تشفير</span>
-      </button>
-    </div>
-  </div>
-
-  <div id="encryptMode">
-    <div class="info-tip">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="10"/>
-        <line x1="12" y1="16" x2="12" y2="12"/>
-        <line x1="12" y1="8" x2="12.01" y2="8"/>
-      </svg>
-      <span>النص السري يُشفّر بشكل مستقل. النص الظاهر مجرد غلاف خارجي لا يؤثر على التشفير!</span>
-    </div>
-
-    <div class="card">
-      <div class="card-label">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-        </svg>
-        النص السري
-      </div>
-      <div class="textarea-wrap">
-        <textarea id="secretText" placeholder="اكتب النص السري هنا..." oninput="updateCount('secretText','secretCount')"></textarea>
-        <span class="char-count" id="secretCount">0</span>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-label">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-          <polyline points="14 2 14 8 20 8"/>
-          <line x1="16" y1="13" x2="8" y2="13"/>
-          <line x1="16" y1="17" x2="8" y2="17"/>
-          <polyline points="10 9 9 9 8 9"/>
-        </svg>
-        النص الظاهر (غلاف فقط)
-      </div>
-      <div class="textarea-wrap">
-        <textarea id="coverText" placeholder="اكتب النص الظاهر هنا..." oninput="updateCount('coverText','coverCount')"></textarea>
-        <span class="char-count" id="coverCount">0</span>
-      </div>
-      <div class="preset-row">
-        <button class="preset-btn" onclick="setCover('هلا')">هلا</button>
-        <button class="preset-btn" onclick="setCover('شلونك')">شلونك</button>
-        <button class="preset-btn" onclick="setCover('السلام عليكم')">سلام</button>
-        <button class="preset-btn" onclick="setCover('كيفك')">كيفك</button>
-      </div>
-    </div>
-
-    <div class="card" style="padding: 16px;">
-      <button class="btn-primary btn-encrypt" onclick="doEncrypt()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-        </svg>
-        تشفير
-      </button>
-    </div>
-  </div>
-
-  <div id="decryptMode" style="display:none;">
-    <div class="info-tip">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="10"/>
-        <line x1="12" y1="16" x2="12" y2="12"/>
-        <line x1="12" y1="8" x2="12.01" y2="8"/>
-      </svg>
-      <span>الصق النص المستلم → اضغط فك تشفير → يظهر النص السري الأصلي فقط</span>
-    </div>
-
-    <div class="card">
-      <div class="card-label">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-          <polyline points="7 10 12 15 17 10"/>
-          <line x1="12" y1="15" x2="12" y2="3"/>
-        </svg>
-        النص المستلم
-      </div>
-      <div class="textarea-wrap">
-        <button class="paste-btn" onclick="pasteText()" aria-label="لصق">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
-            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
-          </svg>
-        </button>
-        <textarea id="encText" placeholder="الصق النص هنا..." oninput="updateCount('encText','encCount')"></textarea>
-        <span class="char-count" id="encCount">0</span>
-      </div>
-    </div>
-
-    <div class="card" style="padding: 16px;">
-      <button class="btn-primary btn-decrypt" onclick="doDecrypt()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-          <path d="M7 11V7a5 5 0 0 1 9.9-1"/>
-        </svg>
-        فك تشفير
-      </button>
-    </div>
-  </div>
-
-  <div class="card" id="resultCard" style="display:none;">
-    <div class="card-label">
-      <svg id="resultIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-        <polyline points="22 4 12 14.01 9 11.01"/>
-      </svg>
-      <span id="resultLabel">النتيجة</span>
-    </div>
-    <div class="result-area" id="resultArea"></div>
-    <div id="successMsg" class="success-box" style="display:none;">
+    <h1 class="app-title">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-        <polyline points="22 4 12 14.01 9 11.01"/>
+        <polyline points="16 18 22 12 16 6"/>
+        <polyline points="8 6 2 12 8 18"/>
       </svg>
-      <span>تم النسخ تلقائياً! أرسله للشخص</span>
+      قارئ الأكواد
+    </h1>
+    <div class="header-actions">
+      <button class="icon-btn" onclick="openSettings()" aria-label="الإعدادات">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+      </button>
     </div>
-    <div class="action-row">
-      <button class="action-btn btn-copy" onclick="copyResult()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+  </div>
+
+  <div class="screen-container">
+    <div class="square-screen">
+      <!-- زر + في الزاوية -->
+      <button class="plus-btn" onclick="openPasteModal()" aria-label="إضافة كود">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"/>
+          <line x1="5" y1="12" x2="19" y2="12"/>
         </svg>
-        نسخ
       </button>
-      <button class="action-btn btn-share" onclick="shareResult()">
+
+      <div class="screen-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="18" cy="5" r="3"/>
-          <circle cx="6" cy="12" r="3"/>
-          <circle cx="18" cy="19" r="3"/>
-          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
-          <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+          <polyline points="16 18 22 12 16 6"/>
+          <polyline points="8 6 2 12 8 18"/>
         </svg>
-        مشاركة
-      </button>
-      <button class="action-btn btn-clear" onclick="clearResult()">
+      </div>
+      <div class="screen-title">قارئ الأكواد</div>
+      <div class="screen-desc">الصق كود HTML وشاهده مباشرة</div>
+      <div class="screen-hint">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="3 6 5 6 21 6"/>
-          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="16" x2="12" y2="12"/>
+          <line x1="12" y1="8" x2="12.01" y2="8"/>
         </svg>
-        مسح
-      </button>
+        <span>اضغط على + لإضافة كود</span>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- Modal الإعدادات -->
-<div class="modal-overlay" id="modalOverlay" onclick="closeSettings()"></div>
+<!-- Modal اللصق -->
+<div class="modal-overlay" id="modalOverlay" onclick="closePasteModal()"></div>
 <div class="modal-sheet" id="modalSheet">
+  <div class="modal-handle"></div>
+  <div class="modal-header">
+    <h2 class="modal-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+        <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+      </svg>
+      إدارة الكود
+    </h2>
+    <button class="modal-close" onclick="closePasteModal()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="action-buttons">
+      <button class="action-card paste-card" onclick="pasteCode()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+          <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+        </svg>
+        لصق
+      </button>
+      <button class="action-card delete-card" onclick="deleteCode()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="3 6 5 6 21 6"/>
+          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+        </svg>
+        حذف
+      </button>
+    </div>
+    <div class="info-box">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="12" y1="16" x2="12" y2="12"/>
+        <line x1="12" y1="8" x2="12.01" y2="8"/>
+      </svg>
+      <span>عند الضغط على "لصق" سيتم قراءة الكود من الحافظة وتشغيله تلقائياً</span>
+    </div>
+  </div>
+</div>
+
+<!-- شاشة العرض -->
+<div class="viewer-screen" id="viewerScreen">
+  <div class="viewer-header">
+    <div class="viewer-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="16 18 22 12 16 6"/>
+        <polyline points="8 6 2 12 8 18"/>
+      </svg>
+      عرض الكود
+    </div>
+    <div class="viewer-actions">
+      <button class="viewer-btn reload" onclick="reloadCode()" aria-label="إعادة تحميل">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="23 4 23 10 17 10"/>
+          <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+        </svg>
+      </button>
+      <button class="viewer-btn back" onclick="backToMain()" aria-label="رجوع">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"/>
+          <polyline points="12 19 5 12 12 5"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+  <div class="iframe-container">
+    <iframe class="code-iframe" id="codeIframe" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"></iframe>
+  </div>
+</div>
+
+<!-- Modal الإعدادات -->
+<div class="settings-modal-overlay" id="settingsModalOverlay" onclick="closeSettings()"></div>
+<div class="settings-modal-sheet" id="settingsModalSheet">
   <div class="modal-handle"></div>
   <div class="modal-header">
     <h2 class="modal-title">
@@ -1115,21 +1016,18 @@
       </svg>
     </button>
   </div>
-  <div class="modal-body">
-
-    <!-- بطاقة التطبيق -->
+  <div class="settings-body">
     <div class="about-card">
       <div class="about-logo">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 2L3 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z"/>
-          <path d="M9 12l2 2 4-4"/>
+          <polyline points="16 18 22 12 16 6"/>
+          <polyline points="8 6 2 12 8 18"/>
         </svg>
       </div>
-      <div class="about-name">تشفير خفي</div>
-      <div class="about-tagline">أخفِ رسائلك السرية داخل النصوص العادية</div>
+      <div class="about-name">قارئ الأكواد</div>
+      <div class="about-tagline">شغّل أكواد HTML مباشرة في التطبيق</div>
     </div>
 
-    <!-- المظهر -->
     <div class="settings-section">
       <div class="settings-section-title">المظهر</div>
       <div class="settings-group">
@@ -1148,7 +1046,6 @@
       </div>
     </div>
 
-    <!-- المطور -->
     <div class="settings-section">
       <div class="settings-section-title">المطور</div>
       <div class="dev-card">
@@ -1162,11 +1059,10 @@
       </div>
     </div>
 
-    <!-- حول -->
     <div class="settings-section">
       <div class="settings-section-title">حول التطبيق</div>
       <div class="settings-group">
-        <div class="settings-item" onclick="showToast('🔐 تطبيق تشفير خفي احترافي')">
+        <div class="settings-item" onclick="showToast('💡 قارئ أكواد HTML احترافي')">
           <div class="settings-icon purple">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="10"/>
@@ -1180,481 +1076,40 @@
           </div>
           <div class="settings-value">›</div>
         </div>
-        <div class="settings-item" onclick="showToast('💡 تشفير متقدم بضغط LZ-String')">
+        <div class="settings-item" onclick="showToast('✅ يدعم HTML/CSS/JavaScript')">
           <div class="settings-icon green">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              <polyline points="16 18 22 12 16 6"/>
+              <polyline points="8 6 2 12 8 18"/>
             </svg>
           </div>
           <div class="settings-content">
-            <div class="settings-label">نوع التشفير</div>
-            <div class="settings-desc">تقنية الإخفاء المستخدمة</div>
+            <div class="settings-label">نوع الأكواد</div>
+            <div class="settings-desc">الأكواد المدعومة</div>
           </div>
-          <div class="settings-value">LZ-String</div>
+          <div class="settings-value">HTML</div>
         </div>
-        <div class="settings-item" onclick="showToast('✅ جميع بياناتك محلية وآمنة')">
+        <div class="settings-item" onclick="showToast('🚀 تشغيل فوري وسريع')">
           <div class="settings-icon orange">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
             </svg>
           </div>
           <div class="settings-content">
-            <div class="settings-label">الخصوصية</div>
-            <div class="settings-desc">حماية بياناتك</div>
+            <div class="settings-label">الأداء</div>
+            <div class="settings-desc">سرعة التشغيل</div>
           </div>
-          <div class="settings-value">آمن</div>
+          <div class="settings-value">سريع</div>
         </div>
       </div>
     </div>
-
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-  // === LZ-String Compression ===
-  const LZString = (function() {
-    const f = String.fromCharCode;
-    
-    const compress = function(uncompressed) {
-      if (uncompressed == null) return "";
-      return _compress(uncompressed, 16, function(a){return f(a);});
-    };
-    
-    const _compress = function(uncompressed, bitsPerChar, getCharFromInt) {
-      if (uncompressed == null) return "";
-      let i, value,
-        context_dictionary = {},
-        context_dictionaryToCreate = {},
-        context_c = "",
-        context_wc = "",
-        context_w = "",
-        context_enlargeIn = 2,
-        context_dictSize = 3,
-        context_numBits = 2,
-        context_data = [],
-        context_data_val = 0,
-        context_data_position = 0,
-        ii;
-      
-      for (ii = 0; ii < uncompressed.length; ii += 1) {
-        context_c = uncompressed.charAt(ii);
-        if (!Object.prototype.hasOwnProperty.call(context_dictionary, context_c)) {
-          context_dictionary[context_c] = context_dictSize++;
-          context_dictionaryToCreate[context_c] = true;
-        }
-        context_wc = context_w + context_c;
-        if (Object.prototype.hasOwnProperty.call(context_dictionary, context_wc)) {
-          context_w = context_wc;
-        } else {
-          if (Object.prototype.hasOwnProperty.call(context_dictionaryToCreate, context_w)) {
-            if (context_w.charCodeAt(0) < 256) {
-              for (i = 0; i < context_numBits; i++) {
-                context_data_val = (context_data_val << 1);
-                if (context_data_position == bitsPerChar - 1) {
-                  context_data_position = 0;
-                  context_data.push(getCharFromInt(context_data_val));
-                  context_data_val = 0;
-                } else {
-                  context_data_position++;
-                }
-              }
-              value = context_w.charCodeAt(0);
-              for (i = 0; i < 8; i++) {
-                context_data_val = (context_data_val << 1) | (value & 1);
-                if (context_data_position == bitsPerChar - 1) {
-                  context_data_position = 0;
-                  context_data.push(getCharFromInt(context_data_val));
-                  context_data_val = 0;
-                } else {
-                  context_data_position++;
-                }
-                value = value >> 1;
-              }
-            } else {
-              value = 1;
-              for (i = 0; i < context_numBits; i++) {
-                context_data_val = (context_data_val << 1) | value;
-                if (context_data_position == bitsPerChar - 1) {
-                  context_data_position = 0;
-                  context_data.push(getCharFromInt(context_data_val));
-                  context_data_val = 0;
-                } else {
-                  context_data_position++;
-                }
-                value = 0;
-              }
-              value = context_w.charCodeAt(0);
-              for (i = 0; i < 16; i++) {
-                context_data_val = (context_data_val << 1) | (value & 1);
-                if (context_data_position == bitsPerChar - 1) {
-                  context_data_position = 0;
-                  context_data.push(getCharFromInt(context_data_val));
-                  context_data_val = 0;
-                } else {
-                  context_data_position++;
-                }
-                value = value >> 1;
-              }
-            }
-            context_enlargeIn--;
-            if (context_enlargeIn == 0) {
-              context_enlargeIn = Math.pow(2, context_numBits);
-              context_numBits++;
-            }
-            delete context_dictionaryToCreate[context_w];
-          } else {
-            value = context_dictionary[context_w];
-            for (i = 0; i < context_numBits; i++) {
-              context_data_val = (context_data_val << 1) | (value & 1);
-              if (context_data_position == bitsPerChar - 1) {
-                context_data_position = 0;
-                context_data.push(getCharFromInt(context_data_val));
-                context_data_val = 0;
-              } else {
-                context_data_position++;
-              }
-              value = value >> 1;
-            }
-          }
-          context_enlargeIn--;
-          if (context_enlargeIn == 0) {
-            context_enlargeIn = Math.pow(2, context_numBits);
-            context_numBits++;
-          }
-          context_dictionary[context_wc] = context_dictSize++;
-          context_w = String(context_c);
-        }
-      }
-      
-      if (context_w !== "") {
-        if (Object.prototype.hasOwnProperty.call(context_dictionaryToCreate, context_w)) {
-          if (context_w.charCodeAt(0) < 256) {
-            for (i = 0; i < context_numBits; i++) {
-              context_data_val = (context_data_val << 1);
-              if (context_data_position == bitsPerChar - 1) {
-                context_data_position = 0;
-                context_data.push(getCharFromInt(context_data_val));
-                context_data_val = 0;
-              } else {
-                context_data_position++;
-              }
-            }
-            value = context_w.charCodeAt(0);
-            for (i = 0; i < 8; i++) {
-              context_data_val = (context_data_val << 1) | (value & 1);
-              if (context_data_position == bitsPerChar - 1) {
-                context_data_position = 0;
-                context_data.push(getCharFromInt(context_data_val));
-                context_data_val = 0;
-              } else {
-                context_data_position++;
-              }
-              value = value >> 1;
-            }
-          } else {
-            value = 1;
-            for (i = 0; i < context_numBits; i++) {
-              context_data_val = (context_data_val << 1) | value;
-              if (context_data_position == bitsPerChar - 1) {
-                context_data_position = 0;
-                context_data.push(getCharFromInt(context_data_val));
-                context_data_val = 0;
-              } else {
-                context_data_position++;
-              }
-              value = 0;
-            }
-            value = context_w.charCodeAt(0);
-            for (i = 0; i < 16; i++) {
-              context_data_val = (context_data_val << 1) | (value & 1);
-              if (context_data_position == bitsPerChar - 1) {
-                context_data_position = 0;
-                context_data.push(getCharFromInt(context_data_val));
-                context_data_val = 0;
-              } else {
-                context_data_position++;
-              }
-              value = value >> 1;
-            }
-          }
-          context_enlargeIn--;
-          if (context_enlargeIn == 0) {
-            context_enlargeIn = Math.pow(2, context_numBits);
-            context_numBits++;
-          }
-          delete context_dictionaryToCreate[context_w];
-        } else {
-          value = context_dictionary[context_w];
-          for (i = 0; i < context_numBits; i++) {
-            context_data_val = (context_data_val << 1) | (value & 1);
-            if (context_data_position == bitsPerChar - 1) {
-              context_data_position = 0;
-              context_data.push(getCharFromInt(context_data_val));
-              context_data_val = 0;
-            } else {
-              context_data_position++;
-            }
-            value = value >> 1;
-          }
-        }
-        context_enlargeIn--;
-        if (context_enlargeIn == 0) {
-          context_enlargeIn = Math.pow(2, context_numBits);
-          context_numBits++;
-        }
-      }
-      
-      value = 2;
-      for (i = 0; i < context_numBits; i++) {
-        context_data_val = (context_data_val << 1) | (value & 1);
-        if (context_data_position == bitsPerChar - 1) {
-          context_data_position = 0;
-          context_data.push(getCharFromInt(context_data_val));
-          context_data_val = 0;
-        } else {
-          context_data_position++;
-        }
-        value = value >> 1;
-      }
-      
-      while (true) {
-        context_data_val = (context_data_val << 1);
-        if (context_data_position == bitsPerChar - 1) {
-          context_data.push(getCharFromInt(context_data_val));
-          break;
-        }
-        else context_data_position++;
-      }
-      return context_data.join('');
-    };
-    
-    const decompress = function(compressed) {
-      if (compressed == null) return "";
-      if (compressed == "") return null;
-      return _decompress(compressed.length, 32768, function(index){return compressed.charCodeAt(index);});
-    };
-    
-    const _decompress = function(length, resetValue, getNextValue) {
-      let dictionary = [],
-        enlargeIn = 4,
-        dictSize = 4,
-        numBits = 3,
-        entry = "",
-        result = [],
-        i,
-        w,
-        c,
-        data_val = getNextValue(0),
-        data_position = resetValue,
-        data_index = 1;
-      
-      for (i = 0; i < 3; i += 1) {
-        dictionary[i] = i;
-      }
-      
-      let bits = 0, maxpower = Math.pow(2, 2), power = 1;
-      while (power != maxpower) {
-        let resb = data_val & data_position;
-        data_position >>= 1;
-        if (data_position == 0) {
-          data_position = resetValue;
-          data_val = getNextValue(data_index++);
-        }
-        bits |= (resb > 0 ? 1 : 0) * power;
-        power <<= 1;
-      }
-      
-      let next = bits;
-      switch (next) {
-        case 0:
-          bits = 0; maxpower = Math.pow(2, 8); power = 1;
-          while (power != maxpower) {
-            let resb = data_val & data_position;
-            data_position >>= 1;
-            if (data_position == 0) {
-              data_position = resetValue;
-              data_val = getNextValue(data_index++);
-            }
-            bits |= (resb > 0 ? 1 : 0) * power;
-            power <<= 1;
-          }
-          c = f(bits);
-          break;
-        case 1:
-          bits = 0; maxpower = Math.pow(2, 16); power = 1;
-          while (power != maxpower) {
-            let resb = data_val & data_position;
-            data_position >>= 1;
-            if (data_position == 0) {
-              data_position = resetValue;
-              data_val = getNextValue(data_index++);
-            }
-            bits |= (resb > 0 ? 1 : 0) * power;
-            power <<= 1;
-          }
-          c = f(bits);
-          break;
-        case 2:
-          return "";
-      }
-      dictionary[3] = c;
-      w = c;
-      result.push(c);
-      
-      while (true) {
-        if (data_index > length) return "";
-        
-        bits = 0; maxpower = Math.pow(2, numBits); power = 1;
-        while (power != maxpower) {
-          let resb = data_val & data_position;
-          data_position >>= 1;
-          if (data_position == 0) {
-            data_position = resetValue;
-            data_val = getNextValue(data_index++);
-          }
-          bits |= (resb > 0 ? 1 : 0) * power;
-          power <<= 1;
-        }
-        
-        switch (c = bits) {
-          case 0:
-            bits = 0; maxpower = Math.pow(2, 8); power = 1;
-            while (power != maxpower) {
-              let resb = data_val & data_position;
-              data_position >>= 1;
-              if (data_position == 0) {
-                data_position = resetValue;
-                data_val = getNextValue(data_index++);
-              }
-              bits |= (resb > 0 ? 1 : 0) * power;
-              power <<= 1;
-            }
-            dictionary[dictSize++] = f(bits);
-            c = dictSize - 1;
-            enlargeIn--;
-            break;
-          case 1:
-            bits = 0; maxpower = Math.pow(2, 16); power = 1;
-            while (power != maxpower) {
-              let resb = data_val & data_position;
-              data_position >>= 1;
-              if (data_position == 0) {
-                data_position = resetValue;
-                data_val = getNextValue(data_index++);
-              }
-              bits |= (resb > 0 ? 1 : 0) * power;
-              power <<= 1;
-            }
-            dictionary[dictSize++] = f(bits);
-            c = dictSize - 1;
-            enlargeIn--;
-            break;
-          case 2:
-            return result.join('');
-        }
-        
-        if (enlargeIn == 0) {
-          enlargeIn = Math.pow(2, numBits);
-          numBits++;
-        }
-        
-        if (dictionary[c]) {
-          entry = dictionary[c];
-        } else {
-          if (c === dictSize) {
-            entry = w + w.charAt(0);
-          } else {
-            return null;
-          }
-        }
-        result.push(entry);
-        
-        dictionary[dictSize++] = w + entry.charAt(0);
-        enlargeIn--;
-        
-        if (enlargeIn == 0) {
-          enlargeIn = Math.pow(2, numBits);
-          numBits++;
-        }
-        
-        w = entry;
-      }
-    };
-    
-    return { compress, decompress };
-  })();
-
-  // === Zero-Width Characters ===
-  const ZW = ['\u200B', '\u200C', '\u200D', '\uFEFF'];
-  const MAGIC_START = '\u2603\u2603';
-  const MAGIC_END = '\u2604\u2604';
-
-  // === تشفير ===
-  function hideMessage(secret, cover) {
-    const compressed = LZString.compress(secret);
-    const payload = MAGIC_START + compressed + MAGIC_END;
-    
-    let bits = '';
-    for (let i = 0; i < payload.length; i++) {
-      bits += payload.charCodeAt(i).toString(2).padStart(16, '0');
-    }
-    
-    let hidden = '';
-    for (let i = 0; i < bits.length; i += 2) {
-      const pair = bits.substr(i, 2);
-      const idx = parseInt(pair, 2);
-      hidden += ZW[idx];
-    }
-    
-    return cover + hidden;
-  }
-
-  // === فك التشفير ===
-  function extractMessage(text) {
-    let hidden = '';
-    
-    for (let i = text.length - 1; i >= 0; i--) {
-      const c = text[i];
-      if (ZW.includes(c)) {
-        hidden = c + hidden;
-      } else {
-        break;
-      }
-    }
-    
-    if (hidden.length === 0) {
-      throw new Error('NO_HIDDEN');
-    }
-    
-    let bits = '';
-    for (let i = 0; i < hidden.length; i++) {
-      const idx = ZW.indexOf(hidden[i]);
-      bits += idx.toString(2).padStart(2, '0');
-    }
-    
-    let compressed = '';
-    for (let i = 0; i < bits.length; i += 16) {
-      const chunk = bits.substr(i, 16);
-      if (chunk.length < 16) break;
-      compressed += String.fromCharCode(parseInt(chunk, 2));
-    }
-    
-    if (!compressed.startsWith(MAGIC_START) || !compressed.endsWith(MAGIC_END)) {
-      throw new Error('WRONG_PASS');
-    }
-    
-    compressed = compressed.slice(MAGIC_START.length, -MAGIC_END.length);
-    const secret = LZString.decompress(compressed);
-    
-    if (!secret) {
-      throw new Error('DECOMPRESS_FAILED');
-    }
-    
-    return secret;
-  }
+  let currentCode = '';
 
   // === الوضع الداكن ===
   function initTheme() {
@@ -1676,175 +1131,88 @@
     toggleDark();
   }
 
-  // === Modal الإعدادات ===
-  function openSettings() {
+  // === Modal اللصق ===
+  function openPasteModal() {
     document.getElementById('modalOverlay').classList.add('show');
     document.getElementById('modalSheet').classList.add('show');
     document.body.style.overflow = 'hidden';
   }
 
-  function closeSettings() {
+  function closePasteModal() {
     document.getElementById('modalOverlay').classList.remove('show');
     document.getElementById('modalSheet').classList.remove('show');
     document.body.style.overflow = '';
   }
 
-  // === تبديل الوضع ===
-  function switchMode(mode) {
-    const isEnc = mode === 'encrypt';
-    document.getElementById('btnEnc').className = 'mode-btn' + (isEnc ? ' active-enc' : '');
-    document.getElementById('btnDec').className = 'mode-btn' + (!isEnc ? ' active-dec' : '');
-    document.getElementById('encryptMode').style.display = isEnc ? 'block' : 'none';
-    document.getElementById('decryptMode').style.display = isEnc ? 'none' : 'block';
-    document.getElementById('resultCard').style.display = 'none';
-  }
-
-  function updateCount(taId, countId) {
-    document.getElementById(countId).textContent = document.getElementById(taId).value.length;
-  }
-
-  function setCover(text) {
-    document.getElementById('coverText').value = text;
-    updateCount('coverText', 'coverCount');
-  }
-
-  // === زر اللصق ===
-  async function pasteText() {
+  // === لصق الكود ===
+  async function pasteCode() {
     try {
       const text = await navigator.clipboard.readText();
-      document.getElementById('encText').value = text;
-      updateCount('encText', 'encCount');
-      showToast('✅ تم اللصق');
+      
+      if (!text || text.trim().length === 0) {
+        showToast('⚠️ الحافظة فارغة');
+        return;
+      }
+
+      currentCode = text;
+      closePasteModal();
+      
+      // تشغيل الكود فوراً
+      runCode(text);
+      showToast('✅ تم تشغيل الكود');
     } catch (err) {
       showToast('❌ فشل اللصق - الصق يدوياً');
     }
   }
 
-  function shakeEl(id) {
-    const el = document.getElementById(id);
-    el.classList.add('shake');
-    setTimeout(() => el.classList.remove('shake'), 500);
+  // === حذف الكود ===
+  function deleteCode() {
+    currentCode = '';
+    closePasteModal();
+    showToast('🗑 تم حذف الكود');
   }
 
+  // === تشغيل الكود ===
+  function runCode(code) {
+    const iframe = document.getElementById('codeIframe');
+    iframe.srcdoc = code;
+    document.getElementById('viewerScreen').classList.add('show');
+  }
+
+  // === إعادة تحميل الكود ===
+  function reloadCode() {
+    if (currentCode) {
+      runCode(currentCode);
+      showToast('🔄 تم إعادة التحميل');
+    }
+  }
+
+  // === العودة للشاشة الرئيسية ===
+  function backToMain() {
+    document.getElementById('viewerScreen').classList.remove('show');
+    const iframe = document.getElementById('codeIframe');
+    iframe.srcdoc = '';
+  }
+
+  // === Modal الإعدادات ===
+  function openSettings() {
+    document.getElementById('settingsModalOverlay').classList.add('show');
+    document.getElementById('settingsModalSheet').classList.add('show');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeSettings() {
+    document.getElementById('settingsModalOverlay').classList.remove('show');
+    document.getElementById('settingsModalSheet').classList.remove('show');
+    document.body.style.overflow = '';
+  }
+
+  // === Toast ===
   function showToast(msg) {
     const toast = document.getElementById('toast');
     toast.textContent = msg;
     toast.classList.add('show');
     setTimeout(() => toast.classList.remove('show'), 2500);
-  }
-
-  function showResult(text, isError, icon, label, autoCopy) {
-    const card = document.getElementById('resultCard');
-    const area = document.getElementById('resultArea');
-    const successMsg = document.getElementById('successMsg');
-    
-    area.textContent = text;
-    area.className = isError ? 'result-area error' : 'result-area';
-    document.getElementById('resultIcon').innerHTML = icon;
-    document.getElementById('resultLabel').textContent = label;
-    
-    if (autoCopy && !isError) {
-      successMsg.style.display = 'flex';
-    } else {
-      successMsg.style.display = 'none';
-    }
-    
-    card.style.display = 'block';
-    if (!isError) card.classList.add('pulse');
-    setTimeout(() => card.classList.remove('pulse'), 700);
-    card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }
-
-  function autoCopy(text) {
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text).catch(() => fallbackCopy(text));
-    } else {
-      fallbackCopy(text);
-    }
-  }
-
-  function fallbackCopy(text) {
-    const ta = document.createElement('textarea');
-    ta.value = text;
-    ta.style.position = 'fixed';
-    ta.style.opacity = '0';
-    document.body.appendChild(ta);
-    ta.select();
-    try { document.execCommand('copy'); } catch(e) {}
-    document.body.removeChild(ta);
-  }
-
-  function doEncrypt() {
-    const secret = document.getElementById('secretText').value.trim();
-    let cover = document.getElementById('coverText').value.trim();
-
-    if (!secret) { shakeEl('secretText'); showToast('⚠️ أدخل النص السري'); return; }
-    if (!cover) { shakeEl('coverText'); showToast('⚠️ أدخل النص الظاهر'); return; }
-
-    try {
-      const result = hideMessage(secret, cover);
-      const icon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>';
-      showResult(result, false, icon, 'النص الجاهز للإرسال', true);
-      autoCopy(result);
-      showToast('✅ تم التشفير والنسخ');
-    } catch (e) {
-      showToast('❌ حدث خطأ: ' + e.message);
-    }
-  }
-
-  function doDecrypt() {
-    const text = document.getElementById('encText').value;
-
-    if (!text) { shakeEl('encText'); showToast('⚠️ الصق النص أولاً'); return; }
-
-    try {
-      const secret = extractMessage(text);
-      const icon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>';
-      showResult(secret, false, icon, 'النص السري المستخرج', false);
-      showToast('✅ تم فك التشفير');
-    } catch (e) {
-      if (e.message === 'NO_HIDDEN') {
-        shakeEl('encText');
-        showToast('❌ لا يوجد نص مخفي');
-        const icon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>';
-        showResult('هذا النص لا يحتوي على رسالة مخفية', true, icon, 'خطأ', false);
-      } else if (e.message === 'WRONG_PASS' || e.message === 'DECOMPRESS_FAILED') {
-        shakeEl('encText');
-        showToast('❌ النص تالف أو غير صالح');
-        const icon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>';
-        showResult('النص غير صالح أو تالف', true, icon, 'خطأ', false);
-      } else {
-        showToast('❌ فشل فك التشفير');
-      }
-    }
-  }
-
-  function copyResult() {
-    const text = document.getElementById('resultArea').textContent;
-    if (!text) return;
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text).then(() => showToast('📋 تم النسخ')).catch(() => {
-        fallbackCopy(text);
-        showToast('📋 تم النسخ');
-      });
-    } else {
-      fallbackCopy(text);
-      showToast('📋 تم النسخ');
-    }
-  }
-
-  async function shareResult() {
-    const text = document.getElementById('resultArea').textContent;
-    if (!text) return;
-    if (navigator.share) {
-      try { await navigator.share({ title: 'رسالة', text }); } catch(e) {}
-    } else {
-      copyResult();
-    }
-  }
-
-  function clearResult() {
-    document.getElementById('resultCard').style.display = 'none';
   }
 
   // === Init ===
